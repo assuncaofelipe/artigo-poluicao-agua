@@ -1,0 +1,83 @@
+\section{RESULTADOS}
+
+Os resultados apresentados a seguir correspondem ao modelo SNN ajustado com
+aumento de dados (fator 5, ruído gaussiano leve) e seleção de hiperparâmetros
+via busca em grade. As análises exploratórias mostram a distribuição das
+variáveis e suas correlações, enquanto as figuras de desempenho destacam a
+estabilidade do treinamento e a qualidade das predições em relação aos valores
+observados.
+
+Após a busca em grade, a melhor configuração encontrada foi: $hidden\_size=64$,
+$time\_steps=15$, $lr=0{,}002$, $\beta=0{,}95$, $thresh=0{,}8$ e ruído de aumento
+$\sigma=0{,}02$, com parada antecipada por paciência de 20 épocas. Com essa
+configuração, o modelo final atingiu desempenho de teste com $MSE=0{,}0327$ e
+$MAE=0{,}1437$ para a predição de pH. Considerando a faixa observada de pH no
+conjunto (aprox. 5{,}16 a 6{,}52), o erro médio absoluto representa uma fração
+reduzida do intervalo total, indicando boa precisão relativa para um conjunto
+de dados pequeno. A Figura~\ref{fig:pred_pH} evidencia a proximidade entre valores
+preditos e reais, enquanto a Figura~\ref{fig:hist_loss} mostra convergência
+rápida e estável do treinamento.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/corr_heatmap.png}
+		\caption*{(a) Correlação entre variáveis}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/boxplots_features.png}
+		\caption*{(b) Boxplots das variáveis}
+	\end{minipage}
+	\caption{Análise exploratória: correlações e distribuição das variáveis de entrada.}
+	\label{fig:exploratoria}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/hist_pH.png}
+		\caption*{(a) Histograma do pH}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/loss_curve.png}
+		\caption*{(b) Curva de perda (MSE)}
+	\end{minipage}
+	\caption{Distribuição do alvo e dinâmica de treinamento/validação.}
+	\label{fig:hist_loss}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_pH.png}
+		\caption*{(a) Predito vs. real}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/map_pH.png}
+		\caption*{(b) Mapa espacial de pH}
+	\end{minipage}
+	\caption{Desempenho preditivo e padrão espacial do pH no Lago do Serpa.}
+	\label{fig:pred_pH}
+\end{figure}
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/map_OD.png}
+		\caption*{(a) Mapa espacial de OD}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/map_TURB.png}
+		\caption*{(b) Mapa espacial de turbidez}
+	\end{minipage}
+	\caption{Padrões espaciais de OD e turbidez.}
+	\label{fig:mapas}
+\end{figure}

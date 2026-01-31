@@ -1,0 +1,127 @@
+\documentclass[twoside]{article}
+
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{placeins}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[sc]{mathpazo} % Palatino
+\usepackage[brazil]{babel}
+\linespread{1.15}
+\usepackage{microtype}
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry}
+\usepackage{multicol}
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{hyperref}
+
+\usepackage{lettrine}
+\usepackage{paralist}
+
+\usepackage{abstract}
+\renewcommand{\abstractnamefont}{\normalfont\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{2}
+% Seção: sem número no título
+\titleformat{\section}[block]{\large\bfseries}{}{0em}{}
+
+% Formato do número da subseção: seção.subseção → 1.0, 1.1, 2.0...
+\renewcommand\thesubsection{\arabic{subsection}{.}\arabic{subsubsection}}
+
+% Subseção: mostra o número (1.0, 1.1, ...) e o título em negrito
+\titleformat{\subsection}[block]{\large\bfseries}{\thesubsection}{1em}{}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[C]{Running title $\bullet$ November 2025 $\bullet$ Vol. XXI, No. 1}
+\fancyfoot[RO,LE]{\thepage}
+
+% Citações ABNT autor-data
+\usepackage[alf]{abntex2cite}
+
+%----------------------------------------------------------------------------------------
+%   TÍTULO E AUTORES (CENTRALIZADOS)
+%----------------------------------------------------------------------------------------
+
+% Redefine o \maketitle para centralizar título e autores
+\makeatletter
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\fontsize{24pt}{10pt}\selectfont\bfseries \@title\par}%
+    \vspace{1em}
+    {\large \@author\par}%
+    \vspace{1em}
+  \end{center}
+}
+\makeatother
+
+\title{
+	Computação Neuromórfica e Redes Neurais para Predição da Qualidade da Água em Ambientes Amazônicos
+}
+
+\author{%
+	Felipe de Vasconcelos Assunção\textsuperscript{1},
+	Alfredo Paulo\textsuperscript{1},
+	Aluno 1\textsuperscript{1},
+	Vandermi João da Silva\textsuperscript{1},
+	Professor Alex\textsuperscript{1}\\[2mm]
+	\textsuperscript{1}Universidade Federal do Amazonas (UFAM)\\[1mm]
+	\texttt{felipe.assuncao@ufam.edu.br, alfredo.paulo@ufam.edu.br,}\\
+	\texttt{aluno@ufam.edu.br, vandermi.silva@ufam.edu.br, alex@ufam.edu.br}%
+}
+
+\date{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+%----------------------------------------------------------------------------------------
+%   ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+	\noindent
+	O monitoramento da qualidade da água na Bacia Amazônica é um desafio logístico e
+	operacional devido à sua vasta extensão territorial e infraestrutura limitada.
+	Este artigo investiga a viabilidade da implementação de Redes Neurais Pulsadas (SNNs)
+	em microcontroladores de baixo custo para a predição de parâmetros da qualidade da água,
+	visando otimizar o consumo energético e a autonomia dos dispositivos de monitoramento
+	remoto. A pesquisa propõe uma abordagem quantitativa, utilizando dados coletados no Lago 
+	do Serpa, em Itacoatiara - AM, para avaliar o desempenho preditivo das SNNs aplicadas a 
+	variáveis físico-químicas como pH, turbidez e oxigênio dissolvido. Os resultados esperados
+	incluem a identificação dos parâmetros mais sensíveis à modelagem com SNNs, bem como a
+	validação da eficácia do modelo em cenários reais, contribuindo para o avanço das
+	tecnologias de monitoramento ambiental na região amazônica.
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%   INTRODUÇÃO
+%----------------------------------------------------------------------------------------
+\FloatBarrier
+
+\input{introduction}
+\input{related_work}
+\input{methods}
+\input{results}
+\input{discussion}
+\input{conclusion}
+
+%----------------------------------------------------------------------------------------
+%   REFERÊNCIAS (via BibTeX / referencias.bib)
+%----------------------------------------------------------------------------------------
+\bibliographystyle{abntex2-alf}
+\bibliography{referencias}
+
+\end{document}

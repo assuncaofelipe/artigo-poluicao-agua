@@ -1,0 +1,55 @@
+\section{INTRODUÇÃO}
+
+A Bacia Amazônica, detentora da maior reserva de água doce superficial do
+planeta e desempenhando um papel crucial na regulação climática e na manutenção da 
+biodiversidade global, enfrenta desafios cada vez mais complexos e urgentes no 
+monitoramento da qualidade de seus recursos hídricos. A vastidão territorial da 
+região, combinada com a densa cobertura florestal, a complexa hidrografia e a 
+infraestrutura de comunicação limitada, torna a implementação de redes de 
+monitoramento eficazes uma tarefa hercúlea. Métodos tradicionais de coleta manual 
+e análise laboratorial, embora precisos, mostram-se onerosos, logisticamente 
+difíceis e, fundamentalmente, incapazes de fornecer a resolução temporal 
+necessária para a detecção precoce de eventos súbitos de contaminação, como 
+derramamentos de óleo ou descargas industriais ilegais, ou para o acompanhamento 
+de alterações hidrológicas críticas decorrentes de eventos climáticos extremos.
+
+Diante desse cenário, a convergência entre a Internet das Coisas (IoT) e a 
+Inteligência Artificial (IA) tem sido amplamente proposta como uma solução 
+viável para viabilizar o monitoramento remoto e contínuo em larga 
+escala \cite{rahu2023}. Sensores inteligentes conectados podem transmitir 
+dados em tempo real, permitindo uma gestão mais proativa e responsiva dos recursos 
+hídricos. No entanto, a dependência da transmissão contínua de grandes volumes de 
+dados brutos para processamento em nuvem (Cloud Computing) esbarra nas limitações 
+de conectividade da região amazônica, resultando em consumo excessivo de energia 
+e latência inaceitável para aplicações de tempo real. A solução lógica reside na 
+descentralização da inteligência, movendo o processamento para a borda da rede 
+(Edge Computing), onde os dados são analisados localmente no próprio dispositivo 
+de monitoramento.
+
+O desafio crítico atual, conforme destacado por \citeonline{molina2025}, é que os 
+modelos de Aprendizado de Máquina de alto desempenho, como as redes Long Short-Term 
+Memory (LSTM), exigem recursos computacionais (memória e processamento) e 
+energéticos que frequentemente excedem a capacidade dos microcontroladores de 
+baixo custo tipicamente empregados em \textit{nós sensores alimentados} por baterias 
+ou pequenos painéis solares. Embora as LSTMs tenham se mostrado excepcionais na 
+modelagem de séries temporais hidrológicas complexas \cite{pyo2023}, sua 
+complexidade computacional pode comprometer a autonomia energética necessária 
+para estações remotas na Amazônia, exigindo manutenção frequente e custosa.
+
+Nesse contexto desafiador, a computação neuromórfica e, especificamente, as Redes 
+Neurais Pulsadas (SNNs - Spiking Neural Networks), emergem como uma fronteira 
+tecnológica promissora e disruptiva. Inspiradas nos princípios de funcionamento 
+biológico do cérebro humano, as SNNs processam informações de maneira assíncrona 
+através de pulsos esparsos (spikes), ativando-se apenas quando há variação significativa 
+no sinal de entrada. Essa característica fundamental promete uma eficiência energética 
+superior em ordens de magnitude quando comparada às Redes Neurais Artificiais (ANNs) 
+tradicionais, que processam dados de forma contínua e síncrona. Este artigo tem como 
+objetivo principal avaliar a viabilidade técnica e prática da implementação de SNNs 
+em microcontroladores de baixo custo para a predição de parâmetros de qualidade da água. 
+Espera-se identificar os parâmetros mais sensíveis à modelagem com SNNs, bem como a
+validação da eficácia do modelo em cenários reais, contribuindo para o avanço das
+tecnologias de monitoramento ambiental na região amazônica.
+
+%----------------------------------------------------------------------------------------
+%   TRABALHOS RELACIONADOS
+%----------------------------------------------------------------------------------------

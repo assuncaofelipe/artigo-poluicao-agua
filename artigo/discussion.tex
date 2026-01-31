@@ -1,0 +1,37 @@
+\section{DISCUSSÃO}
+
+Os resultados indicam que a abordagem neuromórfica proposta é viável para a predição
+de parâmetros físico-químicos da água em ambientes amazônicos, com desempenho consistente
+após a adoção de estratégias de aumento de dados e ajuste de hiperparâmetros. O erro
+médio absoluto obtido para pH (MAE = 0,1437; MSE = 0,0327) representa uma fração relativamente
+pequena da faixa observada no conjunto analisado, sugerindo capacidade de generalização
+adequada para um cenário de prova de conceito. A curva de perda evidencia convergência
+estável e rápida, com validação acompanhando o treino, reduzindo indícios de overfitting
+excessivo quando comparado ao treinamento sem aumento de dados.
+
+O melhor desempenho foi obtido com aumento de dados fator 5 e ruído gaussiano com
+desvio padrão de 0,02, além de configuração compacta de tempo (15 passos) e 64 neurônios
+na camada oculta, o que sugere que a regularização implícita e a redução de complexidade
+temporal ajudam a estabilizar a predição em conjuntos pequenos.
+
+Em termos espaciais, os mapas de pH, OD e turbidez revelam padrões coerentes de gradientes
+e agrupamentos, o que reforça a consistência dos dados de campo e sugere que as variáveis
+de entrada carregam informação relevante para a predição. As correlações entre temperatura,
+cor aparente e turbidez observadas na análise exploratória estão alinhadas com processos
+físico-químicos esperados em ambientes lênticos, fornecendo suporte adicional para o
+modelo proposto.
+
+Apesar dos resultados promissores, é importante reconhecer limitações. O conjunto de dados
+é relativamente pequeno (60 amostras reais), o que impõe restrições à robustez estatística
+das conclusões. O aumento de dados por ruído gaussiano, embora útil para melhorar a
+generalização, não substitui a coleta de novas amostras reais. Além disso, a avaliação foi
+realizada em um único corpo d'água e em um intervalo temporal limitado, o que restringe
+a extrapolação para outros cenários hidrológicos ou sazonais.
+
+Como perspectivas futuras, recomenda-se a ampliação do conjunto de dados com novas campanhas
+de coleta, a validação cruzada com múltiplos corpos hídricos e a comparação sistemática
+com modelos clássicos (por exemplo, regressão linear e LSTM) para quantificar ganhos de
+eficiência energética e precisão. A integração do modelo SNN em microcontroladores reais
+também é uma etapa essencial para avaliar consumo energético e latência em condições de
+campo, consolidando a aplicabilidade do sistema em redes de monitoramento ambiental na
+região amazônica.

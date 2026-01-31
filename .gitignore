@@ -1,0 +1,32 @@
+## Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+## Jupyter
+.ipynb_checkpoints/
+
+## LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.xdv
+texput.log
+
+## OS
+.DS_Store
+Thumbs.db

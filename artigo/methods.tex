@@ -1,0 +1,94 @@
+\section{MATERIAL E MÉTODOS}
+
+Esta pesquisa adota uma abordagem quantitativa para validar a eficácia das
+SNNs em microcontroladores de baixo custo mimetizando computação neuromórfica na predição 
+de parâmetros físico-químicos da qualidade da água.
+
+\subsection{ Descrição da SNN e etc.... }
+Para assegurar a robustez do modelo neuromórfico proposto, adotou-se uma abordagem de validação 
+rigorosa inspirada em Barros et al. (2024). A otimização dos hiperparâmetros da SNN, 
+especificamente a constante de decaimento ($\tau$), a janela temporal de simulação ($T$) e a 
+arquitetura da camada oculta, foi realizada através de um Grid Search exaustivo. Cada configuração 
+foi avaliada com base na média de acurácia e desvio padrão obtidos em múltiplas execuções 
+independentes, garantindo que a solução selecionada não apenas maximize a precisão preditiva, mas 
+também atenda aos requisitos de eficiência computacional impostos pelo hardware de borda.
+
+\subsection{Arquitetura e Integração}
+
+Para avaliar a viabilidade de redes neuromórficas em hardware restrito, esta pesquisa se concentrará 
+exclusivamente na implementação e análise de Redes Neurais Pulsadas (SNNs) em microcontroladores de 
+baixo custo. O estudo não busca realizar comparações extensivas de desempenho entre diferentes tipos 
+de redes neurais (como LSTMs ou ANNs clássicas) contra as SNNs, mas sim focar na capacidade da SNN 
+de operar de forma eficiente e precisa dentro das restrições de um dispositivo de borda (edge device).
+
+A SNN proposta utilizará o modelo de neurônio Leaky Integrate-and-Fire (LIF), configurado para otimizar 
+o processamento de eventos esparsos típicos de dados ambientais. A rede será projetada para explorar 
+a esparsidade temporal dos sinais, ativando-se apenas quando houver variações significativas nos 
+parâmetros monitorados, o que é fundamental para a economia de energia em sistemas autônomos.
+
+A arquitetura proposta para o sistema neuromórfico (ilustrada na Figura 1) foi projetada para 
+viabilizar a execução de redes neurais em dispositivos com restrições severas de hardware. O fluxo 
+de processamento é organizado em macro-estágios principais que se comunicam: Entrada, Processamento 
+e Saída.
+
+O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes estágios fundamentais:
+
+\begin{compactitem}
+  \item Input Layers (Codificação): Responsável pela conversão dos dados escalares normalizados 
+  (contínuos) em trens de pulsos discretos no tempo (spike trains). Esta codificação temporal é o 
+  que permite à rede operar de forma assíncrona.
+
+  \item Hidden Layers (Processamento Neuromórfico): Composta por neurônios baseados no modelo Leaky 
+  Integrate-and-Fire (LIF), que integram os pulsos recebidos e disparam apenas ao atingir o limiar de 
+  tensão, mimetizando a eficiência biológica.
+
+  \item Output Layer (Classificação): Decodifica a atividade dos spikes para gerar a predição 
+  final dos parâmetros de qualidade da água.
+\end{compactitem}
+
+\begin{figure}[ht!] 
+	\centering
+	\caption{ 
+		Fluxograma da arquitetura proposta para o sistema neuromórfico de predição da 
+		qualidade da água. A figura ilustra o pipeline completo, desde o pré-processamento 
+		e interpolação dos dados brutos (azul), passando pela definição e treinamento da SNN 
+		com neurônios LIF e gradiente substituto (amarelo e verde), até a geração do modelo 
+		final otimizado para implantação em dispositivos de borda (vermelho).
+	}
+	\includegraphics[width=0.9\textwidth]{./figuras/Arquitetura.png}
+	\centering
+	\caption*{Fonte: Autores, 2025. }
+	\label{fig:minhafigura}
+\end{figure}
+
+\FloatBarrier
+\subsection{Especificações de Hardware para Treinamento e Inferência}
+
+Para assegurar a reprodutibilidade dos experimentos e a validação eficaz dos modelos neuromórficos, 
+foi utilizada uma estação de trabalho dedicada para o desenvolvimento, treinamento offline das redes 
+e simulações preliminares de inferência. As especificações detalhadas de hardware e software 
+empregadas são apresentadas a seguir:
+
+\begin{compactitem}
+  \item Processador (CPU): 13th Gen Intel® Core™ i7-1355U (12 núcleos de processamento);
+  \item Memória RAM: 32,0 GiB;
+  \item Unidade de Processamento Gráfico (GPU): Mesa Intel® Graphics (arquitetura RPL-U);
+  \item Sistema Operacional: Ubuntu 22.04.5 LTS (tipo 64-bit).
+\end{compactitem}
+
+Este ambiente computacional permitiu a execução eficiente dos algoritmos de aprendizado baseados 
+no método de surrogate gradient, essenciais para contornar a não-diferenciabilidade dos pulsos 
+nas SNNs, antes da etapa final de portabilidade e implantação otimizada nos microcontroladores 
+de borda alvo.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.85\textwidth]{./figuras/map_points_osm_21S.png}
+	\caption{Localização dos pontos de amostragem no Lago do Serpa (Itacoatiara-AM) em mapa base
+	do OpenStreetMap. As coordenadas foram convertidas para latitude/longitude (WGS84, UTM 21S).}
+	\label{fig:mapa_pontos}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+%   RESULTADOS
+%----------------------------------------------------------------------------------------
