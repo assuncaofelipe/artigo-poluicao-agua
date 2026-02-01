@@ -61,6 +61,7 @@ IEEE Access - Checklist completo de adequacao do artigo
 - Inserir biografias dos autores.
 - Incluir resultados de k-fold e baseline (se decidir).
 - Ajustar figuras e legendas ao padrao IEEE.
+- Testar modelo multi-saida (pH, OD, TURB) e comparar com modelos separados.
 
 Quando o grid search terminar, aplicar:
 - Melhor configuracao no config.py
