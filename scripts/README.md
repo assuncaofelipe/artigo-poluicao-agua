@@ -28,6 +28,9 @@ Quick start (Linux/macOS):
 7) Cross-validation (optional)
    python cross_validation.py
 
+8) IDW interpolation maps (optional)
+   python idw_maps.py
+
 Notes:
 - If CUDA is available, set `device` in config.py to "cuda".
 - You can change the target variable in config.py (e.g., "OD", "TURB").
