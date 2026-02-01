@@ -62,6 +62,7 @@ IEEE Access - Checklist completo de adequacao do artigo
 - Incluir resultados de k-fold e baseline (se decidir).
 - Ajustar figuras e legendas ao padrao IEEE.
 - Testar modelo multi-saida (pH, OD, TURB) e comparar com modelos separados.
+- Gerar mapa interpolado (IDW/Kriging) de pH/OD/TURB para visualizacao espacial.
 
 Quando o grid search terminar, aplicar:
 - Melhor configuracao no config.py
