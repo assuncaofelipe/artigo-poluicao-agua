@@ -60,6 +60,15 @@ espacial, foram gerados mapas de pontos e superfícies interpoladas por IDW (Inv
 para pH, OD, turbidez e para o índice de poluição. Essas visualizações ajudam a identificar padrões
 espaciais e possíveis regiões críticas no corpo d’água.
 
+\subsection{Exportação do modelo e implantação móvel}
+Após o treinamento final e seleção do melhor conjunto de hiperparâmetros, o modelo multimodal foi
+exportado para inferência em dispositivo móvel. O fluxo de exportação foi: (i) serialização do modelo
+PyTorch; (ii) conversão para ONNX; (iii) transformação para TensorFlow Lite (TFLite); e (iv) validação
+da inferência offline no aplicativo Android. O aplicativo Flutter foi estruturado em módulos, carregando
+o modelo \textit{.tflite} e os parâmetros de normalização para realizar predição local de pH, OD e
+turbidez, além do índice de poluição. O mapa é exibido em modo offline por meio de base vetorial
+MBTiles, permitindo visualização geoespacial sem conexão à internet.
+
 \subsection{ Descrição da SNN e etc.... }
 Para assegurar a robustez do modelo neuromórfico proposto, adotou-se uma abordagem de validação 
 rigorosa inspirada em Barros et al. (2024). A otimização dos hiperparâmetros da SNN, 

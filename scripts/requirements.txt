@@ -1,3 +1,8 @@
 torch
 numpy
 matplotlib
+onnx==1.16.1
+onnx2tf
+tensorflow
+tf_keras
+onnx_graphsurgeon

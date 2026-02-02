@@ -33,6 +33,11 @@ Passos rapidos:
 7) Gerar todas as figuras do multimodal
    python generate_figures_multimodal.py
 
+8) Exportar modelo para TFLite (para o app Flutter)
+   # dependencias: onnx, onnx2tf, tensorflow
+   python export_tflite.py
+   # OBS: a exportacao usa codificacao deterministica (sem aleatoriedade)
+
 Arquivos principais:
 - config.py
 - data.py
