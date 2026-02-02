@@ -4,6 +4,62 @@ Esta pesquisa adota uma abordagem quantitativa para validar a eficácia das
 SNNs em microcontroladores de baixo custo mimetizando computação neuromórfica na predição 
 de parâmetros físico-químicos da qualidade da água.
 
+\subsection{Fluxo metodológico passo a passo}
+O procedimento completo foi organizado nas seguintes etapas: (i) consolidação e limpeza dos
+dados; (ii) definição das variáveis de entrada e saída; (iii) normalização e divisão dos dados
+em treino/validação/teste; (iv) codificação temporal das entradas para SNN; (v) treinamento com
+parada antecipada e busca em grade de hiperparâmetros; (vi) avaliação com métricas de erro e
+visualizações; e (vii) geração de mapas espaciais e interpolados para interpretação ambiental.
+
+\subsection{Dados e pré-processamento}
+Os dados foram obtidos de medições pontuais no Lago do Serpa (Itacoatiara-AM) e organizados em
+arquivo CSV com as seguintes colunas: coordenadas ($x, y$) e variáveis físico-químicas
+(\textit{pH}, OD, temperatura, cor aparente, turbidez e cor verdadeira). A limpeza consistiu em
+converter separadores decimais, garantir consistência numérica e remover linhas incompletas. Em
+seguida, definiu-se um conjunto de variáveis de entrada composto por $x, y, TEMP, COR\_A, TURB,
+COR\_V$ e OD, enquanto a saída principal no modelo univariado foi o pH. Para o modelo multimodal,
+as saídas foram definidas como pH, OD e turbidez simultaneamente.
+
+\subsection{Normalização e divisão dos dados}
+As entradas foram normalizadas via z-score, utilizando apenas a média e o desvio padrão do conjunto
+de treino para evitar vazamento de informação. O conjunto foi dividido em treino, validação e teste
+com proporções fixas e embaralhamento controlado por semente. Para o modelo multimodal, as saídas
+foram opcionalmente normalizadas para estabilizar a otimização conjunta.
+
+\subsection{Aumento de dados}
+Para mitigar a escassez de amostras, aplicou-se aumento de dados no conjunto de treino por replicação
+com ruído gaussiano leve nas entradas. Esse procedimento amplia a variabilidade observada sem criar
+novas amostras reais, reduzindo a sensibilidade do modelo a ruídos de medição.
+
+\subsection{Codificação temporal e arquitetura SNN}
+As entradas normalizadas foram codificadas em trens de pulsos usando \textit{rate coding}, no qual
+a probabilidade de disparo é função sigmoidal da entrada. A SNN foi construída com uma camada de
+entrada densa, uma camada oculta com neurônios Leaky Integrate-and-Fire (LIF) e uma camada de saída
+linear. A inferência ocorre ao longo de $T$ passos temporais, acumulando a atividade dos neurônios
+ocultos, o que permite um processamento esparso e energeticamente eficiente.
+
+\subsection{Treinamento, validação e busca em grade}
+O treinamento utilizou otimizador Adam e função de perda MSE. Foi aplicado \textit{early stopping}
+com paciência definida, interrompendo o treino quando a validação não apresentou melhora após um
+número fixo de épocas. A seleção de hiperparâmetros foi feita por busca em grade, variando o número
+de neurônios ocultos, passos temporais, taxa de aprendizado, limiar e constante de decaimento, além
+da intensidade do ruído do aumento de dados. O melhor conjunto foi selecionado com base no menor erro
+de validação.
+
+\subsection{Modelo multimodal e índice de poluição}
+Para o modelo multimodal, a rede foi treinada com múltiplas saídas (pH, OD e turbidez), adotando
+normalização dos alvos e perda ponderada para equilibrar as variáveis. A partir das previsões
+multimodais, definiu-se um índice composto de poluição baseado em: (i) desvio do pH em relação ao
+valor neutro; (ii) OD inverso (menor OD implica maior poluição); e (iii) turbidez normalizada. O
+índice final é uma combinação ponderada dessas três componentes, permitindo mapear a intensidade
+relativa de poluição.
+
+\subsection{Geração de gráficos e mapas espaciais}
+As análises exploratórias incluem boxplots e mapa de correlação entre variáveis. Para interpretação
+espacial, foram gerados mapas de pontos e superfícies interpoladas por IDW (Inverse Distance Weighting)
+para pH, OD, turbidez e para o índice de poluição. Essas visualizações ajudam a identificar padrões
+espaciais e possíveis regiões críticas no corpo d’água.
+
 \subsection{ Descrição da SNN e etc.... }
 Para assegurar a robustez do modelo neuromórfico proposto, adotou-se uma abordagem de validação 
 rigorosa inspirada em Barros et al. (2024). A otimização dos hiperparâmetros da SNN, 
@@ -69,12 +125,21 @@ foi utilizada uma estação de trabalho dedicada para o desenvolvimento, treinam
 e simulações preliminares de inferência. As especificações detalhadas de hardware e software 
 empregadas são apresentadas a seguir:
 
-\begin{compactitem}
-  \item Processador (CPU): 13th Gen Intel® Core™ i7-1355U (12 núcleos de processamento);
-  \item Memória RAM: 32,0 GiB;
-  \item Unidade de Processamento Gráfico (GPU): Mesa Intel® Graphics (arquitetura RPL-U);
-  \item Sistema Operacional: Ubuntu 22.04.5 LTS (tipo 64-bit).
-\end{compactitem}
+\begin{table}[H]
+\centering
+\caption{Especificações da máquina utilizada nos experimentos.}
+\begin{tabular}{ll}
+\toprule
+Componente & Especificação \\
+\midrule
+CPU & Intel(R) Core(TM) i7-14650HX (24 threads) \\
+Memória RAM & 15 GiB \\
+ GPU & NVIDIA GeForce RTX 4060 (8 GB VRAM), Driver 550.163.01, CUDA 12.4 \\
+Sistema Operacional & Ubuntu 22.04.5 LTS (64-bit) \\
+\bottomrule
+\end{tabular}
+\label{tab:hardware}
+\end{table}
 
 Este ambiente computacional permitiu a execução eficiente dos algoritmos de aprendizado baseados 
 no método de surrogate gradient, essenciais para contornar a não-diferenciabilidade dos pulsos 

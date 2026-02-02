@@ -1,0 +1,201 @@
+import os
+import matplotlib.pyplot as plt
+import torch
+
+
+def _ensure_dir(path: str):
+    os.makedirs(path, exist_ok=True)
+
+
+def save_loss_curve(train_losses: list, val_losses: list, out_dir: str, dpi: int):
+    _ensure_dir(out_dir)
+    plt.figure(figsize=(5, 4))
+    plt.plot(train_losses, label="treino")
+    plt.plot(val_losses, label="validação")
+    plt.xlabel("Época")
+    plt.ylabel("MSE")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, "loss_curve_multi.png"), dpi=dpi)
+    plt.close()
+
+
+def save_boxplots(x, feature_cols, out_dir: str, dpi: int):
+    _ensure_dir(out_dir)
+    data = [x[:, i] for i in range(x.shape[1])]
+    plt.figure(figsize=(10, 4))
+    plt.boxplot(data, labels=feature_cols, vert=True)
+    plt.xticks(rotation=30, ha="right")
+    plt.ylabel("Valor")
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, "boxplots_features_multi.png"), dpi=dpi)
+    plt.close()
+
+
+def save_corr_heatmap(x, feature_cols, out_dir: str, dpi: int):
+    import numpy as np
+
+    _ensure_dir(out_dir)
+    x_np = np.asarray(x)
+    x_np = (x_np - x_np.mean(axis=0, keepdims=True)) / x_np.std(
+        axis=0, keepdims=True
+    )
+    corr = (x_np.T @ x_np) / (x_np.shape[0] - 1)
+    plt.figure(figsize=(6, 5))
+    im = plt.imshow(corr, cmap="coolwarm", vmin=-1, vmax=1)
+    plt.colorbar(im, fraction=0.046, pad=0.04)
+    plt.xticks(range(len(feature_cols)), feature_cols, rotation=30, ha="right")
+    plt.yticks(range(len(feature_cols)), feature_cols)
+    plt.title("Correlação (features)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, "corr_heatmap_multi.png"), dpi=dpi)
+    plt.close()
+
+
+def save_pred_scatter(y_true: torch.Tensor, y_pred: torch.Tensor, names, out_dir: str, dpi: int):
+    _ensure_dir(out_dir)
+    for i, name in enumerate(names):
+        yt = y_true[:, i].cpu().numpy()
+        yp = y_pred[:, i].cpu().numpy()
+        plt.figure(figsize=(5, 5))
+        plt.scatter(yt, yp, s=18, alpha=0.7)
+        mn = min(yt.min(), yp.min())
+        mx = max(yt.max(), yp.max())
+        plt.plot([mn, mx], [mn, mx], "--", color="#444")
+        plt.xlabel(f"{name} real")
+        plt.ylabel(f"{name} predito")
+        plt.tight_layout()
+        plt.savefig(os.path.join(out_dir, f"pred_vs_real_{name}_multi.png"), dpi=dpi)
+        plt.close()
+
+
+def save_residuals(y_true: torch.Tensor, y_pred: torch.Tensor, names, out_dir: str, dpi: int):
+    _ensure_dir(out_dir)
+    for i, name in enumerate(names):
+        yt = y_true[:, i].cpu().numpy()
+        yp = y_pred[:, i].cpu().numpy()
+        res = yp - yt
+        plt.figure(figsize=(5, 4))
+        plt.scatter(yt, res, s=18, alpha=0.7)
+        plt.axhline(0, linestyle="--", color="#444")
+        plt.xlabel(f"{name} real")
+        plt.ylabel("resíduo (pred - real)")
+        plt.tight_layout()
+        plt.savefig(os.path.join(out_dir, f"residuals_{name}_multi.png"), dpi=dpi)
+        plt.close()
+
+
+def save_pollution_scatter(x, y, score, out_dir: str, dpi: int):
+    _ensure_dir(out_dir)
+    plt.figure(figsize=(5, 4))
+    sc = plt.scatter(x, y, c=score, s=24, cmap="inferno")
+    plt.colorbar(sc, fraction=0.046, pad=0.04, label="Índice de poluição")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("Índice de poluição (pontos)")
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, "pollution_scatter.png"), dpi=dpi)
+    plt.close()
+
+
+def save_pollution_idw(x, y, score, out_dir: str, dpi: int, power: int = 2):
+    _ensure_dir(out_dir)
+    import numpy as np
+
+    x = np.asarray(x)
+    y = np.asarray(y)
+    z = np.asarray(score)
+    nx, ny = 200, 200
+    xi = np.linspace(x.min(), x.max(), nx)
+    yi = np.linspace(y.min(), y.max(), ny)
+    X, Y = np.meshgrid(xi, yi)
+    dist2 = (X[..., None] - x[None, None, :]) ** 2 + (Y[..., None] - y[None, None, :]) ** 2
+    dist2[dist2 == 0] = 1e-12
+    w = 1.0 / (dist2 ** (power / 2))
+    Z = (w * z[None, None, :]).sum(axis=2) / w.sum(axis=2)
+
+    plt.figure(figsize=(5, 4))
+    im = plt.imshow(
+        Z,
+        origin="lower",
+        extent=[x.min(), x.max(), y.min(), y.max()],
+        cmap="inferno",
+        aspect="auto",
+    )
+    plt.scatter(x, y, s=10, c="k", alpha=0.5)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title("Índice de poluição (IDW)")
+    plt.colorbar(im, fraction=0.046, pad=0.04, label="Índice de poluição")
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, "pollution_idw.png"), dpi=dpi)
+    plt.close()
+
+
+def save_idw_map(x, y, z, title, fname, out_dir: str, dpi: int, power: int = 2):
+    import numpy as np
+
+    _ensure_dir(out_dir)
+    x = np.asarray(x)
+    y = np.asarray(y)
+    z = np.asarray(z)
+    nx, ny = 200, 200
+    xi = np.linspace(x.min(), x.max(), nx)
+    yi = np.linspace(y.min(), y.max(), ny)
+    X, Y = np.meshgrid(xi, yi)
+    dist2 = (X[..., None] - x[None, None, :]) ** 2 + (Y[..., None] - y[None, None, :]) ** 2
+    dist2[dist2 == 0] = 1e-12
+    w = 1.0 / (dist2 ** (power / 2))
+    Z = (w * z[None, None, :]).sum(axis=2) / w.sum(axis=2)
+
+    plt.figure(figsize=(5, 4))
+    im = plt.imshow(
+        Z,
+        origin="lower",
+        extent=[x.min(), x.max(), y.min(), y.max()],
+        cmap="viridis",
+        aspect="auto",
+    )
+    plt.scatter(x, y, s=10, c="k", alpha=0.5)
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.title(title)
+    plt.colorbar(im, fraction=0.046, pad=0.04)
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, fname), dpi=dpi)
+    plt.close()
+
+
+def save_idw_combined(x, y, zs, titles, fname, out_dir: str, dpi: int, power: int = 2):
+    import numpy as np
+
+    _ensure_dir(out_dir)
+    x = np.asarray(x)
+    y = np.asarray(y)
+    nx, ny = 200, 200
+    xi = np.linspace(x.min(), x.max(), nx)
+    yi = np.linspace(y.min(), y.max(), ny)
+    X, Y = np.meshgrid(xi, yi)
+
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+    for ax, z, title in zip(axes, zs, titles):
+        z = np.asarray(z)
+        dist2 = (X[..., None] - x[None, None, :]) ** 2 + (Y[..., None] - y[None, None, :]) ** 2
+        dist2[dist2 == 0] = 1e-12
+        w = 1.0 / (dist2 ** (power / 2))
+        Z = (w * z[None, None, :]).sum(axis=2) / w.sum(axis=2)
+        im = ax.imshow(
+            Z,
+            origin="lower",
+            extent=[x.min(), x.max(), y.min(), y.max()],
+            cmap="viridis",
+            aspect="auto",
+        )
+        ax.scatter(x, y, s=8, c="k", alpha=0.5)
+        ax.set_title(title)
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        fig.colorbar(im, ax=ax, fraction=0.046, pad=0.02)
+    fig.tight_layout()
+    fig.savefig(os.path.join(out_dir, fname), dpi=dpi)
+    plt.close(fig)
