@@ -38,6 +38,19 @@ Passos rapidos:
    python export_tflite.py
    # OBS: a exportacao usa codificacao deterministica (sem aleatoriedade)
 
+9) Benchmark para artigo (multiplas seeds + baseline)
+   python benchmark_multiseed.py --seeds 7 13 21 42 84 --device gpu
+   # modelos padrao: snn, random_forest, mlp
+   # saidas em outputs/: CSV bruto, CSV resumo, tabela markdown e JSON
+
+10) Significancia estatistica pareada (sobre benchmark multiseed)
+    python benchmark_significance.py
+    # saida: outputs/benchmark_significance.json
+
+11) Ajuste de pesos da loss para melhorar turbidez na SNN
+    python snn_turbidity_weight_sweep.py --seeds 7 13 21 42 84 --device gpu
+    # saida: outputs/snn_weight_sweep.json
+
 Arquivos principais:
 - config.py
 - data.py

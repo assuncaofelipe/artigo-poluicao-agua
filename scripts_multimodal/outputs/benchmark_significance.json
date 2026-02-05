@@ -1,0 +1,127 @@
+{
+  "reference": "snn",
+  "comparisons": [
+    {
+      "model_a": "snn",
+      "model_b": "random_forest",
+      "seeds": [
+        7,
+        13,
+        21,
+        42,
+        84
+      ],
+      "metrics": {
+        "mae_macro": {
+          "mean_a": 0.26266920417547224,
+          "mean_b": 0.17528958162091052,
+          "better": "random_forest",
+          "sign_test": {
+            "n": 5,
+            "p_value": 0.0625,
+            "pos": 5,
+            "neg": 0
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 0.0,
+            "p_value": 0.0625
+          }
+        },
+        "rmse_macro": {
+          "mean_a": 0.3326425991485287,
+          "mean_b": 0.24116918450324915,
+          "better": "random_forest",
+          "sign_test": {
+            "n": 5,
+            "p_value": 0.0625,
+            "pos": 5,
+            "neg": 0
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 0.0,
+            "p_value": 0.0625
+          }
+        },
+        "r2_macro": {
+          "mean_a": 0.7193189938863119,
+          "mean_b": 0.47524841744711405,
+          "better": "snn",
+          "sign_test": {
+            "n": 5,
+            "p_value": 0.0625,
+            "pos": 5,
+            "neg": 0
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 0.0,
+            "p_value": 0.0625
+          }
+        }
+      }
+    },
+    {
+      "model_a": "snn",
+      "model_b": "mlp",
+      "seeds": [
+        7,
+        13,
+        21,
+        42,
+        84
+      ],
+      "metrics": {
+        "mae_macro": {
+          "mean_a": 0.26266920417547224,
+          "mean_b": 0.35027555699149765,
+          "better": "snn",
+          "sign_test": {
+            "n": 5,
+            "p_value": 1.0,
+            "pos": 3,
+            "neg": 2
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 6.0,
+            "p_value": 0.8125
+          }
+        },
+        "rmse_macro": {
+          "mean_a": 0.3326425991485287,
+          "mean_b": 0.44153353016895674,
+          "better": "snn",
+          "sign_test": {
+            "n": 5,
+            "p_value": 1.0,
+            "pos": 3,
+            "neg": 2
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 7.0,
+            "p_value": 1.0
+          }
+        },
+        "r2_macro": {
+          "mean_a": 0.7193189938863119,
+          "mean_b": -2.2545483708381653,
+          "better": "snn",
+          "sign_test": {
+            "n": 5,
+            "p_value": 0.0625,
+            "pos": 5,
+            "neg": 0
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 0.0,
+            "p_value": 0.0625
+          }
+        }
+      }
+    }
+  ]
+}

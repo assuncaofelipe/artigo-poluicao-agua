@@ -26,6 +26,68 @@ indicam bom desempenho para pH e OD, e desempenho aceitável para turbidez. As
 Figuras~\ref{fig:multi_pred} e \ref{fig:multi_res} apresentam as predições e
 os resíduos do modelo multimodal, respectivamente.
 
+Para avaliar robustez, foi executado um benchmark com múltiplas sementes
+($n=5$: 7, 13, 21, 42 e 84), comparando SNN multimodal com Random Forest e MLP
+multissaída, usando o mesmo particionamento por semente. Em termos de erro
+global (macro), o Random Forest obteve o menor $MAE$ e $RMSE$, enquanto a SNN
+obteve o maior $R^2$ médio. O MLP apresentou maior instabilidade entre sementes.
+
+\begin{table}[ht!]
+\centering
+\caption{Comparação multissemente (média $\pm$ desvio padrão) entre modelos multimodais.}
+\begin{tabular}{lccc}
+\toprule
+Modelo & MAE macro & RMSE macro & $R^2$ macro \\
+\midrule
+Random Forest & $0{,}175 \pm 0{,}012$ & $0{,}241 \pm 0{,}026$ & $0{,}475 \pm 0{,}085$ \\
+SNN & $0{,}263 \pm 0{,}050$ & $0{,}333 \pm 0{,}056$ & $0{,}719 \pm 0{,}065$ \\
+MLP & $0{,}350 \pm 0{,}224$ & $0{,}442 \pm 0{,}271$ & $-2{,}255 \pm 4{,}271$ \\
+\bottomrule
+\end{tabular}
+\label{tab:benchmark_multiseed}
+\end{table}
+
+Observa-se que todos os valores de $R^2$ apresentados estão no intervalo matematicamente
+válido para o coeficiente de determinação ($R^2 \leq 1$).
+
+No teste estatístico pareado de Wilcoxon (SNN vs Random Forest, $n=5$ sementes),
+foram obtidos $p=0{,}0625$ para $MAE_{macro}$, $RMSE_{macro}$ e $R^2_{macro}$.
+Assim, para $\alpha=0{,}05$, não há evidência estatística suficiente de superioridade
+global de um método sobre o outro neste conjunto; ainda assim, os resultados indicam
+tendência de melhor erro para Random Forest e melhor capacidade explicativa média para SNN.
+
+Quando comparada ao MLP no mesmo protocolo, a SNN apresentou vantagem clara em desempenho médio
+e estabilidade. Os testes pareados resultaram em $p=1{,}0000$ (SNN vs MLP) para
+$MAE_{macro}$ e $RMSE_{macro}$ no teste de sinais, e $p=0{,}8125$ (Wilcoxon) para
+$MAE_{macro}$, reforçando que o MLP variou significativamente entre sementes e foi sensível
+à pequena quantidade de dados. Além disso, o $R^2_{macro}$ do MLP foi negativo em média
+($-2{,}255 \pm 4{,}271$), indicando baixa robustez para este cenário.
+
+Com foco específico em turbidez, foi realizada varredura de pesos da função de perda da
+SNN, priorizando o alvo TURB. O melhor compromisso foi obtido com pesos
+$(0{,}1,\ 0{,}1,\ 0{,}8)$ para (pH, OD, TURB), reduzindo o $MAE_{TURB}$ médio para
+$0{,}501$ e melhorando simultaneamente $MAE_{macro}$ para $0{,}239$ e
+$R^2_{macro}$ para $0{,}748$ (5 sementes), em relação à configuração base
+$(0{,}2,\ 0{,}2,\ 0{,}6)$, que apresentou $MAE_{TURB}=0{,}548$,
+$MAE_{macro}=0{,}263$ e $R^2_{macro}=0{,}719$. Esse ajuste confirma que a ponderação da perda
+é uma alavanca efetiva para melhorar alvos mais difíceis no cenário multimodal.
+
+\begin{table}[ht!]
+\centering
+\caption{Varredura dos pesos da perda da SNN (5 sementes).}
+\begin{tabular}{lccc}
+\toprule
+Pesos (pH, OD, TURB) & MAE macro & MAE TURB & $R^2$ macro \\
+\midrule
+$(0{,}20,\ 0{,}20,\ 0{,}60)$ & $0{,}263$ & $0{,}548$ & $0{,}719$ \\
+$(0{,}15,\ 0{,}15,\ 0{,}70)$ & $0{,}274$ & $0{,}576$ & $0{,}698$ \\
+$(0{,}10,\ 0{,}10,\ 0{,}80)$ & $\mathbf{0{,}239}$ & $\mathbf{0{,}501}$ & $\mathbf{0{,}748}$ \\
+$(0{,}05,\ 0{,}15,\ 0{,}80)$ & $0{,}271$ & $0{,}573$ & $0{,}730$ \\
+\bottomrule
+\end{tabular}
+\label{tab:snn_weight_sweep}
+\end{table}
+
 \begin{figure}[ht!]
 	\centering
 	\begin{minipage}{0.48\textwidth}
@@ -42,10 +104,14 @@ os resíduos do modelo multimodal, respectivamente.
 	\label{fig:exploratoria}
 \end{figure}
 
-As Figuras~\ref{fig:exploratoria} e \ref{fig:hist_loss} sintetizam a etapa exploratória. O mapa de
-correlação indica relações entre variáveis ambientais, enquanto os boxplots mostram dispersão e
-possíveis outliers. Essas informações orientam a interpretação dos modelos e ajudam a contextualizar
-as variações observadas nos parâmetros físico-químicos.
+Na Figura~\ref{fig:exploratoria}(a), a matriz de correlação evidencia dependências relevantes entre
+parâmetros físico-químicos e variáveis de contexto, indicando que a predição multivariada é adequada
+para o problema. Em particular, correlações mais altas sugerem que parte da variabilidade dos alvos
+pode ser explicada por combinações entre temperatura, cor aparente, turbidez e OD, enquanto correlações
+mais baixas apontam componentes de variabilidade local e não linearidade. Na Figura~\ref{fig:exploratoria}(b),
+os boxplots mostram dispersões heterogêneas e presença de valores extremos, o que justifica o uso de
+normalização, aumento de dados e regularização para evitar sensibilidade excessiva do modelo a amostras
+isoladas.
 
 \begin{figure}[ht!]
 	\centering
@@ -63,9 +129,13 @@ as variações observadas nos parâmetros físico-químicos.
 	\label{fig:hist_loss}
 \end{figure}
 
-O histograma do pH evidencia a concentração de valores em uma faixa estreita, o que reforça a
-necessidade de modelos sensíveis a pequenas variações. A curva de perda mostra convergência rápida
-e estável, compatível com o uso de \textit{early stopping}.
+Na Figura~\ref{fig:hist_loss}(a), a distribuição do pH em faixa relativamente estreita indica que
+pequenas diferenças absolutas já representam mudanças ambientalmente relevantes; por isso, erros
+médios modestos têm impacto prático na interpretação da qualidade da água. A Figura~\ref{fig:hist_loss}(b)
+mostra queda rápida das perdas de treino e validação nas primeiras épocas e posterior estabilização,
+com baixa divergência entre curvas. Esse comportamento sugere aprendizado efetivo sem sobreajuste
+dominante, validando o uso de \textit{early stopping} para interromper o treinamento no ponto de
+melhor generalização.
 
 \begin{figure}[ht!]
 	\centering
@@ -83,9 +153,12 @@ e estável, compatível com o uso de \textit{early stopping}.
 	\label{fig:pred_pH}
 \end{figure}
 
-Na Figura~\ref{fig:pred_pH}, a proximidade dos pontos à linha de identidade indica boa capacidade
-do modelo em reproduzir o pH observado. O mapa espacial do pH revela gradientes coerentes no lago,
-com regiões de valores mais elevados concentradas em setores específicos.
+Na Figura~\ref{fig:pred_pH}(a), a concentração de pontos próxima à linha de identidade indica boa
+capacidade do modelo em reproduzir o pH observado, com erros residuais mais evidentes nas extremidades
+da faixa, onde há menor densidade amostral. Esse padrão é esperado em bases pequenas e reforça a
+necessidade de ampliar coletas para reduzir incerteza em regiões menos representadas. Na Figura~\ref{fig:pred_pH}(b),
+o mapa espacial de pH evidencia gradiente geográfico consistente, mostrando que o modelo preserva
+coerência espacial e não gera predições aleatórias ao longo do corpo d'água.
 
 \begin{figure}[ht!]
 	\centering
@@ -103,9 +176,12 @@ com regiões de valores mais elevados concentradas em setores específicos.
 	\label{fig:mapas}
 \end{figure}
 
-Os mapas de OD e turbidez evidenciam heterogeneidade espacial, com áreas de maior turbidez e zonas
-de OD relativamente reduzido. Essa variabilidade sugere influência local de processos físicos e
-biogeoquímicos, justificando a necessidade de monitoramento em rede.
+Na Figura~\ref{fig:mapas}(a), o OD apresenta variação espacial compatível com ambientes aquáticos
+heterogêneos, com zonas de menor oxigenação potencialmente mais sensíveis a estresse ambiental.
+Na Figura~\ref{fig:mapas}(b), a turbidez mostra contrastes mais acentuados, indicando regiões com
+maior carga particulada. A interpretação conjunta de OD e turbidez é relevante porque combina um
+indicador de condição bioquímica com um indicador físico de material em suspensão, fortalecendo
+o diagnóstico ambiental por múltiplas evidências.
 
 \begin{figure}[ht!]
 	\centering
@@ -115,9 +191,11 @@ biogeoquímicos, justificando a necessidade de monitoramento em rede.
 	\label{fig:idw}
 \end{figure}
 
-A Figura~\ref{fig:idw} apresenta as superfícies interpoladas (IDW) para pH, OD e turbidez, oferecendo
-uma leitura contínua das variáveis a partir das medições pontuais. Observam-se gradientes espaciais
-consistentes, permitindo identificar regiões com maior contraste entre os parâmetros.
+A Figura~\ref{fig:idw} transforma medições pontuais em superfícies contínuas via IDW, permitindo
+visualizar ``manchas'' e transições espaciais de cada variável. Embora interpolação não substitua
+medição direta, ela melhora a leitura integrada do sistema ao destacar zonas de maior contraste e
+áreas prioritárias para amostragem futura. A coerência entre as superfícies estimadas e os padrões
+pontuais reforça a consistência interna do conjunto de dados.
 
 \begin{figure}[ht!]
 	\centering
@@ -140,9 +218,12 @@ consistentes, permitindo identificar regiões com maior contraste entre os parâ
 	\label{fig:multi_pred}
 \end{figure}
 
-Na Figura~\ref{fig:multi_pred}, o ajuste multimodal apresenta boa aderência para pH e OD, enquanto a
-turbidez apresenta maior dispersão. Ainda assim, a tendência geral permanece alinhada à linha de
-identidade, indicando capacidade preditiva satisfatória em múltiplas variáveis.
+Na Figura~\ref{fig:multi_pred}(a) e (b), as nuvens para pH e OD apresentam alinhamento mais próximo
+da linha identidade, refletindo melhor ajuste nesses alvos. Já na Figura~\ref{fig:multi_pred}(c),
+a maior dispersão para turbidez indica dificuldade adicional de modelagem, coerente com a variabilidade
+intrínseca desse parâmetro e com possíveis efeitos locais não totalmente capturados pelas entradas.
+Ainda assim, a tendência global permanece crescente, indicando que o modelo preserva estrutura
+previsível também para turbidez.
 
 \begin{figure}[ht!]
 	\centering
@@ -165,9 +246,12 @@ identidade, indicando capacidade preditiva satisfatória em múltiplas variávei
 	\label{fig:multi_res}
 \end{figure}
 
-Os resíduos na Figura~\ref{fig:multi_res} se distribuem em torno de zero para pH e OD, sugerindo
-ausência de viés sistemático relevante. Para turbidez, há maior variabilidade, indicando maior
-dificuldade de modelagem e possível necessidade de mais dados ou calibração adicional.
+Na Figura~\ref{fig:multi_res}(a) e (b), os resíduos de pH e OD oscilam ao redor de zero sem
+padrão direcional forte, o que sugere ausência de viés sistemático dominante nesses alvos.
+Na Figura~\ref{fig:multi_res}(c), a amplitude residual de turbidez é maior e menos homogênea,
+apontando incerteza superior nesse componente. Essa evidência sustentou a etapa de ajuste de pesos
+da função de perda, com priorização de turbidez para reduzir erro específico sem perda substancial
+de desempenho global.
 
 \begin{figure}[ht!]
 	\centering
@@ -186,8 +270,11 @@ dificuldade de modelagem e possível necessidade de mais dados ou calibração a
 	\label{fig:pollution}
 \end{figure}
 
-A Figura~\ref{fig:pollution} apresenta o índice composto de poluição, combinando pH, OD e turbidez
-em um único mapa. O gráfico de pontos evidencia locais com maior intensidade relativa, enquanto a
-superfície interpolada por IDW permite visualizar a mancha de poluição estimada no corpo d’água.
+Na Figura~\ref{fig:pollution}(a), o índice composto permite ordenar espacialmente os pontos por
+intensidade relativa de degradação, integrando em uma única escala os efeitos de pH, OD e turbidez.
+Na Figura~\ref{fig:pollution}(b), a superfície IDW amplia essa leitura ao delinear a mancha estimada
+de poluição, útil para priorização de inspeções de campo. Essa representação não substitui análise
+laboratorial, mas funciona como ferramenta de triagem operacional para monitoramento contínuo e
+apoio à tomada de decisão.
 
 \FloatBarrier

@@ -1,21 +1,31 @@
 \section{CONCLUSÃO}
 
-Este trabalho avaliou a viabilidade do uso de Redes Neurais Pulsadas (SNNs) em
-microcontroladores de baixo custo para a predição de parâmetros de qualidade da
-água no Lago do Serpa. Os resultados demonstram que, mesmo com um conjunto de
-dados reduzido, a SNN alcança desempenho preditivo consistente (MSE = 0,0327 e
-MAE = 0,1437 para pH), especialmente após o ajuste de hiperparâmetros e a
-aplicação de aumento de dados, indicando potencial para uso em sistemas de
-monitoramento ambiental de baixo consumo energético.
+Este trabalho confirmou a viabilidade técnica da predição neuromórfica de qualidade
+da água no Lago do Serpa, combinando modelagem multimodal, análise espacial e
+implantação embarcada. Em nível de desempenho, a SNN apresentou resultados
+competitivos, com bom poder explicativo médio e maior estabilidade que o MLP no
+benchmark multissemente. Além disso, o ajuste de pesos da função de perda mostrou
+ganho específico para turbidez, reduzindo erro nesse alvo sem comprometer o
+desempenho global.
 
-As análises exploratórias confirmaram padrões espaciais e correlações relevantes
-entre as variáveis físico-químicas, reforçando a adequação do modelo proposto
-para capturar dinâmicas locais. Embora os resultados sejam promissores, o estudo
-deve ser compreendido como uma prova de conceito, limitada pela quantidade de
-amostras e pela abrangência geográfica restrita.
+No eixo de aplicação, o modelo foi exportado para TensorFlow Lite e integrado em
+aplicativo móvel offline, com inferência local de pH, OD e turbidez, cálculo de
+índice de poluição e visualização geoespacial com mapa offline (MBTiles). Esse
+resultado avança o trabalho além de uma prova de conceito puramente algorítmica,
+demonstrando um fluxo completo de dados, treinamento, inferência embarcada e apoio
+à decisão em campo.
+No desenho neuromórfico, a adoção de \textit{rate coding} também se mostrou coerente
+com o cenário de borda, pois permite ajustar explicitamente o equilíbrio entre qualidade
+da representação temporal e latência de inferência no celular por meio do parâmetro $T$.
 
-Como continuidade, é fundamental ampliar a base de dados, validar o modelo em
-outros ambientes aquáticos e realizar a implantação embarcada em hardware real,
-avaliando consumo energético e robustez em campo. Essas etapas consolidarão o
-papel da computação neuromórfica como alternativa viável para o monitoramento
-inteligente da qualidade da água na Amazônia.
+Como limitações, o estudo ainda depende de base amostral local e reduzida, o que
+restringe a generalização para outros corpos hídricos e regimes sazonais.
+
+\section{TRABALHOS FUTUROS}
+
+Como continuidade desta pesquisa, recomenda-se ampliar campanhas de coleta,
+validar o modelo em múltiplos cenários ambientais e medir de forma sistemática
+latência, consumo energético e robustez operacional no dispositivo móvel.
+Também é relevante evoluir a calibração do índice composto de poluição com apoio
+de especialistas da área ambiental, além de testar estratégias de atualização
+de modelo em campo para diferentes regimes hidrológicos.

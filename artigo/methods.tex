@@ -37,6 +37,9 @@ a probabilidade de disparo é função sigmoidal da entrada. A SNN foi construí
 entrada densa, uma camada oculta com neurônios Leaky Integrate-and-Fire (LIF) e uma camada de saída
 linear. A inferência ocorre ao longo de $T$ passos temporais, acumulando a atividade dos neurônios
 ocultos, o que permite um processamento esparso e energeticamente eficiente.
+Na prática, essa escolha de codificação controla diretamente o compromisso entre fidelidade temporal e
+custo computacional: valores maiores de $T$ aumentam a resolução dos padrões de disparo, mas também
+elevam latência de inferência e consumo no dispositivo móvel.
 
 \subsection{Treinamento, validação e busca em grade}
 O treinamento utilizou otimizador Adam e função de perda MSE. Foi aplicado \textit{early stopping}
@@ -69,22 +72,22 @@ o modelo \textit{.tflite} e os parâmetros de normalização para realizar predi
 turbidez, além do índice de poluição. O mapa é exibido em modo offline por meio de base vetorial
 MBTiles, permitindo visualização geoespacial sem conexão à internet.
 
-\subsection{ Descrição da SNN e etc.... }
-Para assegurar a robustez do modelo neuromórfico proposto, adotou-se uma abordagem de validação 
-rigorosa inspirada em Barros et al. (2024). A otimização dos hiperparâmetros da SNN, 
-especificamente a constante de decaimento ($\tau$), a janela temporal de simulação ($T$) e a 
-arquitetura da camada oculta, foi realizada através de um Grid Search exaustivo. Cada configuração 
-foi avaliada com base na média de acurácia e desvio padrão obtidos em múltiplas execuções 
-independentes, garantindo que a solução selecionada não apenas maximize a precisão preditiva, mas 
-também atenda aos requisitos de eficiência computacional impostos pelo hardware de borda.
+\subsection{Validação e seleção de hiperparâmetros}
+Para garantir robustez no ajuste do modelo neuromórfico, foi adotado um protocolo de validação com
+busca em grade (\textit{grid search}) sobre os principais hiperparâmetros da SNN, incluindo constante
+de decaimento ($\beta$), janela temporal de simulação ($T$), taxa de aprendizado, limiar de disparo e
+tamanho da camada oculta. Cada configuração foi avaliada no conjunto de validação com parada
+antecipada (\textit{early stopping}), e a seleção final considerou o melhor desempenho preditivo com
+estabilidade entre execuções. Como o problema é de regressão multivariada, os critérios principais
+foram métricas de erro (MAE/RMSE) e coeficiente de determinação ($R^2$), em vez de acurácia
+classificatória.
 
 \subsection{Arquitetura e Integração}
 
-Para avaliar a viabilidade de redes neuromórficas em hardware restrito, esta pesquisa se concentrará 
-exclusivamente na implementação e análise de Redes Neurais Pulsadas (SNNs) em microcontroladores de 
-baixo custo. O estudo não busca realizar comparações extensivas de desempenho entre diferentes tipos 
-de redes neurais (como LSTMs ou ANNs clássicas) contra as SNNs, mas sim focar na capacidade da SNN 
-de operar de forma eficiente e precisa dentro das restrições de um dispositivo de borda (edge device).
+Para avaliar a viabilidade de redes neuromórficas em hardware restrito, esta pesquisa se concentrou
+na implementação e análise de Redes Neurais Pulsadas (SNNs) em microcontroladores de baixo custo.
+O foco do estudo foi a capacidade da SNN de operar com eficiência e precisão sob restrições de
+memória, processamento e energia típicas de dispositivos de borda.
 
 A SNN proposta utilizará o modelo de neurônio Leaky Integrate-and-Fire (LIF), configurado para otimizar 
 o processamento de eventos esparsos típicos de dados ambientais. A rede será projetada para explorar 
@@ -96,19 +99,18 @@ viabilizar a execução de redes neurais em dispositivos com restrições severa
 de processamento é organizado em macro-estágios principais que se comunicam: Entrada, Processamento 
 e Saída.
 
-O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes estágios fundamentais:
+O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes estágios:
 
 \begin{compactitem}
-  \item Input Layers (Codificação): Responsável pela conversão dos dados escalares normalizados 
-  (contínuos) em trens de pulsos discretos no tempo (spike trains). Esta codificação temporal é o 
-  que permite à rede operar de forma assíncrona.
+  \item Camada de entrada (codificação): conversão dos dados escalares normalizados em trens de
+  pulsos discretos no tempo (\textit{spike trains}) via \textit{rate coding}; quanto maior o valor de
+  entrada normalizada, maior a taxa de disparo esperada.
 
-  \item Hidden Layers (Processamento Neuromórfico): Composta por neurônios baseados no modelo Leaky 
-  Integrate-and-Fire (LIF), que integram os pulsos recebidos e disparam apenas ao atingir o limiar de 
-  tensão, mimetizando a eficiência biológica.
+  \item Camada oculta (processamento neuromórfico): neurônios Leaky Integrate-and-Fire (LIF), que
+  integram pulsos de entrada e disparam ao atingir limiar de tensão.
 
-  \item Output Layer (Classificação): Decodifica a atividade dos spikes para gerar a predição 
-  final dos parâmetros de qualidade da água.
+  \item Camada de saída (regressão): decodificação da atividade de pulsos para gerar a predição
+  contínua dos parâmetros de qualidade da água.
 \end{compactitem}
 
 \begin{figure}[ht!] 

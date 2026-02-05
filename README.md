@@ -59,3 +59,39 @@ Edite `scripts/config.py` para:
 - trocar o alvo (`target_col`, ex.: `pH`, `OD`, `TURB`)
 - ajustar hiperparâmetros
 - habilitar CUDA (`device="cuda"`)
+
+---
+
+## Rodar via Conda (passo a passo)
+
+Se preferir Conda em vez de `venv`, use:
+
+1) Criar ambiente
+```bash
+conda create -n serpa_lago python=3.10 -y
+```
+
+2) Ativar ambiente
+```bash
+source /home/alfredo/miniconda3/etc/profile.d/conda.sh
+conda activate serpa_lago
+```
+
+3) Instalar dependências
+```bash
+pip install -r scripts/requirements.txt
+```
+
+4) Treinar e avaliar
+```bash
+python scripts/train.py
+python scripts/eval.py
+python scripts/generate_figures.py
+```
+
+5) Multimodal (opcional)
+```bash
+python scripts_multimodal/train_multimodal.py
+python scripts_multimodal/eval_multimodal.py
+python scripts_multimodal/benchmark_multiseed.py --seeds 7 13 21 42 84 --device gpu
+```
