@@ -1,8 +1,8 @@
 \section{MATERIAL E MÉTODOS}
 
 Esta pesquisa adota uma abordagem quantitativa para validar a eficácia das
-SNNs em microcontroladores de baixo custo mimetizando computação neuromórfica na predição 
-de parâmetros físico-químicos da qualidade da água.
+SNNs em dispositivos de borda com inferência local, mimetizando computação neuromórfica
+na predição de parâmetros físico-químicos da qualidade da água.
 
 \subsection{Fluxo metodológico passo a passo}
 O procedimento completo foi organizado nas seguintes etapas: (i) consolidação e limpeza dos
@@ -16,9 +16,10 @@ Os dados foram obtidos de medições pontuais no Lago do Serpa (Itacoatiara-AM) 
 arquivo CSV com as seguintes colunas: coordenadas ($x, y$) e variáveis físico-químicas
 (\textit{pH}, OD, temperatura, cor aparente, turbidez e cor verdadeira). A limpeza consistiu em
 converter separadores decimais, garantir consistência numérica e remover linhas incompletas. Em
-seguida, definiu-se um conjunto de variáveis de entrada composto por $x, y, TEMP, COR\_A, TURB,
-COR\_V$ e OD, enquanto a saída principal no modelo univariado foi o pH. Para o modelo multimodal,
-as saídas foram definidas como pH, OD e turbidez simultaneamente.
+seguida, definiu-se um conjunto de variáveis de entrada composto por $x, y, TEMP, COR\_A$ e
+COR\_V, enquanto a saída principal no modelo univariado foi o pH. Para o modelo multimodal,
+as saídas foram definidas como pH, OD e turbidez simultaneamente. As variáveis-alvo não foram
+incluídas nas entradas do modelo multimodal para evitar vazamento de informação.
 
 \subsection{Normalização e divisão dos dados}
 As entradas foram normalizadas via z-score, utilizando apenas a média e o desvio padrão do conjunto
@@ -85,7 +86,7 @@ classificatória.
 \subsection{Arquitetura e Integração}
 
 Para avaliar a viabilidade de redes neuromórficas em hardware restrito, esta pesquisa se concentrou
-na implementação e análise de Redes Neurais Pulsadas (SNNs) em microcontroladores de baixo custo.
+na implementação e análise de Redes Neurais Pulsadas (SNNs) em dispositivo móvel de borda.
 O foco do estudo foi a capacidade da SNN de operar com eficiência e precisão sob restrições de
 memória, processamento e energia típicas de dispositivos de borda.
 
@@ -154,7 +155,7 @@ Sistema Operacional & Ubuntu 22.04.5 LTS (64-bit) \\
 
 Este ambiente computacional permitiu a execução eficiente dos algoritmos de aprendizado baseados 
 no método de surrogate gradient, essenciais para contornar a não-diferenciabilidade dos pulsos 
-nas SNNs, antes da etapa final de portabilidade e implantação otimizada nos microcontroladores 
+nas SNNs, antes da etapa final de portabilidade e implantação otimizada no dispositivo móvel
 de borda alvo.
 
 \begin{figure}[ht!]

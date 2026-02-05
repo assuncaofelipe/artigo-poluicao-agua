@@ -20,6 +20,19 @@ from encoding import rate_encode
 from model import SNNRegressor
 
 
+class LSTMBaseline(nn.Module):
+    def __init__(self, hidden_size: int, output_size: int):
+        super().__init__()
+        self.lstm = nn.LSTM(input_size=1, hidden_size=hidden_size, batch_first=True)
+        self.head = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        # x: [batch, features] -> pseudo-sequence [batch, seq_len, 1]
+        x = x.unsqueeze(-1)
+        out, _ = self.lstm(x)
+        return self.head(out[:, -1, :])
+
+
 def parse_args():
     p = argparse.ArgumentParser(
         description="Benchmark multiseed: SNN vs baselines classicos (multimodal)."
@@ -46,8 +59,8 @@ def parse_args():
     p.add_argument(
         "--models",
         nargs="+",
-        default=["snn", "rf", "mlp"],
-        choices=["snn", "rf", "mlp"],
+        default=["snn", "rf", "mlp", "lstm"],
+        choices=["snn", "rf", "mlp", "lstm"],
         help="Modelos a comparar.",
     )
     return p.parse_args()
@@ -260,6 +273,75 @@ def run_mlp(cfg, seed):
     return y_test.numpy(), pred
 
 
+def run_lstm(cfg, seed, device):
+    set_seed(seed)
+    (x_train, y_train), (x_val, y_val), (x_test, y_test), _, _, y_mean, y_std = load_data(
+        cfg.data_path,
+        cfg.feature_cols,
+        cfg.target_cols,
+        cfg.test_split,
+        cfg.val_split,
+        seed,
+    )
+    y_train_n = y_train.clone()
+    y_val_n = y_val.clone()
+    if cfg.normalize_targets:
+        y_train_n = (y_train - y_mean) / y_std
+        y_val_n = (y_val - y_mean) / y_std
+
+    train_ds = SerpaDataset(x_train, y_train_n)
+    val_ds = SerpaDataset(x_val, y_val_n)
+    train_loader = DataLoader(train_ds, batch_size=cfg.batch_size, shuffle=True)
+    val_loader = DataLoader(val_ds, batch_size=cfg.batch_size, shuffle=False)
+
+    model = LSTMBaseline(hidden_size=32, output_size=len(cfg.target_cols)).to(device)
+    opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+    loss_fn = nn.MSELoss()
+
+    best_val = float("inf")
+    no_improve = 0
+    best_state = None
+    for _ in range(600):
+        model.train()
+        for xb, yb in train_loader:
+            xb = xb.to(device)
+            yb = yb.to(device)
+            pred = model(xb)
+            loss = loss_fn(pred, yb)
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+
+        model.eval()
+        val_loss = 0.0
+        with torch.no_grad():
+            for xb, yb in val_loader:
+                xb = xb.to(device)
+                yb = yb.to(device)
+                pred = model(xb)
+                val_loss += loss_fn(pred, yb).item() * xb.size(0)
+        val_loss /= max(1, len(val_loader.dataset))
+
+        if val_loss < best_val - cfg.min_delta:
+            best_val = val_loss
+            no_improve = 0
+            best_state = {k: v.detach().cpu() for k, v in model.state_dict().items()}
+        else:
+            no_improve += 1
+        if no_improve >= 40:
+            break
+
+    if best_state is not None:
+        model.load_state_dict(best_state)
+
+    model.eval()
+    with torch.no_grad():
+        pred = model(x_test.to(device)).cpu()
+    if cfg.normalize_targets:
+        pred = pred * y_std + y_mean
+    return y_test.numpy(), pred.numpy()
+
+
 def summarize(rows, target_cols):
     by_model = {}
     for row in rows:
@@ -342,6 +424,8 @@ def main():
         task_models.append("random_forest")
     if "mlp" in args.models:
         task_models.append("mlp")
+    if "lstm" in args.models:
+        task_models.append("lstm")
 
     tasks = [(s, m) for s in args.seeds for m in task_models]
     total_tasks = len(tasks)
@@ -369,6 +453,9 @@ def main():
         elif model_name == "random_forest":
             y_true, y_pred = run_rf(cfg, seed)
             rec = {"seed": seed, "model": "random_forest", **_metrics(y_true, y_pred, cfg.target_cols)}
+        elif model_name == "lstm":
+            y_true, y_pred = run_lstm(cfg, seed, device)
+            rec = {"seed": seed, "model": "lstm", **_metrics(y_true, y_pred, cfg.target_cols)}
         else:
             y_true, y_pred = run_mlp(cfg, seed)
             rec = {"seed": seed, "model": "mlp", **_metrics(y_true, y_pred, cfg.target_cols)}

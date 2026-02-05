@@ -1,18 +1,18 @@
 \section{DISCUSSÃO}
 
-Os resultados indicam que a abordagem neuromórfica proposta é viável para a predição
-de parâmetros físico-químicos da água em ambientes amazônicos, com desempenho consistente
-após a adoção de estratégias de aumento de dados e ajuste de hiperparâmetros. O erro
-médio absoluto obtido para pH (MAE = 0,1437; MSE = 0,0327) representa uma fração relativamente
-pequena da faixa observada no conjunto analisado, sugerindo capacidade de generalização
-adequada para um cenário de prova de conceito. A curva de perda evidencia convergência
-estável e rápida, com validação acompanhando o treino, reduzindo indícios de overfitting
-excessivo quando comparado ao treinamento sem aumento de dados.
+Os resultados indicam que a abordagem neuromórfica proposta é viável para predição de
+parâmetros físico-químicos da água em ambiente amazônico, com desempenho consistente após
+ajuste de hiperparâmetros e regularização por \textit{early stopping}. No cenário multimodal
+sem vazamento de informação (sem uso das variáveis-alvo nas entradas), observou-se aumento da
+dificuldade de predição, especialmente para turbidez, o que torna a avaliação mais realista
+para uso em campo.
 
-O melhor desempenho foi obtido com aumento de dados fator 5 e ruído gaussiano com
-desvio padrão de 0,02, além de configuração compacta de tempo (15 passos) e 64 neurônios
-na camada oculta, o que sugere que a regularização implícita e a redução de complexidade
-temporal ajudam a estabilizar a predição em conjuntos pequenos.
+No benchmark com 10 sementes, Random Forest e LSTM apresentaram menores erros médios
+globais, enquanto a SNN permaneceu competitiva e claramente superior ao MLP em robustez.
+Os testes estatísticos reforçam essa leitura: não houve evidência de superioridade estatística
+da SNN sobre Random Forest e LSTM para $\alpha=0{,}05$, mas houve vantagem significativa
+da SNN sobre MLP. Portanto, os resultados sustentam a SNN como alternativa viável em
+cenário de borda, ainda que não dominante em erro absoluto no conjunto atual.
 
 Em termos espaciais, os mapas de pH, OD e turbidez revelam padrões coerentes de gradientes
 e agrupamentos, o que reforça a consistência dos dados de campo e sugere que as variáveis
@@ -21,17 +21,18 @@ cor aparente e turbidez observadas na análise exploratória estão alinhadas co
 físico-químicos esperados em ambientes lênticos, fornecendo suporte adicional para o
 modelo proposto.
 
+\subsection*{Ameaças à validade}
+
 Apesar dos resultados promissores, é importante reconhecer limitações. O conjunto de dados
 é limitado em tamanho, o que impõe restrições à robustez estatística das conclusões. O
 aumento de dados por ruído gaussiano, embora útil para melhorar a generalização, não
-substitui a coleta de novas amostras reais. Além disso, a avaliação foi
-realizada em um único corpo d'água e em um intervalo temporal limitado, o que restringe
-a extrapolação para outros cenários hidrológicos ou sazonais.
+substitui a coleta de novas amostras reais e pode não representar integralmente variações
+sazonais e eventos extremos (por exemplo, chuva intensa e aporte súbito de sedimentos).
+Além disso, a avaliação foi realizada em um único corpo d'água e em um intervalo temporal
+limitado, o que restringe a extrapolação para outros cenários hidrológicos.
 
-Como perspectivas futuras, recomenda-se a ampliação do conjunto de dados com novas campanhas
-de coleta, a validação cruzada com múltiplos corpos hídricos e a comparação sistemática
-com modelos clássicos (por exemplo, regressão linear e LSTM) para quantificar ganhos de
-eficiência energética e precisão. A integração do modelo SNN em microcontroladores reais
-também é uma etapa essencial para avaliar consumo energético e latência em condições de
-campo, consolidando a aplicabilidade do sistema em redes de monitoramento ambiental na
-região amazônica.
+Outra ameaça interna relevante é o risco de inferência otimista em bases pequenas: mesmo com
+\textit{early stopping}, grid search, benchmark multissemente e testes pareados, diferenças
+de desempenho entre modelos podem variar com novas coletas. Por fim, a implantação prática
+foi validada em dispositivo móvel Android offline; portanto, os resultados de latência e
+consumo não podem ser diretamente generalizados para microcontroladores ultra-restritos.

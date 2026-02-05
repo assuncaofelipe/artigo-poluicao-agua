@@ -20,17 +20,19 @@ rápida e estável do treinamento.
 
 Também foi treinado um modelo multimodal (multi-saída) para prever simultaneamente
 pH, OD e turbidez. O melhor ajuste multimodal apresentou, no conjunto de teste,
-as seguintes métricas: $MAE_{pH}=0{,}115$, $MAE_{OD}=0{,}072$ e $MAE_{TURB}=0{,}392$,
-com $R^{2}_{pH}=0{,}723$, $R^{2}_{OD}=0{,}908$ e $R^{2}_{TURB}=0{,}909$. Esses valores
-indicam bom desempenho para pH e OD, e desempenho aceitável para turbidez. As
+as seguintes métricas: $MAE_{pH}=0{,}107$, $MAE_{OD}=0{,}222$ e $MAE_{TURB}=0{,}971$.
+No cenário sem vazamento de informação entre entradas e saídas, observou-se maior
+dificuldade para turbidez, indicando um problema de predição mais desafiador e mais
+realista. As
 Figuras~\ref{fig:multi_pred} e \ref{fig:multi_res} apresentam as predições e
 os resíduos do modelo multimodal, respectivamente.
 
 Para avaliar robustez, foi executado um benchmark com múltiplas sementes
-($n=5$: 7, 13, 21, 42 e 84), comparando SNN multimodal com Random Forest e MLP
-multissaída, usando o mesmo particionamento por semente. Em termos de erro
-global (macro), o Random Forest obteve o menor $MAE$ e $RMSE$, enquanto a SNN
-obteve o maior $R^2$ médio. O MLP apresentou maior instabilidade entre sementes.
+($n=10$: 7, 13, 21, 42, 84, 101, 123, 202, 303 e 404), comparando SNN multimodal
+com Random Forest, MLP e LSTM multissaída, usando o mesmo particionamento por
+semente. Em termos de erro global (macro), Random Forest e LSTM apresentaram
+melhores médias de $MAE$ e $RMSE$, enquanto a SNN manteve desempenho competitivo.
+O MLP apresentou maior instabilidade entre sementes.
 
 \begin{table}[ht!]
 \centering
@@ -39,9 +41,10 @@ obteve o maior $R^2$ médio. O MLP apresentou maior instabilidade entre sementes
 \toprule
 Modelo & MAE macro & RMSE macro & $R^2$ macro \\
 \midrule
-Random Forest & $0{,}175 \pm 0{,}012$ & $0{,}241 \pm 0{,}026$ & $0{,}475 \pm 0{,}085$ \\
-SNN & $0{,}263 \pm 0{,}050$ & $0{,}333 \pm 0{,}056$ & $0{,}719 \pm 0{,}065$ \\
-MLP & $0{,}350 \pm 0{,}224$ & $0{,}442 \pm 0{,}271$ & $-2{,}255 \pm 4{,}271$ \\
+Random Forest & $\mathbf{0{,}409 \pm 0{,}062}$ & $\mathbf{0{,}557 \pm 0{,}086}$ & $\mathbf{0{,}335 \pm 0{,}131}$ \\
+LSTM & $0{,}428 \pm 0{,}059$ & $0{,}548 \pm 0{,}073$ & $0{,}313 \pm 0{,}139$ \\
+SNN & $0{,}447 \pm 0{,}064$ & $0{,}566 \pm 0{,}072$ & $0{,}291 \pm 0{,}146$ \\
+MLP & $0{,}781 \pm 0{,}193$ & $0{,}983 \pm 0{,}178$ & $-5{,}460 \pm 5{,}220$ \\
 \bottomrule
 \end{tabular}
 \label{tab:benchmark_multiseed}
@@ -50,27 +53,29 @@ MLP & $0{,}350 \pm 0{,}224$ & $0{,}442 \pm 0{,}271$ & $-2{,}255 \pm 4{,}271$ \\
 Observa-se que todos os valores de $R^2$ apresentados estão no intervalo matematicamente
 válido para o coeficiente de determinação ($R^2 \leq 1$).
 
-No teste estatístico pareado de Wilcoxon (SNN vs Random Forest, $n=5$ sementes),
-foram obtidos $p=0{,}0625$ para $MAE_{macro}$, $RMSE_{macro}$ e $R^2_{macro}$.
-Assim, para $\alpha=0{,}05$, não há evidência estatística suficiente de superioridade
-global de um método sobre o outro neste conjunto; ainda assim, os resultados indicam
-tendência de melhor erro para Random Forest e melhor capacidade explicativa média para SNN.
+No teste estatístico pareado de Wilcoxon (SNN vs Random Forest, $n=10$ sementes),
+foram obtidos $p=0{,}0645$ para $MAE_{macro}$, $p=0{,}8457$ para $RMSE_{macro}$ e
+$p=0{,}9219$ para $R^2_{macro}$. Assim, para $\alpha=0{,}05$, não há evidência estatística
+suficiente de superioridade global da SNN sobre Random Forest neste conjunto.
 
 Quando comparada ao MLP no mesmo protocolo, a SNN apresentou vantagem clara em desempenho médio
-e estabilidade. Os testes pareados resultaram em $p=1{,}0000$ (SNN vs MLP) para
-$MAE_{macro}$ e $RMSE_{macro}$ no teste de sinais, e $p=0{,}8125$ (Wilcoxon) para
-$MAE_{macro}$, reforçando que o MLP variou significativamente entre sementes e foi sensível
-à pequena quantidade de dados. Além disso, o $R^2_{macro}$ do MLP foi negativo em média
-($-2{,}255 \pm 4{,}271$), indicando baixa robustez para este cenário.
+e estabilidade. Os testes pareados resultaram em $p=0{,}00195$ (Wilcoxon) para
+$MAE_{macro}$, $RMSE_{macro}$ e $R^2_{macro}$ (SNN vs MLP), reforçando que o MLP
+variou significativamente entre sementes e foi sensível à pequena quantidade de dados.
+Além disso, o $R^2_{macro}$ do MLP foi negativo em média ($-5{,}460 \pm 5{,}220$),
+indicando baixa robustez para este cenário.
+
+Na comparação SNN vs LSTM, os testes de Wilcoxon apresentaram $p=0{,}1055$ para
+$MAE_{macro}$, $p=0{,}1309$ para $RMSE_{macro}$ e $p=0{,}2324$ para $R^2_{macro}$,
+sem evidência de diferença estatística significativa para $\alpha=0{,}05$.
 
 Com foco específico em turbidez, foi realizada varredura de pesos da função de perda da
 SNN, priorizando o alvo TURB. O melhor compromisso foi obtido com pesos
-$(0{,}1,\ 0{,}1,\ 0{,}8)$ para (pH, OD, TURB), reduzindo o $MAE_{TURB}$ médio para
-$0{,}501$ e melhorando simultaneamente $MAE_{macro}$ para $0{,}239$ e
-$R^2_{macro}$ para $0{,}748$ (5 sementes), em relação à configuração base
-$(0{,}2,\ 0{,}2,\ 0{,}6)$, que apresentou $MAE_{TURB}=0{,}548$,
-$MAE_{macro}=0{,}263$ e $R^2_{macro}=0{,}719$. Esse ajuste confirma que a ponderação da perda
-é uma alavanca efetiva para melhorar alvos mais difíceis no cenário multimodal.
+$(0{,}05,\ 0{,}15,\ 0{,}8)$ para (pH, OD, TURB), reduzindo o $MAE_{TURB}$ médio para
+$1{,}006$ (10 sementes), em relação à configuração base $(0{,}2,\ 0{,}2,\ 0{,}6)$, que
+apresentou $MAE_{TURB}=1{,}012$. Esse ajuste melhora o alvo mais difícil, mas com leve
+degradação de $R^2_{macro}$ e mudança marginal em $MAE_{macro}$, indicando trade-off entre
+foco em turbidez e desempenho global.
 
 \begin{table}[ht!]
 \centering
@@ -79,10 +84,10 @@ $MAE_{macro}=0{,}263$ e $R^2_{macro}=0{,}719$. Esse ajuste confirma que a ponder
 \toprule
 Pesos (pH, OD, TURB) & MAE macro & MAE TURB & $R^2$ macro \\
 \midrule
-$(0{,}20,\ 0{,}20,\ 0{,}60)$ & $0{,}263$ & $0{,}548$ & $0{,}719$ \\
-$(0{,}15,\ 0{,}15,\ 0{,}70)$ & $0{,}274$ & $0{,}576$ & $0{,}698$ \\
-$(0{,}10,\ 0{,}10,\ 0{,}80)$ & $\mathbf{0{,}239}$ & $\mathbf{0{,}501}$ & $\mathbf{0{,}748}$ \\
-$(0{,}05,\ 0{,}15,\ 0{,}80)$ & $0{,}271$ & $0{,}573$ & $0{,}730$ \\
+$(0{,}20,\ 0{,}20,\ 0{,}60)$ & $\mathbf{0{,}447}$ & $1{,}012$ & $\mathbf{0{,}291}$ \\
+$(0{,}15,\ 0{,}15,\ 0{,}70)$ & $0{,}452$ & $1{,}022$ & $0{,}289$ \\
+$(0{,}10,\ 0{,}10,\ 0{,}80)$ & $0{,}454$ & $1{,}028$ & $0{,}288$ \\
+$(0{,}05,\ 0{,}15,\ 0{,}80)$ & $0{,}448$ & $\mathbf{1{,}006}$ & $0{,}280$ \\
 \bottomrule
 \end{tabular}
 \label{tab:snn_weight_sweep}
@@ -272,6 +277,8 @@ de desempenho global.
 
 Na Figura~\ref{fig:pollution}(a), o índice composto permite ordenar espacialmente os pontos por
 intensidade relativa de degradação, integrando em uma única escala os efeitos de pH, OD e turbidez.
+Neste trabalho, o índice é normalizado para a faixa $[0,1]$, em que valores mais altos indicam pior
+condição relativa no conjunto analisado.
 Na Figura~\ref{fig:pollution}(b), a superfície IDW amplia essa leitura ao delinear a mancha estimada
 de poluição, útil para priorização de inspeções de campo. Essa representação não substitui análise
 laboratorial, mas funciona como ferramenta de triagem operacional para monitoramento contínuo e

@@ -3,10 +3,12 @@
 Este trabalho confirmou a viabilidade técnica da predição neuromórfica de qualidade
 da água no Lago do Serpa, combinando modelagem multimodal, análise espacial e
 implantação embarcada. Em nível de desempenho, a SNN apresentou resultados
-competitivos, com bom poder explicativo médio e maior estabilidade que o MLP no
-benchmark multissemente. Além disso, o ajuste de pesos da função de perda mostrou
-ganho específico para turbidez, reduzindo erro nesse alvo sem comprometer o
-desempenho global.
+competitivos e estáveis, superando o MLP no benchmark multissemente e mantendo
+proximidade de desempenho com baselines clássicos. No conjunto avaliado, Random
+Forest e LSTM apresentaram menor erro médio absoluto global, enquanto a SNN
+permaneceu como alternativa robusta para inferência neuromórfica em borda.
+Além disso, o ajuste de pesos da função de perda mostrou melhora específica em
+turbidez com trade-off moderado no desempenho macro.
 
 No eixo de aplicação, o modelo foi exportado para TensorFlow Lite e integrado em
 aplicativo móvel offline, com inferência local de pH, OD e turbidez, cálculo de

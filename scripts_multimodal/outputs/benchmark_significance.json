@@ -9,55 +9,60 @@
         13,
         21,
         42,
-        84
+        84,
+        101,
+        123,
+        202,
+        303,
+        404
       ],
       "metrics": {
         "mae_macro": {
-          "mean_a": 0.26266920417547224,
-          "mean_b": 0.17528958162091052,
+          "mean_a": 0.4471302919089794,
+          "mean_b": 0.40865243068076146,
           "better": "random_forest",
           "sign_test": {
-            "n": 5,
-            "p_value": 0.0625,
-            "pos": 5,
-            "neg": 0
+            "n": 10,
+            "p_value": 0.34375,
+            "pos": 7,
+            "neg": 3
           },
           "wilcoxon": {
             "available": true,
-            "stat": 0.0,
-            "p_value": 0.0625
+            "stat": 9.0,
+            "p_value": 0.064453125
           }
         },
         "rmse_macro": {
-          "mean_a": 0.3326425991485287,
-          "mean_b": 0.24116918450324915,
+          "mean_a": 0.5663618666883213,
+          "mean_b": 0.5571403181996093,
           "better": "random_forest",
           "sign_test": {
-            "n": 5,
-            "p_value": 0.0625,
+            "n": 10,
+            "p_value": 1.0,
             "pos": 5,
-            "neg": 0
+            "neg": 5
           },
           "wilcoxon": {
             "available": true,
-            "stat": 0.0,
-            "p_value": 0.0625
+            "stat": 25.0,
+            "p_value": 0.845703125
           }
         },
         "r2_macro": {
-          "mean_a": 0.7193189938863119,
-          "mean_b": 0.47524841744711405,
-          "better": "snn",
+          "mean_a": 0.29076896707216904,
+          "mean_b": 0.33542748528977345,
+          "better": "random_forest",
           "sign_test": {
-            "n": 5,
-            "p_value": 0.0625,
+            "n": 10,
+            "p_value": 1.0,
             "pos": 5,
-            "neg": 0
+            "neg": 5
           },
           "wilcoxon": {
             "available": true,
-            "stat": 0.0,
-            "p_value": 0.0625
+            "stat": 26.0,
+            "p_value": 0.921875
           }
         }
       }
@@ -70,55 +75,126 @@
         13,
         21,
         42,
-        84
+        84,
+        101,
+        123,
+        202,
+        303,
+        404
       ],
       "metrics": {
         "mae_macro": {
-          "mean_a": 0.26266920417547224,
-          "mean_b": 0.35027555699149765,
+          "mean_a": 0.4471302919089794,
+          "mean_b": 0.7809853062033654,
           "better": "snn",
           "sign_test": {
-            "n": 5,
-            "p_value": 1.0,
-            "pos": 3,
-            "neg": 2
+            "n": 10,
+            "p_value": 0.001953125,
+            "pos": 0,
+            "neg": 10
           },
           "wilcoxon": {
             "available": true,
-            "stat": 6.0,
-            "p_value": 0.8125
+            "stat": 0.0,
+            "p_value": 0.001953125
           }
         },
         "rmse_macro": {
-          "mean_a": 0.3326425991485287,
-          "mean_b": 0.44153353016895674,
+          "mean_a": 0.5663618666883213,
+          "mean_b": 0.982659817452519,
           "better": "snn",
           "sign_test": {
-            "n": 5,
-            "p_value": 1.0,
-            "pos": 3,
-            "neg": 2
+            "n": 10,
+            "p_value": 0.001953125,
+            "pos": 0,
+            "neg": 10
           },
           "wilcoxon": {
             "available": true,
-            "stat": 7.0,
-            "p_value": 1.0
+            "stat": 0.0,
+            "p_value": 0.001953125
           }
         },
         "r2_macro": {
-          "mean_a": 0.7193189938863119,
-          "mean_b": -2.2545483708381653,
+          "mean_a": 0.29076896707216904,
+          "mean_b": -5.459715843200684,
           "better": "snn",
           "sign_test": {
-            "n": 5,
-            "p_value": 0.0625,
-            "pos": 5,
+            "n": 10,
+            "p_value": 0.001953125,
+            "pos": 10,
             "neg": 0
           },
           "wilcoxon": {
             "available": true,
             "stat": 0.0,
-            "p_value": 0.0625
+            "p_value": 0.001953125
+          }
+        }
+      }
+    },
+    {
+      "model_a": "snn",
+      "model_b": "lstm",
+      "seeds": [
+        7,
+        13,
+        21,
+        42,
+        84,
+        101,
+        123,
+        202,
+        303,
+        404
+      ],
+      "metrics": {
+        "mae_macro": {
+          "mean_a": 0.4471302919089794,
+          "mean_b": 0.4279273758331935,
+          "better": "lstm",
+          "sign_test": {
+            "n": 10,
+            "p_value": 0.34375,
+            "pos": 7,
+            "neg": 3
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 11.0,
+            "p_value": 0.10546875
+          }
+        },
+        "rmse_macro": {
+          "mean_a": 0.5663618666883213,
+          "mean_b": 0.5479656622722102,
+          "better": "lstm",
+          "sign_test": {
+            "n": 10,
+            "p_value": 0.34375,
+            "pos": 7,
+            "neg": 3
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 12.0,
+            "p_value": 0.130859375
+          }
+        },
+        "r2_macro": {
+          "mean_a": 0.29076896707216904,
+          "mean_b": 0.31342057784398397,
+          "better": "lstm",
+          "sign_test": {
+            "n": 10,
+            "p_value": 0.109375,
+            "pos": 2,
+            "neg": 8
+          },
+          "wilcoxon": {
+            "available": true,
+            "stat": 15.0,
+            "p_value": 0.232421875
           }
         }
       }
