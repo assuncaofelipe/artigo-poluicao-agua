@@ -1,2 +1,3 @@
 tflite-runtime
 numpy<2
+pyserial

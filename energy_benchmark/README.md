@@ -36,6 +36,9 @@ pip install "numpy<2"
 
 ## 3) Medição de Energia (corrente/tensão)
 
+**Aviso ACS712-30A:** a sensibilidade típica é ~66 mV/A. No seu código Arduino,
+use `SENSIBILIDADE = 0.066` para o modelo 30A. O valor `0.100` é do ACS712-20A.
+
 O script `bench_energy.py` mede energia média por inferência usando três modos:
 
 - `sysfs`: lê `current_now` e `voltage_now` em `/sys/class/power_supply`
@@ -71,6 +74,25 @@ python bench_energy.py --provider manual --current-mA 400 --voltage-V 5.0
 ```
 
 Saída: `results_energy.csv` com timestamp e energia por inferência.
+
+## 4) Log via Arduino (ACS712) -> CSV
+
+Se você usa o ACS712 com Arduino, rode o logger serial e depois alimente o
+`bench_energy.py` com `--provider csv`.
+
+### a) Log serial
+
+```bash
+python serial_power_logger.py --port /dev/ttyUSB0 --baud 9600 --voltage 5.0
+```
+
+Isso gera `power_samples.csv` com `timestamp,current_mA,voltage_V`.
+
+### b) Energia a partir do CSV
+
+```bash
+python bench_energy.py --provider csv --csv power_samples.csv
+```
 
 ## 3) Saída esperada
 
