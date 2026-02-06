@@ -79,7 +79,7 @@ foco em turbidez e desempenho global.
 
 \begin{table}[ht!]
 \centering
-\caption{Varredura dos pesos da perda da SNN (5 sementes).}
+\caption{Varredura dos pesos da perda da SNN (10 sementes).}
 \begin{tabular}{lccc}
 \toprule
 Pesos (pH, OD, TURB) & MAE macro & MAE TURB & $R^2$ macro \\
@@ -91,6 +91,26 @@ $(0{,}05,\ 0{,}15,\ 0{,}80)$ & $0{,}448$ & $\mathbf{1{,}006}$ & $0{,}280$ \\
 \bottomrule
 \end{tabular}
 \label{tab:snn_weight_sweep}
+\end{table}
+
+A versão final em TFLite foi executada em uma Raspberry Pi 4B (ARM64), com
+delegate XNNPACK habilitado. A latência média de inferência foi de
+$0{,}214$ ms/amostra (desvio padrão $0{,}023$ ms), com throughput de
+$4670{,}50$ amostras/s, conforme Tabela~\ref{tab:latency_rpi}. Esses resultados
+evidenciam a viabilidade da execução local em hardware de baixo consumo,
+com custo computacional por amostra bastante reduzido.
+
+\begin{table}[ht!]
+\centering
+\caption{Latência de inferência do modelo TFLite em Raspberry Pi 4B.}
+\begin{tabular}{lccc}
+\toprule
+Dispositivo & Latência média (ms) & Desvio padrão (ms) & Throughput (amostras/s) \\
+\midrule
+Raspberry Pi 4B & $0{,}214$ & $0{,}023$ & $4670{,}50$ \\
+\bottomrule
+\end{tabular}
+\label{tab:latency_rpi}
 \end{table}
 
 \begin{figure}[ht!]

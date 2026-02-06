@@ -1,5 +1,6 @@
 ## Python
 .venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo
@@ -30,3 +31,6 @@ texput.log
 ## OS
 .DS_Store
 Thumbs.db
+
+## Local benchmarks
+energy_benchmark/venv/
