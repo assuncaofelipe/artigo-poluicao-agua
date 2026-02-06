@@ -34,6 +34,44 @@ pip uninstall -y numpy
 pip install "numpy<2"
 ```
 
+## 3) Medição de Energia (corrente/tensão)
+
+O script `bench_energy.py` mede energia média por inferência usando três modos:
+
+- `sysfs`: lê `current_now` e `voltage_now` em `/sys/class/power_supply`
+- `csv`: lê um CSV com colunas `timestamp,current_mA,voltage_V`
+- `manual`: usa valores fixos informados via CLI
+
+### a) Modo sysfs (padrão)
+
+```bash
+python bench_energy.py --provider sysfs \
+  --current-unit uA --voltage-unit uV
+```
+
+Se os caminhos forem diferentes, use:
+
+```bash
+python bench_energy.py --provider sysfs \
+  --current-path /sys/class/power_supply/BAT0/current_now \
+  --voltage-path /sys/class/power_supply/BAT0/voltage_now \
+  --current-unit uA --voltage-unit uV
+```
+
+### b) Modo CSV (ex.: medidor externo exportando)
+
+```bash
+python bench_energy.py --provider csv --csv power_samples.csv
+```
+
+### c) Modo manual (valor fixo)
+
+```bash
+python bench_energy.py --provider manual --current-mA 400 --voltage-V 5.0
+```
+
+Saída: `results_energy.csv` com timestamp e energia por inferência.
+
 ## 3) Saída esperada
 
 O script imprime:
