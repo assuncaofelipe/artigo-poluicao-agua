@@ -26,6 +26,14 @@ pip install -r requirements.txt
 python bench_tflite.py
 ```
 
+Se aparecer erro do NumPy 2.x com `tflite-runtime`, confirme que o `requirements.txt`
+está com `numpy<2` e reinstale:
+
+```bash
+pip uninstall -y numpy
+pip install "numpy<2"
+```
+
 ## 3) Saída esperada
 
 O script imprime:

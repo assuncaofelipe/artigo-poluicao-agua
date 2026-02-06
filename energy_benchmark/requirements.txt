@@ -1,2 +1,2 @@
 tflite-runtime
-numpy
+numpy<2
