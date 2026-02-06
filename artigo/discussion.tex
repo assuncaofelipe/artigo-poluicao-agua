@@ -21,6 +21,10 @@ cor aparente e turbidez observadas na análise exploratória estão alinhadas co
 físico-químicos esperados em ambientes lênticos, fornecendo suporte adicional para o
 modelo proposto.
 
+Além do desempenho preditivo, a execução do modelo em Raspberry Pi 4B apresentou latência
+sub-milissegundo por amostra, reforçando a viabilidade de inferência local em hardware de
+baixo consumo e compatível com cenários remotos e offline.
+
 \subsection*{Ameaças à validade}
 
 Apesar dos resultados promissores, é importante reconhecer limitações. O conjunto de dados
@@ -34,5 +38,6 @@ limitado, o que restringe a extrapolação para outros cenários hidrológicos.
 Outra ameaça interna relevante é o risco de inferência otimista em bases pequenas: mesmo com
 \textit{early stopping}, grid search, benchmark multissemente e testes pareados, diferenças
 de desempenho entre modelos podem variar com novas coletas. Por fim, a implantação prática
-foi validada em dispositivo móvel Android offline; portanto, os resultados de latência e
-consumo não podem ser diretamente generalizados para microcontroladores ultra-restritos.
+foi validada em dispositivo móvel Android offline e em Raspberry Pi 4B; portanto, os resultados
+de latência e consumo ainda não podem ser diretamente generalizados para microcontroladores
+ultra-restritos (ex.: ESP32/STM32).

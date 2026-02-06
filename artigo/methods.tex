@@ -158,6 +158,26 @@ no método de surrogate gradient, essenciais para contornar a não-diferenciabil
 nas SNNs, antes da etapa final de portabilidade e implantação otimizada no dispositivo móvel
 de borda alvo.
 
+Para caracterizar a viabilidade de inferência em hardware de baixo consumo, o modelo TFLite
+foi executado em uma Raspberry Pi 4B (ARM64) com delegate XNNPACK, seguindo o fluxo de
+exportação descrito na Seção 3.7. As especificações do dispositivo de inferência são:
+
+\begin{table}[H]
+\centering
+\caption{Especificações do dispositivo de inferência (Raspberry Pi 4B).}
+\begin{tabular}{ll}
+\toprule
+Componente & Especificação \\
+\midrule
+Placa & Raspberry Pi 4B \\
+Arquitetura & ARM64 \\
+Sistema Operacional & Linux 6.12.34+rpt-rpi-v8-aarch64 \\
+Runtime & TFLite (delegate XNNPACK) \\
+\bottomrule
+\end{tabular}
+\label{tab:hardware_rpi}
+\end{table}
+
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.85\textwidth]{./figuras/map_points_osm_21S.png}
