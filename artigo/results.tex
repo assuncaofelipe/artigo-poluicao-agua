@@ -231,6 +231,13 @@ com baixa divergência entre curvas. Esse comportamento sugere aprendizado efeti
 dominante, validando o uso de \textit{early stopping} para interromper o treinamento no ponto de
 melhor generalização.
 
+Do ponto de vista ambiental, uma distribuição estreita implica maior sensibilidade do modelo a
+variações pequenas, o que é desejável para detecção de mudanças sutis no Lago do Serpa. Ao mesmo
+tempo, ressalta a necessidade de rigor na calibração do sensor e na padronização das coletas,
+pois ruídos instrumentais podem se traduzir em variações aparentes relevantes. A estabilidade das
+curvas de perda reforça que o modelo aprendeu padrões consistentes sem depender de flutuações
+aleatórias do conjunto reduzido.
+
 \begin{figure}[ht!]
 	\centering
 	\begin{minipage}{0.48\textwidth}
@@ -254,6 +261,11 @@ dados, com forte sobreposição entre original e aumentado. Isso indica que o ru
 deslocou as médias nem criou modos espúrios, apenas densificou a amostra em torno do comportamento
 observado, o que é desejável em bases pequenas.
 
+Esse resultado sugere que o fator de aumento e o desvio-padrão escolhidos foram conservadores o
+suficiente para preservar a identidade estatística do conjunto. Em termos práticos, isso mantém a
+coerência física das variáveis e evita que o modelo aprenda padrões artificiais. Assim, o aumento
+de dados atua como regularizador e não como fonte de viés.
+
 \begin{figure*}[!t]
 	\centering
 	\begin{minipage}{0.48\textwidth}
@@ -272,6 +284,11 @@ variáveis: medianas e quartis permanecem próximos, enquanto há leve aumento d
 comportamento é coerente com um acréscimo controlado de variabilidade, ampliando o suporte
 estatístico do treinamento sem distorcer a distribuição original. Na prática, tende a reduzir a
 sensibilidade a ruídos de medição e a melhorar a robustez em coletas futuras.
+
+Os boxplots também permitem verificar que não houve criação de outliers extremos fora do intervalo
+original, aspecto crítico para evitar extrapolações espúrias. A leve ampliação da dispersão é
+compatível com cenários reais de campo, onde pequenas flutuações são comuns. Isso contribui para
+um modelo menos sensível a variações pontuais e mais estável para uso em monitoramento contínuo.
 
 
 \begin{figure*}[!t]
@@ -296,6 +313,11 @@ necessidade de ampliar coletas para reduzir incerteza em regiões menos represen
 o mapa espacial de pH evidencia gradiente geográfico consistente, mostrando que o modelo preserva
 coerência espacial e não gera predições aleatórias ao longo do corpo d'água.
 
+Além de refletir o ajuste global, o gráfico predito vs. real sugere que as maiores discrepâncias
+estão associadas a valores extremos, onde o modelo tem menos exemplos para aprender o padrão. No
+mapa, a continuidade espacial do pH indica que a predição respeita a estrutura geográfica do lago,
+o que é importante para análises de microzonas e para priorização de áreas de inspeção.
+
 \begin{figure}[ht!]
 	\centering
 	\begin{minipage}{0.48\textwidth}
@@ -317,6 +339,12 @@ Na Figura~\ref{fig:mapas}(b), a turbidez mostra contrastes mais acentuados, indi
 maior carga particulada. A interpretação conjunta de OD e turbidez é relevante porque combina um
 indicador de condição bioquímica com um indicador físico de material em suspensão, fortalecendo
 o diagnóstico ambiental por múltiplas evidências.
+
+Em termos interpretativos, regiões de baixo OD podem indicar maior demanda biológica de oxigênio
+ou menor renovação hídrica, enquanto turbidez elevada costuma estar associada a sedimentos, matéria
+orgânica em suspensão ou aporte externo. Quando ambas as variáveis apontam para degradação na mesma
+região, há maior confiança na identificação de hotspots ambientais, mesmo em um conjunto de amostras
+limitado.
 
 \begin{figure}[ht!]
 	\centering
@@ -341,6 +369,12 @@ medição direta, ela melhora a leitura integrada do sistema ao destacar zonas d
 áreas prioritárias para amostragem futura. A coerência entre as superfícies estimadas e os padrões
 pontuais reforça a consistência interna do conjunto de dados.
 
+As superfícies interpoladas também ajudam a comunicar resultados a gestores e equipes de campo,
+pois oferecem uma visão contínua do lago sem exigir interpretação ponto a ponto. Como a densidade
+amostral é limitada, essas superfícies devem ser entendidas como aproximações exploratórias e não
+como mapas definitivos, mas ainda assim são úteis para orientar campanhas futuras e validar hipóteses
+sobre dinâmica espacial.
+
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.98\textwidth]{./figuras/idw_combined.png}
@@ -354,6 +388,11 @@ a maior dispersão para turbidez indica dificuldade adicional de modelagem, coer
 intrínseca desse parâmetro e com possíveis efeitos locais não totalmente capturados pelas entradas.
 Ainda assim, a tendência global permanece crescente, indicando que o modelo preserva estrutura
 previsível também para turbidez.
+
+O comportamento observado sugere que as variáveis pH e OD são mais diretamente explicadas pelas
+entradas disponíveis, enquanto turbidez pode depender de fatores locais não medidos, como eventos
+de chuva, ressuspensão ou aporte pontual. Mesmo com maior erro, o modelo mantém relação monotônica
+com a turbidez real, o que indica potencial de melhoria com novas variáveis e maior densidade de dados.
 
 \begin{figure}[ht!]
 	\centering
@@ -381,6 +420,11 @@ Na Figura~\ref{fig:multi_res}(c), a amplitude residual de turbidez é maior e me
 apontando incerteza superior nesse componente. Essa evidência sustentou a etapa de ajuste de pesos
 da função de perda, com priorização de turbidez para reduzir erro específico sem perda substancial
 de desempenho global.
+
+A distribuição dos resíduos também indica que erros extremos são mais comuns na turbidez, o que
+corrobora a interpretação dos gráficos predito vs. real. Ao priorizar turbidez na função de perda,
+buscou-se reduzir o impacto desses erros altos sem comprometer pH e OD. Esse trade-off é esperado em
+modelos multissaída e deve ser explicitado para transparência na aplicação prática.
 
 \begin{figure}[ht!]
 	\centering
@@ -412,6 +456,12 @@ Na Figura~\ref{fig:pollution}(b), a superfície IDW amplia essa leitura ao delin
 de poluição, útil para priorização de inspeções de campo. Essa representação não substitui análise
 laboratorial, mas funciona como ferramenta de triagem operacional para monitoramento contínuo e
 apoio à tomada de decisão.
+
+O índice composto sintetiza múltiplos sinais em um único indicador operacional, facilitando a
+comunicação com usuários não especialistas e a priorização de áreas críticas. A superfície IDW
+mostra que a mancha estimada não é uniforme, sugerindo padrões espaciais que podem orientar novas
+coletas ou intervenções. Esse tipo de visualização é particularmente útil em contextos de borda,
+onde decisões rápidas e interpretáveis são essenciais.
 
 
 \begin{figure}[H]
