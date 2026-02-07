@@ -211,14 +211,14 @@ isoladas.
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/hist_pH.png}
-		\caption*{(a) Histograma do pH}
+		\caption*{(a) pH histogram}
 	\end{minipage}\hfill
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/loss_curve.png}
-		\caption*{(b) Curva de perda (MSE)}
+		\caption*{(b) Loss curve (MSE)}
 	\end{minipage}
-\caption{Target distribution and training/validation dynamics.}
+	\caption{Target distribution and training/validation dynamics.}
 	\label{fig:hist_loss}
 \end{figure}
 
@@ -234,13 +234,35 @@ melhor generalização.
 	\centering
 	\begin{minipage}{0.48\textwidth}
 		\centering
+		\includegraphics[width=\linewidth]{./figuras/aug_compare_hist.png}
+		\caption*{(a) Distributions}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/aug_compare_box.png}
+		\caption*{(b) Boxplots}
+	\end{minipage}
+	\caption{Original vs. augmented data distributions (x10, Gaussian noise).}
+	\label{fig:aug_compare}
+\end{figure}
+
+A Figura~\ref{fig:aug_compare} compara distribuições das variáveis de entrada e saída antes e
+depois do aumento de dados. Observa-se sobreposição consistente entre os histogramas e boxplots,
+indicando que o procedimento preserva a forma global das distribuições e apenas suaviza a
+variabilidade, o que é desejável quando o objetivo é regularização sem criação de padrões
+artificiais no conjunto.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
 		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_pH.png}
-		\caption*{(a) Predito vs. real}
+		\caption*{(a) Predicted vs. true}
 	\end{minipage}\hfill
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/map_pH.png}
-		\caption*{(b) Mapa espacial de pH}
+		\caption*{(b) Spatial map of pH}
 	\end{minipage}
 \caption{Predictive performance and spatial pattern of pH in Lago do Serpa.}
 	\label{fig:pred_pH}
@@ -258,12 +280,12 @@ coerência espacial e não gera predições aleatórias ao longo do corpo d'águ
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/map_OD.png}
-		\caption*{(a) Mapa espacial de OD}
+		\caption*{(a) Spatial map of dissolved oxygen}
 	\end{minipage}\hfill
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/map_TURB.png}
-		\caption*{(b) Mapa espacial de turbidez}
+		\caption*{(b) Spatial map of turbidity}
 	\end{minipage}
 \caption{Spatial patterns of dissolved oxygen and turbidity.}
 	\label{fig:mapas}
@@ -350,7 +372,7 @@ de desempenho global.
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/pollution_scatter.png}
-		\caption*{(a) Índice de poluição nos pontos}
+		\caption*{(a) Pollution index at sample points}
 	\end{minipage}\hfill
 	\begin{minipage}{0.48\textwidth}
 		\centering
