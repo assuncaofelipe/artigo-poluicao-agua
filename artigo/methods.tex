@@ -9,9 +9,20 @@ univariado a saída foi o pH, enquanto no multimodal as saídas foram pH, OD e t
 variáveis-alvo nas entradas para evitar vazamento. O conjunto contém \textbf{60 amostras georreferenciadas}
 no Lago do Serpa (Figura~\ref{fig:mapa_pontos}) e, para reduzir overfitting em base pequena, aplicou-se
 \textbf{aumento de dados sintético} (fator 10)
-com ruído gaussiano leve, apenas para estabilização do treinamento. As entradas foram normalizadas via
-z-score usando estatísticas do treino; as saídas do multimodal foram opcionalmente normalizadas. A divisão
-em treino/validação/teste foi feita com proporções fixas e embaralhamento controlado por semente.
+com ruído gaussiano leve, apenas para estabilização do treinamento. 
+
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.75\textwidth]{./figuras/map_points_osm_21S.png}
+	\caption{Localização dos pontos de amostragem no Lago do Serpa (Itacoatiara-AM) em mapa base
+	do OpenStreetMap. As coordenadas foram convertidas para latitude/longitude (WGS84, UTM 21S).}
+	\label{fig:mapa_pontos}
+\end{figure}
+\FloatBarrier
+
+As entradas foram normalizadas via z-score usando estatísticas do treino; as saídas do multimodal foram opcionalmente normalizadas. A divisão
+em treino/validação/teste foi feita com proporções fixas e embaralhamento controlado por semente. Essa divisão, apresentada na Tabela~\ref{tab:data_split}, é usada em todos os experimentos descritos neste trabalho.
 
 \begin{table}[H]
 \centering
@@ -27,7 +38,9 @@ Teste & 20\% & 12 \\
 \end{tabular}
 \label{tab:data_split}
 \end{table}
-Essa divisão é usada em todos os experimentos descritos neste trabalho (Tabela~\ref{tab:data_split}).
+
+
+
 
 \subsection{Modelagem, treinamento e avaliação}
 As entradas normalizadas foram codificadas em trens de pulsos usando \textit{rate coding}, no qual a
@@ -66,7 +79,7 @@ na implementação e análise de Redes Neurais Pulsadas (SNNs) em dispositivo m�
 O foco do estudo foi a capacidade da SNN de operar com eficiência e precisão sob restrições de
 memória, processamento e energia típicas de dispositivos de borda.
  A SNN proposta utiliza o modelo de neurônio Leaky Integrate-and-Fire (LIF), configurado para otimizar
- o processamento de eventos esparsos típicos de dados ambientais. A arquitetura (Figura 1) organiza o
+o processamento de eventos esparsos típicos de dados ambientais. A arquitetura (Figura~\ref{fig:minhafigura}) organiza o
  fluxo em macro-estágios de Entrada, Processamento e Saída, explorando esparsidade temporal e ativando
  processamento principalmente quando há variações relevantes nos parâmetros monitorados, o que favorece
  eficiência energética em sistemas autônomos.
@@ -94,12 +107,11 @@ O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes e
 		com neurônios LIF e gradiente substituto (amarelo e verde), até a geração do modelo 
 		final otimizado para implantação em dispositivos de borda (vermelho).
 	}
-	\includegraphics[width=0.9\textwidth]{./figuras/Arquitetura.png}
+	\includegraphics[width=0.8\textwidth]{./figuras/Arquitetura.png}
 	\centering
 	
 	\label{fig:minhafigura}
 \end{figure}
-A Figura~\ref{fig:minhafigura} sintetiza o pipeline de dados, treinamento e inferência embarcada.
 
 \FloatBarrier
 \subsection{Especificações de Hardware para Treinamento e Inferência}
@@ -167,14 +179,6 @@ tensão. Duas janelas de medição foram consideradas: \textit{idle} com a Raspb
 e a potência incremental como $\Delta P = P_{carga} - P_{idle}$. A energia por inferência foi então
 estimada como $\Delta P / \mathrm{throughput}$, produzindo uma métrica em mJ/inf para comparação entre
 cenários de borda.
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=0.85\textwidth]{./figuras/map_points_osm_21S.png}
-	\caption{Localização dos pontos de amostragem no Lago do Serpa (Itacoatiara-AM) em mapa base
-	do OpenStreetMap. As coordenadas foram convertidas para latitude/longitude (WGS84, UTM 21S).}
-	\label{fig:mapa_pontos}
-\end{figure}
 
 %----------------------------------------------------------------------------------------
 %   RESULTADOS

@@ -81,6 +81,10 @@ def _plot_box_grid(cols: List[str], orig: np.ndarray, aug: np.ndarray, out_path:
     plt.close(fig)
 
 
+def _split_cols(cols: List[str], size: int = 4):
+    return [cols[i : i + size] for i in range(0, len(cols), size)]
+
+
 def main():
     ap = argparse.ArgumentParser(description="Compare original vs augmented data distributions.")
     ap.add_argument("--factor", type=int, default=None, help="Override augmentation factor.")
@@ -98,21 +102,26 @@ def main():
     feature_cols = list(cfg.feature_cols)
     target_cols = list(cfg.target_cols)
 
-    _plot_hist_grid(
-        feature_cols + target_cols,
-        np.concatenate([x.numpy(), y.numpy()], axis=1),
-        np.concatenate([x_aug.numpy(), y_aug.numpy()], axis=1),
-        os.path.join(cfg.fig_dir, "aug_compare_hist.png"),
-        cfg.dpi,
-    )
+    all_cols = feature_cols + target_cols
+    orig_all = np.concatenate([x.numpy(), y.numpy()], axis=1)
+    aug_all = np.concatenate([x_aug.numpy(), y_aug.numpy()], axis=1)
 
-    _plot_box_grid(
-        feature_cols + target_cols,
-        np.concatenate([x.numpy(), y.numpy()], axis=1),
-        np.concatenate([x_aug.numpy(), y_aug.numpy()], axis=1),
-        os.path.join(cfg.fig_dir, "aug_compare_box.png"),
-        cfg.dpi,
-    )
+    for idx, chunk in enumerate(_split_cols(all_cols, size=4), start=1):
+        sel = [all_cols.index(c) for c in chunk]
+        _plot_hist_grid(
+            chunk,
+            orig_all[:, sel],
+            aug_all[:, sel],
+            os.path.join(cfg.fig_dir, f"aug_compare_hist_{idx}.png"),
+            cfg.dpi,
+        )
+        _plot_box_grid(
+            chunk,
+            orig_all[:, sel],
+            aug_all[:, sel],
+            os.path.join(cfg.fig_dir, f"aug_compare_box_{idx}.png"),
+            cfg.dpi,
+        )
 
 
 if __name__ == "__main__":
