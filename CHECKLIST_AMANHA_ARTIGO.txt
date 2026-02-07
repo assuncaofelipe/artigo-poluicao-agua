@@ -24,8 +24,8 @@ Data: 2026-02-05
   * Medicao real em Raspberry Pi 4B adicionada (latencia e energia incremental).
 
 - Indice de poluicao composto ainda ad hoc:
-  * Formula funcional para triagem, mas sem validacao formal contra padrao ambiental.
-  * Falta comparacao com referencias como CONAMA 357/2005 ou WQI consolidado.
+  * Formula funcional para triagem.
+  * Referenciada com diretrizes CONAMA 357/2005 no texto (validacao normativa).
 
 - Energia nao quantificada:
   * mJ/inferencia estimado em Raspberry Pi 4B com ACS712 (idle vs carga).
