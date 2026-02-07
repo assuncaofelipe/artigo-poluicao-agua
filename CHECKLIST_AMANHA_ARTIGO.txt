@@ -21,15 +21,16 @@ Data: 2026-02-05
 - Implantacao ainda nao em MCU:
   * Implementacao validada em Android offline, nao em ESP32/STM32.
   * Falta medicao real de latencia e consumo energetico em MCU.
-  * Claim de eficiencia energetica ainda sem evidencia experimental direta.
+  * Medicao real em Raspberry Pi 4B adicionada (latencia e energia incremental).
 
 - Indice de poluicao composto ainda ad hoc:
   * Formula funcional para triagem, mas sem validacao formal contra padrao ambiental.
   * Falta comparacao com referencias como CONAMA 357/2005 ou WQI consolidado.
 
 - Energia nao quantificada:
-  * Sem metricas tipo mJ/inferencia, Wh, ou comparativo SNN vs LSTM no dispositivo.
-  * Sem tabela de latencia por amostra no app.
+  * mJ/inferencia estimado em Raspberry Pi 4B com ACS712 (idle vs carga).
+  * Latencia por amostra reportada na Raspberry Pi 4B.
+  * Ainda falta consumo no Android (profiling) e MCU.
 
 - Referencias com potencial risco:
   * Revisar todas as referencias de 2025 para garantir que sao publicadas e reais (nao placeholder/preprint indevido).
@@ -79,4 +80,3 @@ Data: 2026-02-05
 - Tabela adicional: N amostras e divisao treino/val/teste.
 - Paragrafo curto de impacto local (apoio a monitoramento comunitario no Lago do Serpa).
 - Revisao final de ingles (se alvo internacional) e consistencia de termos.
-
