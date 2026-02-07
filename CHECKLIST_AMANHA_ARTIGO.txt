@@ -13,7 +13,7 @@ Data: 2026-02-05
 
 2) FRAQUEZAS PERSISTENTES (PRIORIDADE ALTA)
 - Dataset pequeno e nao quantificado:
-  * Falta declarar N exato de amostras reais (e N apos aumento sintetico).
+  * N exato declarado no texto (N=60) e aumento sintetico (fator 10).
   * Risco de overfit ainda relevante.
   * R2 macro da SNN ~0.29 indica variancia elevada.
   * Wilcoxon SNN vs RF (p ~ 0.06) sugere competitividade borderline.
