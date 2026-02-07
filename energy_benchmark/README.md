@@ -101,6 +101,20 @@ Isso gera `power_samples.csv` com `timestamp,current_mA,voltage_V`.
 python bench_energy.py --provider csv --csv power_samples.csv
 ```
 
+### c) Energia incremental (idle vs carga)
+
+Se você mede corrente em idle e em carga separadamente, salve em dois CSVs
+(`power_samples_idle.csv` e `power_samples_load.csv`) e calcule a energia
+incremental usando o throughput medido:
+
+```bash
+python compute_energy_from_csvs.py \
+  --idle power_samples_idle.csv \
+  --load power_samples_load.csv \
+  --throughput 11639.71 \
+  --out results_energy_manual.csv
+```
+
 ## 3) Saída esperada
 
 O script imprime:

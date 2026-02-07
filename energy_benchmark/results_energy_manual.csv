@@ -1,0 +1,2 @@
+idle_i_A,load_i_A,idle_i_std_A,load_i_std_A,idle_p_W,load_p_W,delta_p_W,throughput_samples_s,energy_per_inf_mJ
+0.547722,0.595425,0.011326,0.081745,2.738608,2.977125,0.238517,11639.71,0.020492

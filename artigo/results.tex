@@ -113,6 +113,30 @@ Raspberry Pi 4B & $0{,}214$ & $0{,}023$ & $4670{,}50$ \\
 \label{tab:latency_rpi}
 \end{table}
 
+Para estimar o custo energético incremental da inferência, foi utilizado o sensor
+ACS712-20A em série com a alimentação da Raspberry Pi 4B, medindo a corrente em
+estado ocioso (idle) e durante carga (benchmark). O consumo incremental foi
+calculado como $\Delta I = I_{carga} - I_{idle}$, e a potência incremental
+como $\Delta P = V \cdot \Delta I$, com $V=5{,}0$ V. Com a corrente média em
+idle de $0{,}548$ A e em carga de $0{,}595$ A, obteve-se $\Delta P = 0{,}239$ W.
+Usando o throughput observado ($11639{,}71$ amostras/s), a energia por inferência
+estimada foi de $0{,}020$ mJ/inf (Tabela~\ref{tab:energy_rpi}). Estes valores
+representam uma estimativa prática do custo energético adicional do modelo em
+hardware embarcado.
+
+\begin{table}[ht!]
+\centering
+\caption{Estimativa de energia incremental por inferência (Raspberry Pi 4B).}
+\begin{tabular}{lccc}
+\toprule
+$I_{idle}$ (A) & $I_{carga}$ (A) & $\Delta P$ (W) & Energia (mJ/inf) \\
+\midrule
+0{,}548 & 0{,}595 & 0{,}239 & 0{,}020 \\
+\bottomrule
+\end{tabular}
+\label{tab:energy_rpi}
+\end{table}
+
 \begin{figure}[ht!]
 	\centering
 	\begin{minipage}{0.48\textwidth}
