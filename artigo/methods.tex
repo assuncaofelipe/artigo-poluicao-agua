@@ -21,6 +21,14 @@ COR\_V, enquanto a saída principal no modelo univariado foi o pH. Para o modelo
 as saídas foram definidas como pH, OD e turbidez simultaneamente. As variáveis-alvo não foram
 incluídas nas entradas do modelo multimodal para evitar vazamento de informação.
 
+O conjunto de dados de campo utilizado neste estudo contém \textbf{60 amostras georreferenciadas}
+coletadas no Lago do Serpa (Itacoatiara-AM), abrangendo parâmetros físico-químicos e coordenadas
+espaciais. Considerando a limitação natural de campanhas de campo em ambientes amazônicos, foi
+aplicado \textbf{aumento de dados sintético} (fator 10) por meio da adição de ruído gaussiano de
+baixa intensidade, \textbf{apenas para estabilização do treinamento}, sem substituir a coleta real.
+O procedimento preserva a distribuição original e não cria novos padrões ambientais, sendo usado
+exclusivamente como técnica de regularização para reduzir overfitting.
+
 \subsection{Normalização e divisão dos dados}
 As entradas foram normalizadas via z-score, utilizando apenas a média e o desvio padrão do conjunto
 de treino para evitar vazamento de informação. O conjunto foi dividido em treino, validação e teste
