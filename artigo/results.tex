@@ -113,6 +113,24 @@ Raspberry Pi 4B & $0{,}214$ & $0{,}023$ & $4670{,}50$ \\
 \label{tab:latency_rpi}
 \end{table}
 
+No dispositivo móvel Android (modelo 23021RAAEG, Android 15), o benchmark embarcado no
+aplicativo reportou latência média de $0{,}093$ ms/amostra (desvio padrão $0{,}005$ ms)
+e throughput de $10780{,}37$ amostras/s, com 5000 execuções. Esses valores indicam que
+a inferência local no celular é viável em tempo quase real, mesmo sem aceleração dedicada.
+
+\begin{table}[ht!]
+\centering
+\caption{Latência de inferência no dispositivo móvel Android.}
+\begin{tabular}{lccc}
+\toprule
+Dispositivo & Latência média (ms) & Desvio padrão (ms) & Throughput (amostras/s) \\
+\midrule
+Android 23021RAAEG & $0{,}093$ & $0{,}005$ & $10780{,}37$ \\
+\bottomrule
+\end{tabular}
+\label{tab:latency_android}
+\end{table}
+
 Para estimar o custo energético incremental da inferência, foi utilizado o sensor
 ACS712-20A em série com a alimentação da Raspberry Pi 4B, medindo a corrente em
 estado ocioso (idle) e durante carga (benchmark). O consumo incremental foi

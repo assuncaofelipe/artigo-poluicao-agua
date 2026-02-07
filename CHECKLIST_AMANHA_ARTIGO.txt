@@ -30,6 +30,7 @@ Data: 2026-02-05
 - Energia nao quantificada:
   * mJ/inferencia estimado em Raspberry Pi 4B com ACS712 (idle vs carga).
   * Latencia por amostra reportada na Raspberry Pi 4B.
+  * Latencia por amostra reportada no Android.
   * Ainda falta consumo no Android (profiling) e MCU.
 
 - Referencias com potencial risco:
