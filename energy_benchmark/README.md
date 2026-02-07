@@ -86,6 +86,13 @@ Se você usa o ACS712 com Arduino, rode o logger serial e depois alimente o
 python serial_power_logger.py --port /dev/ttyUSB0 --baud 9600 --voltage 5.0
 ```
 
+Se o Arduino reiniciar ao abrir a porta, use:
+
+```bash
+python serial_power_logger.py --port /dev/ttyACM0 --baud 9600 --voltage 5.0 \
+  --no-reset --skip-seconds 10
+```
+
 Isso gera `power_samples.csv` com `timestamp,current_mA,voltage_V`.
 
 ### b) Energia a partir do CSV

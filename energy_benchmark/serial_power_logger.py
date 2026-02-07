@@ -25,14 +25,23 @@ def main():
     ap.add_argument("--baud", type=int, default=9600)
     ap.add_argument("--out", default="power_samples.csv")
     ap.add_argument("--voltage", type=float, default=5.0, help="Tensão fixa da Raspberry (V)")
+    ap.add_argument("--no-reset", action="store_true", help="Evita reset do Arduino (DTR/RTS baixos)")
+    ap.add_argument("--skip-seconds", type=float, default=0.0, help="Ignora leituras nos primeiros N segundos")
     ap.add_argument("--flush-seconds", type=float, default=2.0)
     args = ap.parse_args()
 
-    ser = serial.Serial(args.port, args.baud, timeout=1)
-    time.sleep(2.0)  # aguarda boot do Arduino
+    ser = serial.Serial(args.port, args.baud, timeout=1, dsrdtr=False)
+    if args.no_reset:
+        try:
+            ser.setDTR(False)
+            ser.setRTS(False)
+        except Exception:
+            pass
+    time.sleep(2.0)  # aguarda boot do Arduino (se houver)
 
     header = ["timestamp", "current_mA", "voltage_V"]
     last_flush = time.time()
+    start_time = time.time()
 
     with open(args.out, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -50,6 +59,8 @@ def main():
                     continue
                 vout, current_a = parsed
                 current_mA = abs(current_a) * 1000.0
+                if args.skip_seconds > 0 and (time.time() - start_time) < args.skip_seconds:
+                    continue
                 writer.writerow([time.time(), f"{current_mA:.6f}", f"{args.voltage:.6f}"])
 
                 if time.time() - last_flush >= args.flush_seconds:
