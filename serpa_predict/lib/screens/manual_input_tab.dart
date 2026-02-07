@@ -18,6 +18,8 @@ class ManualInputTab extends StatefulWidget {
 class _ManualInputTabState extends State<ManualInputTab> {
   final _formKey = GlobalKey<FormState>();
   final _controllers = <String, TextEditingController>{};
+  bool _benchmarking = false;
+  BenchmarkResult? _bench;
 
   @override
   void initState() {
@@ -136,6 +138,81 @@ class _ManualInputTabState extends State<ManualInputTab> {
                       label: const Text('Predizer'),
                     ),
                   ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x1A0F172A),
+                    blurRadius: 12,
+                    offset: Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Benchmark de inferência',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Mede a latência média no dispositivo.',
+                    style: TextStyle(color: Color(0xFF64748B)),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _benchmarking
+                          ? null
+                          : () async {
+                              setState(() {
+                                _benchmarking = true;
+                              });
+                              try {
+                                final res =
+                                    widget.model.benchmark(runs: 5000, warmup: 200);
+                                if (mounted) {
+                                  setState(() {
+                                    _bench = res;
+                                  });
+                                }
+                              } finally {
+                                if (mounted) {
+                                  setState(() {
+                                    _benchmarking = false;
+                                  });
+                                }
+                              }
+                            },
+                      icon: _benchmarking
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.speed),
+                      label: Text(_benchmarking ? 'Medindo...' : 'Rodar benchmark'),
+                    ),
+                  ),
+                  if (_bench != null) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      'Latência média: ${_bench!.meanMs.toStringAsFixed(3)} ms\n'
+                      'Desvio padrão: ${_bench!.stdMs.toStringAsFixed(3)} ms\n'
+                      'Throughput: ${_bench!.throughput.toStringAsFixed(2)} amostras/s\n'
+                      'Runs: ${_bench!.runs}',
+                      style: const TextStyle(color: Color(0xFF0F172A)),
+                    ),
+                  ],
                 ],
               ),
             ),

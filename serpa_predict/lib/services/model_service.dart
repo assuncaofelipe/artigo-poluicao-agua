@@ -49,6 +49,47 @@ class ModelService {
     }
   }
 
+  BenchmarkResult benchmark({int runs = 5000, int warmup = 200, int chunk = 100}) {
+    if (!ready) {
+      throw Exception('Modelo não carregado.');
+    }
+    // Entrada default: média => normalização resulta em zero.
+    final x = List<double>.generate(featureCols.length, (i) => 0.0);
+    final inputTensor = [x];
+    final output = List.filled(targetCols.length, 0.0).reshape([1, 3]);
+
+    for (var i = 0; i < warmup; i++) {
+      _interpreter.run(inputTensor, output);
+    }
+
+    final swTotal = Stopwatch()..start();
+    final chunkMeans = <double>[];
+    var done = 0;
+    while (done < runs) {
+      final n = (runs - done) < chunk ? (runs - done) : chunk;
+      final sw = Stopwatch()..start();
+      for (var i = 0; i < n; i++) {
+        _interpreter.run(inputTensor, output);
+      }
+      sw.stop();
+      final msPer = (sw.elapsedMicroseconds / 1000.0) / n;
+      chunkMeans.add(msPer);
+      done += n;
+    }
+    swTotal.stop();
+
+    final meanMs = (swTotal.elapsedMicroseconds / 1000.0) / runs;
+    final stdMs = _std(chunkMeans);
+    final throughput = 1000.0 / meanMs;
+
+    return BenchmarkResult(
+      meanMs: meanMs,
+      stdMs: stdMs,
+      throughput: throughput,
+      runs: runs,
+    );
+  }
+
   Prediction predictSingle(Map<String, double> input,
       {Map<String, List<double>>? stats}) {
     final x = List<double>.generate(
@@ -110,4 +151,29 @@ class ModelService {
     }
     throw Exception('Falha ao carregar model.tflite (asset nao encontrado)');
   }
+}
+
+class BenchmarkResult {
+  final double meanMs;
+  final double stdMs;
+  final double throughput;
+  final int runs;
+
+  BenchmarkResult({
+    required this.meanMs,
+    required this.stdMs,
+    required this.throughput,
+    required this.runs,
+  });
+}
+
+double _std(List<double> values) {
+  if (values.isEmpty) return 0.0;
+  final mean = values.reduce((a, b) => a + b) / values.length;
+  var acc = 0.0;
+  for (final v in values) {
+    final d = v - mean;
+    acc += d * d;
+  }
+  return sqrt(acc / values.length);
 }
