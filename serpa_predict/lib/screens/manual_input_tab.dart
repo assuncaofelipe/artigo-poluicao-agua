@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/data_store.dart';
 import '../services/model_service.dart';
+import '../services/power_service.dart';
 import '../models/sample.dart';
 import '../utils/pollution.dart';
 
@@ -20,6 +21,9 @@ class _ManualInputTabState extends State<ManualInputTab> {
   final _controllers = <String, TextEditingController>{};
   bool _benchmarking = false;
   BenchmarkResult? _bench;
+  bool _energying = false;
+  EnergyEstimate? _energy;
+  final _power = PowerService();
 
   @override
   void initState() {
@@ -216,9 +220,130 @@ class _ManualInputTabState extends State<ManualInputTab> {
                 ],
               ),
             ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x1A0F172A),
+                    blurRadius: 12,
+                    offset: Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Energia estimada (mJ/inf)',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Mede corrente via Android e estima energia por inferência.',
+                    style: TextStyle(color: Color(0xFF64748B)),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _energying
+                          ? null
+                          : () async {
+                              setState(() {
+                                _energying = true;
+                              });
+                              try {
+                                final idle = await _power.sampleAverage(
+                                  duration: const Duration(seconds: 5),
+                                  interval: const Duration(milliseconds: 500),
+                                );
+                                final loadBench = await widget.model.benchmarkWithPower(
+                                  samplePower: _power.readPower,
+                                  runs: 200000,
+                                  warmup: 200,
+                                  chunk: 1000,
+                                );
+                                final loadPower = loadBench.meanPowerW;
+                                if (idle != null && loadPower != null) {
+                                  final deltaP = (loadPower - idle.meanPowerW);
+                                  final energyJ = (deltaP > 0 ? deltaP : 0) /
+                                      loadBench.throughput;
+                                  final energyMJ = energyJ * 1000.0;
+                                  if (mounted) {
+                                    setState(() {
+                                      _energy = EnergyEstimate(
+                                        idlePowerW: idle.meanPowerW,
+                                        loadPowerW: loadPower,
+                                        deltaPowerW: deltaP,
+                                        energyPerInfMJ: energyMJ,
+                                        throughput: loadBench.throughput,
+                                        samples: loadBench.powerSamples,
+                                      );
+                                    });
+                                  }
+                                } else if (mounted) {
+                                  setState(() {
+                                    _energy = null;
+                                  });
+                                }
+                              } finally {
+                                if (mounted) {
+                                  setState(() {
+                                    _energying = false;
+                                  });
+                                }
+                              }
+                            },
+                      icon: _energying
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.bolt),
+                      label: Text(_energying ? 'Medindo...' : 'Medir energia'),
+                    ),
+                  ),
+                  if (_energy != null) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      'Potência idle: ${_energy!.idlePowerW.toStringAsFixed(3)} W\n'
+                      'Potência carga: ${_energy!.loadPowerW.toStringAsFixed(3)} W\n'
+                      'ΔP: ${_energy!.deltaPowerW.toStringAsFixed(3)} W\n'
+                      'Energia: ${_energy!.energyPerInfMJ.toStringAsFixed(4)} mJ/inf\n'
+                      'Throughput: ${_energy!.throughput.toStringAsFixed(2)} amostras/s\n'
+                      'Amostras de power: ${_energy!.samples}',
+                      style: const TextStyle(color: Color(0xFF0F172A)),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+class EnergyEstimate {
+  final double idlePowerW;
+  final double loadPowerW;
+  final double deltaPowerW;
+  final double energyPerInfMJ;
+  final double throughput;
+  final int samples;
+
+  EnergyEstimate({
+    required this.idlePowerW,
+    required this.loadPowerW,
+    required this.deltaPowerW,
+    required this.energyPerInfMJ,
+    required this.throughput,
+    required this.samples,
+  });
 }

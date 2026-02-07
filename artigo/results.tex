@@ -1,7 +1,7 @@
 \section{RESULTADOS}
 
 Os resultados apresentados a seguir correspondem ao modelo SNN ajustado com
-aumento de dados (fator 5, ruído gaussiano leve) e seleção de hiperparâmetros
+aumento de dados (ruído gaussiano leve) e seleção de hiperparâmetros
 via busca em grade. As análises exploratórias mostram a distribuição das
 variáveis e suas correlações, enquanto as figuras de desempenho destacam a
 estabilidade do treinamento e a qualidade das predições em relação aos valores
@@ -33,7 +33,7 @@ com Random Forest, MLP e LSTM multissaída, usando o mesmo particionamento por
 semente. Em termos de erro global (macro), Random Forest e LSTM apresentaram
 melhores médias de $MAE$ e $RMSE$, enquanto a SNN manteve desempenho competitivo.
 O MLP apresentou maior instabilidade entre sementes.
-
+\par A Tabela~\ref{tab:benchmark_multiseed} resume as médias e desvios padrão do benchmark multissemente.
 \begin{table}[ht!]
 \centering
 \caption{Comparação multissemente (média $\pm$ desvio padrão) entre modelos multimodais.}
@@ -49,27 +49,20 @@ MLP & $0{,}781 \pm 0{,}193$ & $0{,}983 \pm 0{,}178$ & $-5{,}460 \pm 5{,}220$ \\
 \end{tabular}
 \label{tab:benchmark_multiseed}
 \end{table}
-
 Observa-se que todos os valores de $R^2$ apresentados estão no intervalo matematicamente
-válido para o coeficiente de determinação ($R^2 \leq 1$).
-
-No teste estatístico pareado de Wilcoxon (SNN vs Random Forest, $n=10$ sementes),
-foram obtidos $p=0{,}0645$ para $MAE_{macro}$, $p=0{,}8457$ para $RMSE_{macro}$ e
-$p=0{,}9219$ para $R^2_{macro}$. Assim, para $\alpha=0{,}05$, não há evidência estatística
-suficiente de superioridade global da SNN sobre Random Forest neste conjunto.
-
-Quando comparada ao MLP no mesmo protocolo, a SNN apresentou vantagem clara em desempenho médio
-e estabilidade. Os testes pareados resultaram em $p=0{,}00195$ (Wilcoxon) para
+válido para o coeficiente de determinação ($R^2 \leq 1$). No teste pareado de sinais (SNN vs Random Forest, $n=10$ sementes),
+foram obtidos $p=0{,}3438$ para $MAE_{macro}$, $p=1{,}0000$ para $RMSE_{macro}$ e
+$p=1{,}0000$ para $R^2_{macro}$. Assim, para $\alpha=0{,}05$, não há evidência estatística
+suficiente de superioridade global da SNN sobre Random Forest neste conjunto. Quando comparada ao MLP no mesmo protocolo, a SNN apresentou vantagem clara em desempenho médio
+e estabilidade. O teste de sinais resultou em $p=0{,}0020$ para
 $MAE_{macro}$, $RMSE_{macro}$ e $R^2_{macro}$ (SNN vs MLP), reforçando que o MLP
 variou significativamente entre sementes e foi sensível à pequena quantidade de dados.
 Além disso, o $R^2_{macro}$ do MLP foi negativo em média ($-5{,}460 \pm 5{,}220$),
 indicando baixa robustez para este cenário.
 
-Na comparação SNN vs LSTM, os testes de Wilcoxon apresentaram $p=0{,}1055$ para
-$MAE_{macro}$, $p=0{,}1309$ para $RMSE_{macro}$ e $p=0{,}2324$ para $R^2_{macro}$,
-sem evidência de diferença estatística significativa para $\alpha=0{,}05$.
-
-Com foco específico em turbidez, foi realizada varredura de pesos da função de perda da
+Na comparação SNN vs LSTM, o teste de sinais apresentou $p=0{,}3438$ para
+$MAE_{macro}$, $p=0{,}3438$ para $RMSE_{macro}$ e $p=0{,}1094$ para $R^2_{macro}$,
+sem evidência de diferença estatística significativa para $\alpha=0{,}05$. Com foco específico em turbidez, foi realizada varredura de pesos da função de perda da
 SNN, priorizando o alvo TURB. O melhor compromisso foi obtido com pesos
 $(0{,}05,\ 0{,}15,\ 0{,}8)$ para (pH, OD, TURB), reduzindo o $MAE_{TURB}$ médio para
 $1{,}006$ (10 sementes), em relação à configuração base $(0{,}2,\ 0{,}2,\ 0{,}6)$, que
@@ -92,6 +85,11 @@ $(0{,}05,\ 0{,}15,\ 0{,}80)$ & $0{,}448$ & $\mathbf{1{,}006}$ & $0{,}280$ \\
 \end{tabular}
 \label{tab:snn_weight_sweep}
 \end{table}
+Como síntese, a Tabela~\ref{tab:snn_weight_sweep} apresenta a varredura de pesos e evidencia o
+trade-off entre reduzir o erro de turbidez e preservar o desempenho global. Quando o peso de TURB
+é aumentado para 0,80, o $MAE_{TURB}$ diminui para $1{,}006$, mas o $R^2_{macro}$ cai para $0{,}280$,
+indicando perda de ajuste agregado. Já a configuração base $(0{,}20,0{,}20,0{,}60)$ mantém melhor
+equilíbrio entre as três variáveis, com $MAE_{macro}$ ligeiramente menor e $R^2_{macro}$ mais alto.
 
 A versão final em TFLite foi executada em uma Raspberry Pi 4B (ARM64), com
 delegate XNNPACK habilitado. A latência média de inferência foi de
@@ -99,6 +97,10 @@ $0{,}214$ ms/amostra (desvio padrão $0{,}023$ ms), com throughput de
 $4670{,}50$ amostras/s, conforme Tabela~\ref{tab:latency_rpi}. Esses resultados
 evidenciam a viabilidade da execução local em hardware de baixo consumo,
 com custo computacional por amostra bastante reduzido.
+Em termos práticos, esses valores indicam que a inferência é sub-milissegundo
+por amostra e suporta milhares de predições por segundo, o que é compatível
+com cenários de monitoramento em tempo quase real e com baixo impacto de
+latência em dispositivos embarcados.
 
 \begin{table}[ht!]
 \centering
@@ -117,6 +119,10 @@ No dispositivo móvel Android (modelo 23021RAAEG, Android 15), o benchmark embar
 aplicativo reportou latência média de $0{,}093$ ms/amostra (desvio padrão $0{,}005$ ms)
 e throughput de $10780{,}37$ amostras/s, com 5000 execuções. Esses valores indicam que
 a inferência local no celular é viável em tempo quase real, mesmo sem aceleração dedicada.
+Além de confirmar a viabilidade, o resultado mostra que a execução no smartphone mantém
+latência menor que 1 ms por amostra e throughput acima de 10 mil amostras/s, o que é
+suficiente para uso em campo com atualização frequente dos parâmetros. A Tabela~\ref{tab:latency_android}
+organiza esses valores para facilitar a comparação com a Raspberry.
 
 \begin{table}[ht!]
 \centering
@@ -131,11 +137,31 @@ Android 23021RAAEG & $0{,}093$ & $0{,}005$ & $10780{,}37$ \\
 \label{tab:latency_android}
 \end{table}
 
+Além da latência, a energia incremental foi estimada diretamente no celular via leitura
+de corrente e tensão do sistema. A potência média em idle foi $1{,}977$ W e em carga
+$2{,}106$ W, resultando em $\Delta P = 0{,}128$ W. Com throughput de $12337{,}40$
+amostras/s, a energia por inferência estimada foi de $0{,}0104$ mJ/inf, baseada em
+200 amostras de potência (Tabela~\ref{tab:energy_android}).
+
+\begin{table}[ht!]
+\centering
+\caption{Estimativa de energia incremental por inferência no dispositivo Android.}
+\begin{tabular}{lcccc}
+\toprule
+$P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & Amostras \\
+\midrule
+1{,}977 & 2{,}106 & 0{,}128 & 0{,}0104 & 200 \\
+\bottomrule
+\end{tabular}
+\label{tab:energy_android}
+\end{table}
+
 Para estimar o custo energético incremental da inferência, foi utilizado o sensor
 ACS712-20A em série com a alimentação da Raspberry Pi 4B, medindo a corrente em
 estado ocioso (idle) e durante carga (benchmark). O consumo incremental foi
 calculado como $\Delta I = I_{carga} - I_{idle}$, e a potência incremental
-como $\Delta P = V \cdot \Delta I$, com $V=5{,}0$ V. Com a corrente média em
+como $\Delta P = V \cdot \Delta I$, com $V=5{,}0$ V. A média foi calculada a partir
+de $N_{idle}=97$ amostras e $N_{carga}=440$ amostras. Com a corrente média em
 idle de $0{,}548$ A e em carga de $0{,}595$ A, obteve-se $\Delta P = 0{,}239$ W.
 Usando o throughput observado ($11639{,}71$ amostras/s), a energia por inferência
 estimada foi de $0{,}020$ mJ/inf (Tabela~\ref{tab:energy_rpi}). Estes valores
@@ -145,11 +171,11 @@ hardware embarcado.
 \begin{table}[ht!]
 \centering
 \caption{Estimativa de energia incremental por inferência (Raspberry Pi 4B).}
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-$I_{idle}$ (A) & $I_{carga}$ (A) & $\Delta P$ (W) & Energia (mJ/inf) \\
+$I_{idle}$ (A) & $I_{carga}$ (A) & $N_{idle}/N_{carga}$ & $\Delta P$ (W) & Energia (mJ/inf) \\
 \midrule
-0{,}548 & 0{,}595 & 0{,}239 & 0{,}020 \\
+0{,}548 & 0{,}595 & 97/440 & 0{,}239 & 0{,}020 \\
 \bottomrule
 \end{tabular}
 \label{tab:energy_rpi}
@@ -167,7 +193,7 @@ $I_{idle}$ (A) & $I_{carga}$ (A) & $\Delta P$ (W) & Energia (mJ/inf) \\
 		\includegraphics[width=\linewidth]{./figuras/boxplots_features.png}
 		\caption*{(b) Boxplots das variáveis}
 	\end{minipage}
-	\caption{Análise exploratória: correlações e distribuição das variáveis de entrada.}
+\caption{Exploratory analysis: correlations and distribution of input variables.}
 	\label{fig:exploratoria}
 \end{figure}
 
@@ -192,7 +218,7 @@ isoladas.
 		\includegraphics[width=\linewidth]{./figuras/loss_curve.png}
 		\caption*{(b) Curva de perda (MSE)}
 	\end{minipage}
-	\caption{Distribuição do alvo e dinâmica de treinamento/validação.}
+\caption{Target distribution and training/validation dynamics.}
 	\label{fig:hist_loss}
 \end{figure}
 
@@ -216,7 +242,7 @@ melhor generalização.
 		\includegraphics[width=\linewidth]{./figuras/map_pH.png}
 		\caption*{(b) Mapa espacial de pH}
 	\end{minipage}
-	\caption{Desempenho preditivo e padrão espacial do pH no Lago do Serpa.}
+\caption{Predictive performance and spatial pattern of pH in Lago do Serpa.}
 	\label{fig:pred_pH}
 \end{figure}
 
@@ -239,7 +265,7 @@ coerência espacial e não gera predições aleatórias ao longo do corpo d'águ
 		\includegraphics[width=\linewidth]{./figuras/map_TURB.png}
 		\caption*{(b) Mapa espacial de turbidez}
 	\end{minipage}
-	\caption{Padrões espaciais de OD e turbidez.}
+\caption{Spatial patterns of dissolved oxygen and turbidity.}
 	\label{fig:mapas}
 \end{figure}
 
@@ -253,8 +279,7 @@ o diagnóstico ambiental por múltiplas evidências.
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.98\textwidth]{./figuras/idw_combined.png}
-	\caption{Superfícies interpoladas por IDW para pH, OD e turbidez a partir dos
-	pontos amostrados.}
+\caption{IDW interpolated surfaces for pH, dissolved oxygen, and turbidity from sampled points.}
 	\label{fig:idw}
 \end{figure}
 
@@ -281,7 +306,7 @@ pontuais reforça a consistência interna do conjunto de dados.
 		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_TURB_multi.png}
 		\caption*{(c) Turbidez}
 	\end{minipage}
-	\caption{Predito vs. real do modelo multimodal para pH, OD e turbidez.}
+\caption{Predicted vs. true values for the multimodal model (pH, dissolved oxygen, turbidity).}
 	\label{fig:multi_pred}
 \end{figure}
 
@@ -309,7 +334,7 @@ previsível também para turbidez.
 		\includegraphics[width=\linewidth]{./figuras/residuals_TURB_multi.png}
 		\caption*{(c) Turbidez}
 	\end{minipage}
-	\caption{Resíduos (predito - real) do modelo multimodal para cada variável.}
+\caption{Residuals (predicted - true) of the multimodal model for each variable.}
 	\label{fig:multi_res}
 \end{figure}
 
@@ -332,8 +357,7 @@ de desempenho global.
 		\includegraphics[width=\linewidth]{./figuras/pollution_idw.png}
 		\caption*{(b) Mancha (IDW) do índice}
 	\end{minipage}
-	\caption{Estimativa espacial do índice de poluição composto a partir das
-	predições multimodais.}
+\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$).}
 	\label{fig:pollution}
 \end{figure}
 

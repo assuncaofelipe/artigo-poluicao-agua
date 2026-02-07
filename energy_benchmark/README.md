@@ -34,10 +34,19 @@ pip uninstall -y numpy
 pip install "numpy<2"
 ```
 
+Se aparecer erro `AttributeError: module 'serial' has no attribute 'Serial'`,
+é porque o pacote errado foi instalado. Corrija assim:
+
+```bash
+pip uninstall -y serial
+pip install pyserial
+```
+
 ## 3) Medição de Energia (corrente/tensão)
 
-**Aviso ACS712-30A:** a sensibilidade típica é ~66 mV/A. No seu código Arduino,
-use `SENSIBILIDADE = 0.066` para o modelo 30A. O valor `0.100` é do ACS712-20A.
+**Aviso ACS712:** a sensibilidade típica é ~66 mV/A para o modelo 30A e ~100 mV/A
+para o modelo 20A. No seu código Arduino, use `SENSIBILIDADE = 0.066` (30A) ou
+`SENSIBILIDADE = 0.100` (20A), conforme o sensor.
 
 O script `bench_energy.py` mede energia média por inferência usando três modos:
 
@@ -101,6 +110,16 @@ Isso gera `power_samples.csv` com `timestamp,current_mA,voltage_V`.
 python bench_energy.py --provider csv --csv power_samples.csv
 ```
 
+### b.1) Converter log bruto do Arduino em CSV
+
+Se você já tem o texto bruto do Serial Monitor, salve em `log.txt` e converta:
+
+```bash
+python parse_arduino_log.py --in log.txt --out power_samples_parsed.csv --summary power_summary.csv
+```
+
+Você pode forçar tensão fixa com `--voltage 5.0` se preferir.
+
 ### c) Energia incremental (idle vs carga)
 
 Se você mede corrente em idle e em carga separadamente, salve em dois CSVs
@@ -114,6 +133,16 @@ python compute_energy_from_csvs.py \
   --throughput 11639.71 \
   --out results_energy_manual.csv
 ```
+
+## 5) Android: log de corrente via ADB
+
+Se o seu Android expõe `current_now` e `voltage_now`, você pode registrar via ADB:
+
+```bash
+python adb_power_logger.py --out android_power_samples.csv --interval 0.5 --duration 60
+```
+
+Depois envie o CSV para eu calcular a média e a energia por inferência.
 
 ## 3) Saída esperada
 

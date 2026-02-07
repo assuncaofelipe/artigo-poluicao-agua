@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 import '../models/prediction.dart';
+import '../models/power_reading.dart';
 import '../utils/normalize.dart';
 
 class ModelService {
@@ -90,6 +91,63 @@ class ModelService {
     );
   }
 
+  Future<EnergyBenchmarkResult> benchmarkWithPower({
+    required Future<PowerReading?> Function() samplePower,
+    int runs = 200000,
+    int warmup = 200,
+    int chunk = 1000,
+  }) async {
+    if (!ready) {
+      throw Exception('Modelo não carregado.');
+    }
+    final x = List<double>.generate(featureCols.length, (i) => 0.0);
+    final inputTensor = [x];
+    final output = List.filled(targetCols.length, 0.0).reshape([1, 3]);
+
+    for (var i = 0; i < warmup; i++) {
+      _interpreter.run(inputTensor, output);
+    }
+
+    final powerSamples = <PowerReading>[];
+    final swTotal = Stopwatch()..start();
+    final chunkMeans = <double>[];
+    var done = 0;
+    while (done < runs) {
+      final n = (runs - done) < chunk ? (runs - done) : chunk;
+      final sw = Stopwatch()..start();
+      for (var i = 0; i < n; i++) {
+        _interpreter.run(inputTensor, output);
+      }
+      sw.stop();
+      final msPer = (sw.elapsedMicroseconds / 1000.0) / n;
+      chunkMeans.add(msPer);
+      done += n;
+
+      final reading = await samplePower();
+      if (reading != null) {
+        powerSamples.add(reading);
+      }
+    }
+    swTotal.stop();
+
+    final meanMs = (swTotal.elapsedMicroseconds / 1000.0) / runs;
+    final stdMs = _std(chunkMeans);
+    final throughput = 1000.0 / meanMs;
+    final meanPowerW = powerSamples.isEmpty
+        ? null
+        : powerSamples.map((p) => p.powerW).reduce((a, b) => a + b) /
+            powerSamples.length;
+
+    return EnergyBenchmarkResult(
+      meanMs: meanMs,
+      stdMs: stdMs,
+      throughput: throughput,
+      runs: runs,
+      powerSamples: powerSamples.length,
+      meanPowerW: meanPowerW,
+    );
+  }
+
   Prediction predictSingle(Map<String, double> input,
       {Map<String, List<double>>? stats}) {
     final x = List<double>.generate(
@@ -164,6 +222,24 @@ class BenchmarkResult {
     required this.stdMs,
     required this.throughput,
     required this.runs,
+  });
+}
+
+class EnergyBenchmarkResult {
+  final double meanMs;
+  final double stdMs;
+  final double throughput;
+  final int runs;
+  final int powerSamples;
+  final double? meanPowerW;
+
+  EnergyBenchmarkResult({
+    required this.meanMs,
+    required this.stdMs,
+    required this.throughput,
+    required this.runs,
+    required this.powerSamples,
+    required this.meanPowerW,
   });
 }
 

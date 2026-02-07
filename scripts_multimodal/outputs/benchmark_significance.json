@@ -28,14 +28,14 @@
             "neg": 3
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 9.0,
-            "p_value": 0.064453125
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         },
         "rmse_macro": {
           "mean_a": 0.5663618666883213,
-          "mean_b": 0.5571403181996093,
+          "mean_b": 0.5571403181996094,
           "better": "random_forest",
           "sign_test": {
             "n": 10,
@@ -44,9 +44,9 @@
             "neg": 5
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 25.0,
-            "p_value": 0.845703125
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         },
         "r2_macro": {
@@ -60,9 +60,9 @@
             "neg": 5
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 26.0,
-            "p_value": 0.921875
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         }
       }
@@ -94,9 +94,9 @@
             "neg": 10
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 0.0,
-            "p_value": 0.001953125
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         },
         "rmse_macro": {
@@ -110,9 +110,9 @@
             "neg": 10
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 0.0,
-            "p_value": 0.001953125
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         },
         "r2_macro": {
@@ -126,9 +126,9 @@
             "neg": 0
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 0.0,
-            "p_value": 0.001953125
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         }
       }
@@ -160,9 +160,9 @@
             "neg": 3
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 11.0,
-            "p_value": 0.10546875
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         },
         "rmse_macro": {
@@ -176,9 +176,9 @@
             "neg": 3
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 12.0,
-            "p_value": 0.130859375
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         },
         "r2_macro": {
@@ -192,9 +192,9 @@
             "neg": 8
           },
           "wilcoxon": {
-            "available": true,
-            "stat": 15.0,
-            "p_value": 0.232421875
+            "available": false,
+            "stat": null,
+            "p_value": null
           }
         }
       }

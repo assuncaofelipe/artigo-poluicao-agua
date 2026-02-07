@@ -13,37 +13,28 @@ Os testes estatísticos reforçam essa leitura: não houve evidência de superio
 da SNN sobre Random Forest e LSTM para $\alpha=0{,}05$, mas houve vantagem significativa
 da SNN sobre MLP. Portanto, os resultados sustentam a SNN como alternativa viável em
 cenário de borda, ainda que não dominante em erro absoluto no conjunto atual.
-
 Em termos espaciais, os mapas de pH, OD e turbidez revelam padrões coerentes de gradientes
 e agrupamentos, o que reforça a consistência dos dados de campo e sugere que as variáveis
 de entrada carregam informação relevante para a predição. As correlações entre temperatura,
 cor aparente e turbidez observadas na análise exploratória estão alinhadas com processos
 físico-químicos esperados em ambientes lênticos, fornecendo suporte adicional para o
 modelo proposto.
-
 Além do desempenho preditivo, a execução do modelo em Raspberry Pi 4B apresentou latência
 sub-milissegundo por amostra, reforçando a viabilidade de inferência local em hardware de
 baixo consumo e compatível com cenários remotos e offline.
+\par
+Do ponto de vista prático, a diferença entre modelos sugere que a escolha depende do objetivo
+operacional. Random Forest e LSTM tendem a minimizar erro médio, enquanto a SNN oferece uma
+alternativa robusta quando se prioriza inferência local com menor custo computacional e
+potencial de eficiência energética. O comportamento mais instável do MLP confirma que modelos
+densos clássicos são sensíveis em bases pequenas e podem variar de forma significativa entre
+sementes. Além disso, a dificuldade sistemática na turbidez indica que esse parâmetro exige
+informação adicional (por exemplo, variáveis hidrodinâmicas ou sazonais) para melhorar a
+generalização.
 
-\subsection*{Ameaças à validade}
-
-Apesar dos resultados promissores, é importante reconhecer limitações. O conjunto de dados
-ainda é limitado em tamanho (\textbf{N=60}), o que impõe restrições à robustez estatística das
-conclusões. O
-aumento de dados por ruído gaussiano, embora útil para melhorar a generalização, não
-substitui a coleta de novas amostras reais e pode não representar integralmente variações
-sazonais e eventos extremos (por exemplo, chuva intensa e aporte súbito de sedimentos).
-Além disso, a avaliação foi realizada em um único corpo d'água e em um intervalo temporal
-limitado, o que restringe a extrapolação para outros cenários hidrológicos.
-
-Outra ameaça interna relevante é o risco de inferência otimista em bases pequenas: mesmo com
-\textit{early stopping}, grid search, benchmark multissemente e testes pareados, diferenças
-de desempenho entre modelos podem variar com novas coletas. Por fim, a implantação prática
-foi validada em dispositivo móvel Android offline e em Raspberry Pi 4B; portanto, os resultados
-de latência e consumo ainda não podem ser diretamente generalizados para microcontroladores
-ultra-restritos (ex.: ESP32/STM32).
-
-Quanto ao índice composto de poluição, ele foi proposto como \textit{indicador relativo} para
-triagem espacial e visualização, e não pretende substituir métricas oficiais. Por isso, a
-Resolução CONAMA 357/2005 é utilizada apenas como referência normativa para interpretação dos
-níveis estimados, mantendo uma postura conservadora quanto à classificação ambiental.
+\par
+Outra consideração importante é que a codificação temporal por \textit{rate coding} implica
+um compromisso entre fidelidade temporal e custo computacional: valores maiores de $T$ podem
+aumentar a qualidade da representação, mas ampliam latência de inferência e consumo. Isso
+sugere que, em cenários de uso real, a escolha de $T$ deve ser calibrada em função do contexto
+operacional e das restrições energéticas do dispositivo de borda.

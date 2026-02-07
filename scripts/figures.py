@@ -17,7 +17,7 @@ def save_boxplots(
     plt.figure(figsize=(10, 4))
     plt.boxplot(data, labels=feature_cols, vert=True)
     plt.xticks(rotation=30, ha="right")
-    plt.ylabel("Valor")
+    plt.ylabel("Value")
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "boxplots_features.png"), dpi=dpi)
     plt.close()
@@ -37,7 +37,7 @@ def save_corr_heatmap(
     plt.colorbar(im, fraction=0.046, pad=0.04)
     plt.xticks(range(len(feature_cols)), feature_cols, rotation=30, ha="right")
     plt.yticks(range(len(feature_cols)), feature_cols)
-    plt.title("Correlação (features normalizadas)")
+    # no title
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "corr_heatmap.png"), dpi=dpi)
     plt.close()
@@ -47,8 +47,8 @@ def save_target_hist(y: torch.Tensor, target_col: str, out_dir: str, dpi: int):
     _ensure_dir(out_dir)
     plt.figure(figsize=(5, 4))
     plt.hist(y.cpu().numpy(), bins=12, color="#2f6f7e")
-    plt.xlabel(target_col)
-    plt.ylabel("Frequência")
+    plt.xlabel(_label_with_unit(target_col))
+    plt.ylabel("Frequency (samples)")
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, f"hist_{target_col}.png"), dpi=dpi)
     plt.close()
@@ -65,10 +65,11 @@ def save_spatial_map(
     _ensure_dir(out_dir)
     plt.figure(figsize=(5, 4))
     sc = plt.scatter(x.cpu().numpy(), y.cpu().numpy(), c=z.cpu().numpy(), s=26)
-    plt.colorbar(sc, fraction=0.046, pad=0.04)
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title(name)
+    label = _label_with_unit(name)
+    plt.colorbar(sc, fraction=0.046, pad=0.04, label=label)
+    plt.xlabel("x (UTM, m)")
+    plt.ylabel("y (UTM, m)")
+    # no title
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, f"map_{name}.png"), dpi=dpi)
     plt.close()
@@ -85,8 +86,9 @@ def save_pred_scatter(
     mn = min(yt.min(), yp.min())
     mx = max(yt.max(), yp.max())
     plt.plot([mn, mx], [mn, mx], "--", color="#444")
-    plt.xlabel(f"{target_col} real")
-    plt.ylabel(f"{target_col} predito")
+    label = _label_with_unit(target_col)
+    plt.xlabel(f"{label} (true)")
+    plt.ylabel(f"{label} (predicted)")
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, f"pred_vs_real_{target_col}.png"), dpi=dpi)
     plt.close()
@@ -99,9 +101,25 @@ def save_loss_curve(
     plt.figure(figsize=(5, 4))
     plt.plot(train_losses, label="treino")
     plt.plot(val_losses, label="validação")
-    plt.xlabel("Época")
-    plt.ylabel("MSE")
+    plt.xlabel("Epoch")
+    plt.ylabel("MSE (normalized)")
     plt.legend()
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "loss_curve.png"), dpi=dpi)
     plt.close()
+
+
+def _label_with_unit(name: str) -> str:
+    key = name.strip()
+    key_up = key.upper()
+    if key_up == "PH":
+        return "pH"
+    if key_up in {"OD", "DO", "DISSOLVED OXYGEN"}:
+        return "Dissolved oxygen (mg/L)"
+    if key_up in {"TURB", "TURBIDEZ", "TURBIDITY"}:
+        return "Turbidity (NTU)"
+    if key_up == "TEMP":
+        return "Temperature (°C)"
+    if key_up in {"COR_A", "COR_V"}:
+        return key  # unknown unit
+    return key

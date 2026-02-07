@@ -9,7 +9,9 @@ Data: 2026-02-05
 - Ajuste da narrativa: foco em dispositivo de borda movel offline (nao MCU validado ainda).
 - Inclusao de ameacas a validade na Discussao.
 - Escala do indice de poluicao explicita como relativa e normalizada em [0,1].
+- Categorias do indice (baixo/medio/alto) definidas para leitura dos mapas.
 - Secao de Trabalhos Futuros separada da Conclusao.
+- Medicao de energia com ACS712 detalhada na metodologia.
 
 2) FRAQUEZAS PERSISTENTES (PRIORIDADE ALTA)
 - Dataset pequeno e nao quantificado:
@@ -31,10 +33,13 @@ Data: 2026-02-05
   * mJ/inferencia estimado em Raspberry Pi 4B com ACS712 (idle vs carga).
   * Latencia por amostra reportada na Raspberry Pi 4B.
   * Latencia por amostra reportada no Android.
-  * Ainda falta consumo no Android (profiling) e MCU.
+  * Consumo no Android medido e adicionado ao artigo (mJ/inf).
+  * Ainda falta MCU.
+  * Script ADB para log de corrente no Android adicionado (energy_benchmark/adb_power_logger.py).
 
 - Referencias com potencial risco:
   * Revisar todas as referencias de 2025 para garantir que sao publicadas e reais (nao placeholder/preprint indevido).
+  * Auditoria local Bib vs PDFs gerada em BIBLIOGRAFIA_AUDIT.txt (ok).
 
 - Pontos menores de escrita/figura:
   * Enxugar frases densas da metodologia.
@@ -45,7 +50,7 @@ Data: 2026-02-05
 - Adicionar no texto:
   * N amostras reais usadas.
   * N treino/validacao/teste por seed (ou media).
-  * N apos aumento sintetico (factor 5) e observacao de que aumento nao substitui coleta real.
+  * N apos aumento sintetico (factor 10) e observacao de que aumento nao substitui coleta real.
 - Rodar e reportar:
   * Bootstrap de intervalo de confianca para MAE macro e R2 macro.
   * (Opcional) validacao cruzada por blocos espaciais, se viavel.

@@ -1,115 +1,75 @@
 \section{MATERIAL E MÉTODOS}
 
-Esta pesquisa adota uma abordagem quantitativa para validar a eficácia das
-SNNs em dispositivos de borda com inferência local, mimetizando computação neuromórfica
-na predição de parâmetros físico-químicos da qualidade da água.
+\subsection{Dados, pré-processamento e divisão}
+Os dados foram obtidos de medições pontuais no Lago do Serpa (Itacoatiara-AM) e organizados em CSV com
+coordenadas ($x, y$) e variáveis físico-químicas (\textit{pH}, OD, temperatura, cor aparente, turbidez
+e cor verdadeira). A limpeza consistiu em converter separadores decimais, garantir consistência numérica
+e remover linhas incompletas. As entradas foram definidas como $x, y, TEMP, COR\_A$ e COR\_V; no modelo
+univariado a saída foi o pH, enquanto no multimodal as saídas foram pH, OD e turbidez, sem incluir
+variáveis-alvo nas entradas para evitar vazamento. O conjunto contém \textbf{60 amostras georreferenciadas}
+no Lago do Serpa (Figura~\ref{fig:mapa_pontos}) e, para reduzir overfitting em base pequena, aplicou-se
+\textbf{aumento de dados sintético} (fator 10)
+com ruído gaussiano leve, apenas para estabilização do treinamento. As entradas foram normalizadas via
+z-score usando estatísticas do treino; as saídas do multimodal foram opcionalmente normalizadas. A divisão
+em treino/validação/teste foi feita com proporções fixas e embaralhamento controlado por semente.
 
-\subsection{Fluxo metodológico passo a passo}
-O procedimento completo foi organizado nas seguintes etapas: (i) consolidação e limpeza dos
-dados; (ii) definição das variáveis de entrada e saída; (iii) normalização e divisão dos dados
-em treino/validação/teste; (iv) codificação temporal das entradas para SNN; (v) treinamento com
-parada antecipada e busca em grade de hiperparâmetros; (vi) avaliação com métricas de erro e
-visualizações; e (vii) geração de mapas espaciais e interpolados para interpretação ambiental.
+\begin{table}[H]
+\centering
+\caption{Divisão do conjunto de dados (N=60).}
+\begin{tabular}{lcc}
+\toprule
+Partição & Proporção & Número de amostras \\
+\midrule
+Treino & 70\% & 42 \\
+Validação & 10\% & 6 \\
+Teste & 20\% & 12 \\
+\bottomrule
+\end{tabular}
+\label{tab:data_split}
+\end{table}
+Essa divisão é usada em todos os experimentos descritos neste trabalho (Tabela~\ref{tab:data_split}).
 
-\subsection{Dados e pré-processamento}
-Os dados foram obtidos de medições pontuais no Lago do Serpa (Itacoatiara-AM) e organizados em
-arquivo CSV com as seguintes colunas: coordenadas ($x, y$) e variáveis físico-químicas
-(\textit{pH}, OD, temperatura, cor aparente, turbidez e cor verdadeira). A limpeza consistiu em
-converter separadores decimais, garantir consistência numérica e remover linhas incompletas. Em
-seguida, definiu-se um conjunto de variáveis de entrada composto por $x, y, TEMP, COR\_A$ e
-COR\_V, enquanto a saída principal no modelo univariado foi o pH. Para o modelo multimodal,
-as saídas foram definidas como pH, OD e turbidez simultaneamente. As variáveis-alvo não foram
-incluídas nas entradas do modelo multimodal para evitar vazamento de informação.
+\subsection{Modelagem, treinamento e avaliação}
+As entradas normalizadas foram codificadas em trens de pulsos usando \textit{rate coding}, no qual a
+probabilidade de disparo é função sigmoidal da entrada. A SNN foi construída com uma camada de entrada
+densa, uma camada oculta com neurônios Leaky Integrate-and-Fire (LIF) e uma camada de saída linear. A
+inferência ocorre ao longo de $T$ passos temporais, acumulando a atividade dos neurônios ocultos, o que
+permite processamento esparso; valores maiores de $T$ aumentam a resolução temporal, mas elevam latência
+e consumo no dispositivo móvel. O treinamento utilizou Adam e MSE com \textit{early stopping} e busca em
+grade para $T$, taxa de aprendizado, limiar, decaimento e tamanho da camada oculta, além da intensidade
+do ruído do aumento de dados; o melhor conjunto foi selecionado pelo menor erro de validação. Para o
+modelo multimodal, adotou-se perda ponderada e normalização dos alvos, gerando pH, OD e turbidez em
+uma única rede. A partir das previsões, definiu-se um índice composto de poluição com (i) desvio do pH
+em relação ao neutro, (ii) OD inverso e (iii) turbidez normalizada; a Resolução CONAMA 357/2005 é usada
+como \textbf{referência normativa de interpretação} dos níveis estimados, sem substituir índices oficiais
+\cite{conama3572005}. O índice foi categorizado em três níveis relativos: baixo ($[0,0{,}33)$), médio
+($[0{,}33,0{,}66)$) e alto ($[0{,}66,1]$), para facilitar a leitura dos mapas. As análises exploratórias
+incluíram boxplots e correlação entre variáveis, enquanto a interpretação espacial foi realizada com
+mapas de pontos e superfícies IDW para pH, OD, turbidez e índice de poluição. A avaliação comparativa
+entre modelos foi feita com benchmark multissemente e teste pareado de sinais (sign test) nas métricas
+macro, adequado para amostras pequenas e sem pressupor normalidade.
 
-O conjunto de dados de campo utilizado neste estudo contém \textbf{60 amostras georreferenciadas}
-coletadas no Lago do Serpa (Itacoatiara-AM), abrangendo parâmetros físico-químicos e coordenadas
-espaciais. Considerando a limitação natural de campanhas de campo em ambientes amazônicos, foi
-aplicado \textbf{aumento de dados sintético} (fator 10) por meio da adição de ruído gaussiano de
-baixa intensidade, \textbf{apenas para estabilização do treinamento}, sem substituir a coleta real.
-O procedimento preserva a distribuição original e não cria novos padrões ambientais, sendo usado
-exclusivamente como técnica de regularização para reduzir overfitting.
-
-\subsection{Normalização e divisão dos dados}
-As entradas foram normalizadas via z-score, utilizando apenas a média e o desvio padrão do conjunto
-de treino para evitar vazamento de informação. O conjunto foi dividido em treino, validação e teste
-com proporções fixas e embaralhamento controlado por semente. Para o modelo multimodal, as saídas
-foram opcionalmente normalizadas para estabilizar a otimização conjunta.
-
-\subsection{Aumento de dados}
-Para mitigar a escassez de amostras, aplicou-se aumento de dados no conjunto de treino por replicação
-com ruído gaussiano leve nas entradas. Esse procedimento amplia a variabilidade observada sem criar
-novas amostras reais, reduzindo a sensibilidade do modelo a ruídos de medição.
-
-\subsection{Codificação temporal e arquitetura SNN}
-As entradas normalizadas foram codificadas em trens de pulsos usando \textit{rate coding}, no qual
-a probabilidade de disparo é função sigmoidal da entrada. A SNN foi construída com uma camada de
-entrada densa, uma camada oculta com neurônios Leaky Integrate-and-Fire (LIF) e uma camada de saída
-linear. A inferência ocorre ao longo de $T$ passos temporais, acumulando a atividade dos neurônios
-ocultos, o que permite um processamento esparso e energeticamente eficiente.
-Na prática, essa escolha de codificação controla diretamente o compromisso entre fidelidade temporal e
-custo computacional: valores maiores de $T$ aumentam a resolução dos padrões de disparo, mas também
-elevam latência de inferência e consumo no dispositivo móvel.
-
-\subsection{Treinamento, validação e busca em grade}
-O treinamento utilizou otimizador Adam e função de perda MSE. Foi aplicado \textit{early stopping}
-com paciência definida, interrompendo o treino quando a validação não apresentou melhora após um
-número fixo de épocas. A seleção de hiperparâmetros foi feita por busca em grade, variando o número
-de neurônios ocultos, passos temporais, taxa de aprendizado, limiar e constante de decaimento, além
-da intensidade do ruído do aumento de dados. O melhor conjunto foi selecionado com base no menor erro
-de validação.
-
-\subsection{Modelo multimodal e índice de poluição}
-Para o modelo multimodal, a rede foi treinada com múltiplas saídas (pH, OD e turbidez), adotando
-normalização dos alvos e perda ponderada para equilibrar as variáveis. A partir das previsões
-multimodais, definiu-se um índice composto de poluição baseado em: (i) desvio do pH em relação ao
-valor neutro; (ii) OD inverso (menor OD implica maior poluição); e (iii) turbidez normalizada. O
-índice final é uma combinação ponderada dessas três componentes, permitindo mapear a intensidade
-relativa de poluição. As diretrizes da Resolução CONAMA 357/2005 definem padrões de qualidade para
-corpos d'água (incluindo faixas de pH e parâmetros como OD e turbidez, conforme a classe), e são
-utilizadas aqui como \textbf{referência normativa de interpretação} dos níveis estimados, não
-como substituto de índices oficiais \cite{conama3572005}.
-
-\subsection{Geração de gráficos e mapas espaciais}
-As análises exploratórias incluem boxplots e mapa de correlação entre variáveis. Para interpretação
-espacial, foram gerados mapas de pontos e superfícies interpoladas por IDW (Inverse Distance Weighting)
-para pH, OD, turbidez e para o índice de poluição. Essas visualizações ajudam a identificar padrões
-espaciais e possíveis regiões críticas no corpo d’água.
-
-\subsection{Exportação do modelo e implantação móvel}
-Após o treinamento final e seleção do melhor conjunto de hiperparâmetros, o modelo multimodal foi
-exportado para inferência em dispositivo móvel. O fluxo de exportação foi: (i) serialização do modelo
-PyTorch; (ii) conversão para ONNX; (iii) transformação para TensorFlow Lite (TFLite); e (iv) validação
-da inferência offline no aplicativo Android. O aplicativo Flutter foi estruturado em módulos, carregando
-o modelo \textit{.tflite} e os parâmetros de normalização para realizar predição local de pH, OD e
-turbidez, além do índice de poluição. O mapa é exibido em modo offline por meio de base vetorial
-MBTiles, permitindo visualização geoespacial sem conexão à internet.
-
-\subsection{Validação e seleção de hiperparâmetros}
-Para garantir robustez no ajuste do modelo neuromórfico, foi adotado um protocolo de validação com
-busca em grade (\textit{grid search}) sobre os principais hiperparâmetros da SNN, incluindo constante
-de decaimento ($\beta$), janela temporal de simulação ($T$), taxa de aprendizado, limiar de disparo e
-tamanho da camada oculta. Cada configuração foi avaliada no conjunto de validação com parada
-antecipada (\textit{early stopping}), e a seleção final considerou o melhor desempenho preditivo com
-estabilidade entre execuções. Como o problema é de regressão multivariada, os critérios principais
-foram métricas de erro (MAE/RMSE) e coeficiente de determinação ($R^2$), em vez de acurácia
-classificatória.
+\subsection{Exportação e implantação móvel}
+Após o treinamento final, o modelo multimodal foi exportado para inferência em dispositivo móvel por
+meio de serialização do modelo PyTorch com os pesos finais, conversão para ONNX preservando a assinatura
+de entrada/saída e transformação para TensorFlow Lite (TFLite) para uso em runtime leve no Android. No
+aplicativo Flutter, o modelo \textit{.tflite} e os parâmetros de normalização (média e desvio padrão)
+são carregados no início da sessão, permitindo que cada amostra seja normalizada localmente e enviada
+ao interpretador TFLite. A saída do modelo (pH, OD e turbidez) é desnormalizada e usada para calcular o
+índice composto de poluição em tempo real. Para garantir operações em campo sem conectividade, o mapa
+é exibido em modo offline com base vetorial MBTiles, preservando o contexto espacial e permitindo
+visualização geoespacial mesmo sem internet.
 
 \subsection{Arquitetura e Integração}
-
 Para avaliar a viabilidade de redes neuromórficas em hardware restrito, esta pesquisa se concentrou
 na implementação e análise de Redes Neurais Pulsadas (SNNs) em dispositivo móvel de borda.
 O foco do estudo foi a capacidade da SNN de operar com eficiência e precisão sob restrições de
 memória, processamento e energia típicas de dispositivos de borda.
-
-A SNN proposta utilizará o modelo de neurônio Leaky Integrate-and-Fire (LIF), configurado para otimizar 
-o processamento de eventos esparsos típicos de dados ambientais. A rede será projetada para explorar 
-a esparsidade temporal dos sinais, ativando-se apenas quando houver variações significativas nos 
-parâmetros monitorados, o que é fundamental para a economia de energia em sistemas autônomos.
-
-A arquitetura proposta para o sistema neuromórfico (ilustrada na Figura 1) foi projetada para 
-viabilizar a execução de redes neurais em dispositivos com restrições severas de hardware. O fluxo 
-de processamento é organizado em macro-estágios principais que se comunicam: Entrada, Processamento 
-e Saída.
+ A SNN proposta utiliza o modelo de neurônio Leaky Integrate-and-Fire (LIF), configurado para otimizar
+ o processamento de eventos esparsos típicos de dados ambientais. A arquitetura (Figura 1) organiza o
+ fluxo em macro-estágios de Entrada, Processamento e Saída, explorando esparsidade temporal e ativando
+ processamento principalmente quando há variações relevantes nos parâmetros monitorados, o que favorece
+ eficiência energética em sistemas autônomos.
 
 O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes estágios:
 
@@ -136,9 +96,10 @@ O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes e
 	}
 	\includegraphics[width=0.9\textwidth]{./figuras/Arquitetura.png}
 	\centering
-	\caption*{Fonte: Autores, 2025. }
+	
 	\label{fig:minhafigura}
 \end{figure}
+A Figura~\ref{fig:minhafigura} sintetiza o pipeline de dados, treinamento e inferência embarcada.
 
 \FloatBarrier
 \subsection{Especificações de Hardware para Treinamento e Inferência}
@@ -146,7 +107,7 @@ O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes e
 Para assegurar a reprodutibilidade dos experimentos e a validação eficaz dos modelos neuromórficos, 
 foi utilizada uma estação de trabalho dedicada para o desenvolvimento, treinamento offline das redes 
 e simulações preliminares de inferência. As especificações detalhadas de hardware e software 
-empregadas são apresentadas a seguir:
+empregadas são apresentadas na Tabela~\ref{tab:hardware}.
 
 \begin{table}[H]
 \centering
@@ -171,7 +132,8 @@ de borda alvo.
 
 Para caracterizar a viabilidade de inferência em hardware de baixo consumo, o modelo TFLite
 foi executado em uma Raspberry Pi 4B (ARM64) com delegate XNNPACK, seguindo o fluxo de
-exportação descrito na Seção 3.7. As especificações do dispositivo de inferência são:
+exportação descrito na Seção 3.7. As especificações do dispositivo de inferência são
+apresentadas na Tabela~\ref{tab:hardware_rpi}.
 
 \begin{table}[H]
 \centering
@@ -193,6 +155,18 @@ Adicionalmente, para avaliar a execução no dispositivo móvel de borda, o apli
 foi testado no aparelho \textit{23021RAAEG} (SoC Qualcomm, Android 15), com aproximadamente
 5{,}5~GiB de memória RAM disponível (MemTotal: 5{,}77~GB). Essa configuração foi utilizada
 para o benchmark de latência no aplicativo.
+
+\subsection{Medição de energia com ACS712}
+Para quantificar o consumo incremental durante a inferência, foi utilizado o sensor de corrente
+ACS712-20A em série com a alimentação da Raspberry Pi 4B. O procedimento foi conduzido com calibração
+do offset do sensor sem carga para garantir leitura próxima de zero, seguida de amostragem contínua da
+tensão de saída do ACS712 e conversão para corrente pela sensibilidade do sensor. As leituras foram
+registradas via Arduino e enviadas por serial, sendo armazenadas em CSV com timestamp, corrente e
+tensão. Duas janelas de medição foram consideradas: \textit{idle} com a Raspberry ociosa e
+\textit{carga} durante a execução do benchmark TFLite. A potência média foi calculada como $P = V \cdot I$
+e a potência incremental como $\Delta P = P_{carga} - P_{idle}$. A energia por inferência foi então
+estimada como $\Delta P / \mathrm{throughput}$, produzindo uma métrica em mJ/inf para comparação entre
+cenários de borda.
 
 \begin{figure}[ht!]
 	\centering

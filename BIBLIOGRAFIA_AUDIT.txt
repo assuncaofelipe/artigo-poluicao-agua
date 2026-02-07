@@ -1,0 +1,39 @@
+AUDITORIA DE BIBLIOGRAFIA (BIB vs PDF LOCAL)
+Total de entradas BibTeX: 26
+Total de PDFs em Bibliografias/: 26
+
+1) ENTRADAS COM PDF CORRESPONDENTE (match por título)
+- ahmed2019 (2019): "Machine learning methods for better water quality prediction" -> Machine learning methods for better water quality prediction.pdf (score=8)
+- aladhaileh2021 (2021): "Modelling and Prediction of Water Quality by Using Artificial Intelligence" -> Modelling and Prediction of Water Quality by Using Artificial Intelligence.pdf (score=10)
+- alprol2024 (2024): "Artificial Intelligence Technologies Revolutionizing Wastewater Treatment: Current Trends and Future Prospective" -> Artificial Intelligence Technologies Revolutionizing Wastewater Treatment: Current Trends and Future Prospective.pdf (score=11)
+- aral2024 (2024): "The Promise of Neuromorphic Edge AI for Rural Environmental Monitoring" -> the-promise-of-neuromorphic-edge-ai-for-rural-environmental-monitoring.pdf (score=10)
+- chadalavada2025 (2025): "Gated-LNN: Gated Liquid Neural Networks for Accurate Water Quality Index Prediction and Classification" -> Gated-LNN_Gated_Liquid_Neural_Networks_for_Accurate_Water_Quality_Index_Prediction_and_Classification.pdf (score=13)
+- elshafeiy2023 (2023): "Real-Time Anomaly Detection for Water Quality Sensor Monitoring Based on Multivariate Deep Learning Technique" -> Real-Time Anomaly Detection for Water Quality Sensor Monitoring Based on Multivariate Deep Learning Technique.pdf (score=15)
+- kalaivanan2022 (2022): "Survival Study on Different Water Quality Prediction Methods Using Machine Learning" -> Survival Study on Different Water Quality Prediction Methods Using Machine Learning.pdf (score=11)
+- lamrini2024 (2024): "Towards Reliability in Smart Water Sensing Technology: Evaluating Classical Machine Learning Models for Outlier Detection" -> Towards Reliability in Smart Water Sensing Technology: Evaluating Classical Machine Learning Models for Outlier Detection.pdf (score=15)
+- liu2019 (2019): "Analysis and Prediction of Water Quality Using LSTM Deep Neural Networks in IoT Environment" -> Analysis and Prediction of Water Quality Using.pdf (score=7)
+- lowe2022 (2022): "A Review on Machine Learning, Artificial Intelligence, and Smart Technology in Water Treatment and Monitoring" -> A Review on Machine Learning, Artificial Intelligence, and Smart Technology in Water Treatment and Monitoring.pdf (score=14)
+- miller2025 (2025): "Integrating Artificial Intelligence Agents with the Internet of Things for Enhanced Environmental Monitoring: Applications in Water Quality and Climate Data" -> Integrating Artificial Intelligence Agents with the Internet of Things for Enhanced Environmental Monitoring: Applicationsin Water Quality and Climate Data.pdf (score=18)
+- nogueira2022 (2022): "A educação quilombola e a luta em prol do meio ambiente na comunidade Sagrado Coração de Jesus Lago de Serpa Itacoatiara-Amazonas" -> A educação quilombola e a luta em prol do meio ambiente na comunidade Sagrado Coração de Jesus Lago de Serpa Itacoatiara-Amazonas.pdf (score=21)
+- palani2008 (2008): "An ANN application for water quality forecasting" -> An ANN application for water quality forecasting.pdf (score=7)
+- pan2025 (2025): "Recent Advances in Remote Sensing and Artificial Intelligence for River Water Quality Forecasting: A Review" -> Recent Advances in Remote Sensing and Artificial Intelligence
+for River Water Quality Forecasting: A Review.pdf (score=15)
+- pyo2023 (2023): "Long short-term memory models of water quality in inland water environments" -> Long short-term memory models of water quality in inland water environments.pdf (score=11)
+- qi2020 (2020): "Monitoring Water Quality Parameters of Taihu Lake Based on Remote Sensing Images and LSTM-RNN" -> Monitoring Water Quality Parameters of Taihu Lake Based on Remote Sensing Images and LSTM-RNN.pdf (score=15)
+- rahu2023 (2023): "Toward Design of Internet of Things and Machine Learning-Enabled Frameworks for Analysis and Prediction of Water Quality" -> Toward_Design_of_Internet_of_Things_and_Machine_Learning-Enabled_Frameworks_for_Analysis_and_Prediction_of_Water_Quality.pdf (score=15)
+- rosero2020 (2020): "Intelligent WSN System for Water Quality Analysis Using Machine Learning Algorithms: A Case Study (Tahuando River from Ecuador)" -> Intelligent WSN System for Water Quality Analysis Using Machine Learning Algorithms: A Case Study (Tahuando River from Ecuador).pdf (score=18)
+- wu2022 (2022): "A Hybrid Model for Water Quality Prediction Based On an Artificial Neural Network, Wavelet Transform, and Long Short-Term Memory" -> A Hybrid Model for Water Quality Prediction Based on an.pdf (score=10)
+- yan2024 (2024): "A Comprehensive Review of Machine Learning for Water Quality Prediction Over the Past Five Years" -> A Comprehensive Review of Machine Learning for Water Quality Prediction over the Past Five Years.pdf (score=15)
+- zulkifli2022 (2022): "IoT-Based Water Monitoring Systems: A Systematic Review" -> IoT-Based Water Monitoring Systems: A Systematic Review.pdf (score=8)
+- azadi2025 (2025): "Towards an Energy-Efficient and Sustainable IIoT using Embedded Neuromorphic AI" -> Towards an Energy-Efficient and Sustainable IIoT usingEmbedded Neuromorphic AI.pdf (score=9)
+- alshareeda2025 (2025): "Secure IoT-Based Real-Time Water Level Monitoring System Using ESP32 for Critical Infrastructure" -> Secure IoT-Based Real-Time Water Level Monitoring System UsingESP32 for Critical Infrastructure.pdf (score=12)
+- huijbregts2024 (2024): "Energy-efficient SNN Architecture using 3nm FinFET Multiport SRAM-based CIM with Online Learning" -> ESAM: Energy-efficient SNN Architecture using 3nm FinFETMultiport SRAM-based CIM with Online Learning.pdf (score=12)
+- aribe2025future (2025): "Spiking Neural Networks: The Future of Brain-Inspired Computing" -> Spiking Neural Networks: The Future of Brain-Inspired
+Computing.pdf (score=9)
+- conama3572005 (2005): "Resolução CONAMA n\textsuperscript{o" -> Resolucao_CONAMA_357_2005.pdf (score=99)
+
+2) ENTRADAS SEM PDF CORRESPONDENTE (verificar manualmente)
+
+3) PDFs SEM ENTRADA NO .bib (verificar inclusão)
+
+Observação: a correspondência é baseada em similaridade textual do título.

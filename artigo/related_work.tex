@@ -1,68 +1,42 @@
 \section{TRABALHOS RELACIONADOS}
 
-\subsection{Modelagem Temporal com Deep Learning em Hidrologia}
+\subsection{Deep Learning, modelos híbridos e confiabilidade em qualidade da água}
 
 A modelagem de qualidade da água tem avançado de abordagens clássicas para redes neurais profundas,
 com destaque para modelos recorrentes em séries temporais ambientais. \citeonline{pyo2023} mostram
 ganhos consistentes com LSTM em ambientes aquáticos interiores, enquanto \citeonline{qi2020} e
 \citeonline{liu2019} reforçam a efetividade de arquiteturas recorrentes e IoT para previsão de
-parâmetros fisico-químicos. Em nível de síntese, revisões recentes confirmam a predominância de
-Deep Learning para padrões não lineares em hidrologia \cite{yan2024,pan2025}. Apesar da precisão,
-esses trabalhos também indicam custo computacional e energético elevados para execução contínua em borda.
-
-\subsection{Arquiteturas Híbridas e Pré-processamento de Sinal}
-
-Abordagens híbridas são usadas para melhorar robustez em cenários ruidosos. \citeonline{wu2022}
-integram ANN, Wavelet e LSTM para elevar desempenho preditivo, enquanto \citeonline{ahmed2019},
-\citeonline{kalaivanan2022} e \citeonline{aladhaileh2021} comparam múltiplos algoritmos de
-aprendizado de máquina para parâmetros de qualidade da água. Esses resultados mostram ganhos de
-acurácia, porém com maior custo de pré-processamento e inferência quando o objetivo é execução
-local em hardware restrito.
-
-\subsection{Avanços em Redes Neurais Bioinspiradas}
-
-Entre os modelos bioinspirados recentes, \citeonline{chadalavada2025} propõem Gated Liquid Neural
-Networks para índice de qualidade da água, com resultados promissores de predição e classificação.
-Embora eficientes, tais modelos ainda operam em regime contínuo. Em contraste, SNNs exploram
-processamento orientado a eventos (\textit{event-driven}), potencialmente mais compatível com
-restrições energéticas de sensores de borda.
-
-\subsection{Detecção de Anomalias e Confiabilidade de Sensores}
-
-A detecção de anomalias e a confiabilidade da instrumentação são pilares em monitoramento contínuo.
-\citeonline{elshafeiy2023} apresentam abordagem multivariada em tempo real para detecção de eventos
-anômalos, enquanto \citeonline{lamrini2024} avaliam modelos clássicos para detecção de outliers em
-sensoriamento inteligente. Complementarmente, revisões de sistemas IoT para água mostram que o
-desempenho analítico depende de arquitetura de dados, calibração e robustez da rede de sensores
+parâmetros físico-químicos. Revisões recentes confirmam a predominância de Deep Learning para padrões
+não lineares em hidrologia \cite{yan2024,pan2025}. Em paralelo, abordagens híbridas buscam robustez
+em cenários ruidosos; \citeonline{wu2022} integram ANN, Wavelet e LSTM, e estudos comparativos
+avaliam múltiplos algoritmos para parâmetros de qualidade da água \cite{ahmed2019,kalaivanan2022,aladhaileh2021}.
+Esses resultados mostram ganhos de acurácia, porém com maior custo de pré-processamento e inferência
+quando o objetivo é execução local em hardware restrito. A confiabilidade da instrumentação também é
+um eixo crítico: \citeonline{elshafeiy2023} tratam detecção de anomalias em tempo real, enquanto
+\citeonline{lamrini2024} avaliam outliers em sensoriamento inteligente; revisões de sistemas IoT
+destacam que o desempenho depende de arquitetura de dados, calibração e robustez da rede de sensores
 \cite{zulkifli2022,miller2025}.
 
-\subsection{Edge Computing e Estratégias de Eficiência Energética}
+\subsection{Edge AI, neuromórfica e fundamentos de SNN}
 
 Edge AI tem sido proposta para reduzir latência e dependência de nuvem em monitoramento hídrico
-\cite{rahu2023,lowe2022}. Estudos aplicados em redes de sensores sem fio e monitoramento remoto
-mostram viabilidade operacional, mas também destacam limites de hardware, energia e conectividade
+\cite{rahu2023,lowe2022}. Estudos aplicados em redes de sensores e monitoramento remoto mostram
+viabilidade operacional, mas também destacam limites de hardware, energia e conectividade
 \cite{rosero2020,alprol2024}. No contexto amazônico, essas limitações são críticas e motivam
-arquiteturas de inferência local com menor custo computacional.
-Além disso, a literatura de visão estratégica sobre monitoramento rural enfatiza que arquiteturas
-neuromórficas na borda podem reduzir consumo energético e tornar os sistemas mais resilientes em
-áreas com infraestrutura limitada \cite{aral2024}.
-Resultados recentes em IIoT embarcado também reportam ganhos energéticos com hardware
-neuromórfico em comparação com plataformas convencionais \cite{azadi2025}, enquanto soluções
-baseadas em ESP32 mostram viabilidade para monitoramento em tempo real em infraestrutura crítica
-\cite{alshareeda2025}.
-
-\subsection{Fundamentos de Redes Neurais Pulsadas (SNN) em Computação Neuromórfica}
-
+arquiteturas de inferência local com menor custo computacional. A literatura estratégica enfatiza
+que arquiteturas neuromórficas na borda podem reduzir consumo energético e tornar sistemas mais
+resilientes em áreas com infraestrutura limitada \cite{aral2024}; resultados recentes em IIoT
+embarcado também reportam ganhos energéticos com hardware neuromórfico \cite{azadi2025}, enquanto
+soluções baseadas em ESP32 mostram viabilidade para monitoramento em tempo real \cite{alshareeda2025}.
 Para mitigar o custo energético de ANNs convencionais em inferência contínua, a computação
 neuromórfica propõe processamento por eventos. Em SNNs, a informação é codificada em pulsos
 assíncronos (\textit{spikes}), reduzindo atividade computacional quando não há variação relevante
-nos sinais.
-No nível de hardware, aceleradores SNN com \textit{compute-in-memory} já reportam ganhos de
-desempenho e eficiência energética em tecnologias avançadas de fabricação, reforçando a viabilidade
-de arquiteturas neuromórficas para cenários de borda \cite{huijbregts2024}. Em paralelo, revisões
-recentes sobre SNNs consolidam fundamentos de modelagem, treinamento e métricas de latência e
-energia, apoiando sua adoção em aplicações sensíveis a consumo e tempo de resposta
-\cite{aribe2025future}.
+nos sinais. Aceleradores SNN com \textit{compute-in-memory} já reportam ganhos de desempenho e
+eficiência energética \cite{huijbregts2024}, e revisões recentes consolidam fundamentos de
+modelagem, treinamento e métricas de latência e energia \cite{aribe2025future}. Entre modelos
+bioinspirados recentes, \citeonline{chadalavada2025} propõem Gated Liquid Neural Networks para
+índice de qualidade da água, mas ainda em regime contínuo; em contraste, SNNs exploram
+processamento orientado a eventos, potencialmente mais compatível com restrições de borda.
 
 Entre os diversos modelos que descrevem a dinâmica do neurônio pulsado, o Leaky Integrate-and-Fire 
 (LIF) destaca-se pelo equilíbrio entre plausibilidade biológica e eficiência computacional. A dinâmica 
@@ -85,45 +59,23 @@ Esta formulação evidencia a vantagem potencial das SNNs em borda: na ausência
 ($I[t] \approx 0$), o sistema evolui com baixa atividade, favorecendo eficiência energética em
 dispositivos com recursos limitados.
 
-\subsection{Contexto local e lacuna de pesquisa}
+\subsection{Contexto local e posicionamento do trabalho}
 
 No contexto do Lago do Serpa, estudos locais sobre território e ambiente reforçam a relevância social
 e ecológica de monitoramento contínuo na região \cite{nogueira2022}. Em paralelo, a literatura clássica
 de previsão de qualidade da água com ANN já demonstrava potencial de modelagem em diferentes cenários
-\cite{palani2008}, mas sem foco em inferência neuromórfica embarcada. Assim, a lacuna abordada neste
-trabalho está na integração de predição multimodal, mapeamento espacial e implantação offline em
-dispositivo móvel, mantendo viabilidade para uso em borda.
-
-\subsection{Tabela comparativa dos estudos e posicionamento do trabalho}
-
-A Tabela~\ref{tab:comparativo_estado_arte} sintetiza estudos representativos e posiciona
-o presente trabalho em termos de tipo de modelo, escopo de saída e foco em implantação
-de borda.
-
-\begin{table*}[t]
-\centering
-\caption{Comparativo entre estudos da literatura e o presente trabalho}
-\label{tab:comparativo_estado_arte}
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{p{2.8cm} p{2.4cm} p{2.7cm} p{2.2cm} p{2.1cm} p{2.1cm} p{2.1cm}}
-\toprule
-\textbf{Estudo} & \textbf{Abordagem} & \textbf{Dados/escopo} & \textbf{Saída} & \textbf{Edge/offline} & \textbf{Mapa espacial} & \textbf{Contribuição central} \\
-\midrule
-\citeonline{palani2008} & ANN clássica & Águas costeiras de Singapura; série temporal & Variáveis físico-químicas (salinidade, temperatura, OD, clorofila-a) & Não reportado & Não & Previsão de variáveis de qualidade com ANN \\
-\citeonline{qi2020} & LSTM-RNN + sensoriamento remoto & Lago Taihu; dados in situ + imagens de satélite & 4 parâmetros (pH, OD, CODMn, NH\textsubscript{3}-N) & Não reportado & Sim & Inversão de parâmetros e geração de mapas temáticos \\
-\citeonline{pyo2023} & Revisão de LSTM (survey) & Revisão de estudos em águas interiores & Não aplicável (artigo de revisão) & Não aplicável & Não aplicável & Síntese crítica de arquiteturas LSTM e extensões \\
-\citeonline{rahu2023} & IoT + ML (framework aplicado) & Canal Rohri (Paquistão), sensores IoT + modelos ML & WQI (regressão) e WQC (classificação) & Parcial (IoT/edge discutido) & Não & Framework integrado de aquisição e predição \\
-\citeonline{rosero2020} & WSN + ML supervisionado & Rio Tahuando (Equador), rede de sensores & Classes de contaminação & Não (arquitetura conectada) & Sim & Sistema WSN com interface e mapa de contaminação \\
-\citeonline{chadalavada2025} & Gated Liquid Neural Networks & Base pública da Índia (2005--2014) & WQI (regressão) + classes de qualidade & Não reportado & Não & Modelo bioinspirado para predição e classificação \\
-\citeonline{aral2024} & Position paper (Neuromorphic Edge AI) & Monitoramento ambiental rural/remoto & Conceitual (agenda de pesquisa) & Sim (proposição) & Não aplicável & Direções para Edge AI neuromórfica em áreas rurais (sem implementação experimental) \\
-\textbf{Este trabalho} & \textbf{SNN multimodal + app móvel} & \textbf{Lago do Serpa (AM), entradas: coordenadas e variáveis físico-químicas} & \textbf{Predição de pH, OD e turbidez + índice de poluição composto} & \textbf{Sim (inferência offline no celular)} & \textbf{Sim (mapa e heatmap)} & \textbf{Integra modelagem neuromórfica, análise espacial e implantação prática} \\
-\bottomrule
-\end{tabular}
-}
-\end{table*}
+\cite{palani2008}, mas sem foco em inferência neuromórfica embarcada. Estudos com LSTM e sensoriamento
+remoto mostram ganhos de precisão e mapas temáticos em lagos de grande porte \cite{qi2020}, enquanto
+frameworks IoT para qualidade da água e redes de sensores sem fio priorizam integração de aquisição e
+predição, porém geralmente dependem de conectividade contínua \cite{rahu2023,rosero2020}. Modelos
+bioinspirados como Liquid Neural Networks obtêm bons resultados para índices de qualidade, mas operam
+em regime contínuo e não exploram plenamente inferência orientada a eventos \cite{chadalavada2025}. Já
+trabalhos de visão estratégica em Edge AI neuromórfica apontam o potencial de SNNs para ambientes
+rurais, porém sem implementação experimental completa \cite{aral2024}. Assim, este trabalho se
+posiciona pela integração de (i) predição multimodal de pH, OD e turbidez; (ii) análise espacial e
+mapas de poluição; e (iii) implantação offline em dispositivo móvel, com benchmark de latência e
+energia em hardware de borda. Essa combinação é pouco explorada na literatura e responde a lacunas
+práticas de operação em campo na Amazônia, onde conectividade e energia são limitadas.
 
 %----------------------------------------------------------------------------------------
 %   MÉTODOS
