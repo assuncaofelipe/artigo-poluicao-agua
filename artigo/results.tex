@@ -131,9 +131,12 @@ Raspberry Pi 4B & $0{,}214$ & $0{,}023$ & $4670{,}50$ \\
 \label{tab:latency_rpi}
 \end{table}
 
-No dispositivo móvel Android (modelo 23021RAAEG, Android 15), o benchmark embarcado no
-aplicativo reportou latência média de $0{,}093$ ms/amostra (desvio padrão $0{,}005$ ms)
-e throughput de $10780{,}37$ amostras/s, com 5000 execuções. Esses valores indicam que
+No dispositivo móvel Android, o benchmark embarcado no aplicativo reportou latência média
+de $0{,}093$ ms/amostra (desvio padrão $0{,}005$ ms) e throughput de $10780{,}37$ amostras/s
+no aparelho 23021RAAEG (Android 15), $0{,}030$ ms/amostra (desvio padrão $0{,}002$ ms) e
+throughput de $33425{,}81$ amostras/s no aparelho SM-A566E (Android 16), e $0{,}61$ ms/amostra
+(desvio padrão $0{,}014$ ms) e throughput de $16313{,}16$ amostras/s no aparelho 2201117SG
+(Android 13), com 5000 execuções. Esses valores indicam que
 a inferência local no celular é viável em tempo quase real, mesmo sem aceleração dedicada.
 Além de confirmar a viabilidade, o resultado mostra que a execução no smartphone mantém
 latência menor que 1 ms por amostra e throughput acima de 10 mil amostras/s, o que é
@@ -148,16 +151,22 @@ organiza esses valores para facilitar a comparação com a Raspberry.
 Dispositivo & Latência média (ms) & Desvio padrão (ms) & Throughput (amostras/s) \\
 \midrule
 Android 23021RAAEG & $0{,}093$ & $0{,}005$ & $10780{,}37$ \\
+Android SM-A566E & $0{,}030$ & $0{,}002$ & $33425{,}81$ \\
+Android 2201117SG & $0{,}61$ & $0{,}014$ & $16313{,}16$ \\
 \bottomrule
 \end{tabular}
 \label{tab:latency_android}
 \end{table}
 
 Além da latência, a energia incremental foi estimada diretamente no celular via leitura
-de corrente e tensão do sistema. A potência média em idle foi $1{,}977$ W e em carga
-$2{,}106$ W, resultando em $\Delta P = 0{,}128$ W. Com throughput de $12337{,}40$
-amostras/s, a energia por inferência estimada foi de $0{,}0104$ mJ/inf, baseada em
-200 amostras de potência (Tabela~\ref{tab:energy_android}).
+de corrente e tensão do sistema. No 23021RAAEG, a potência média em idle foi $1{,}977$ W e em
+carga $2{,}106$ W, resultando em $\Delta P = 0{,}128$ W e energia de $0{,}0104$ mJ/inf
+($12337{,}40$ amostras/s). No SM-A566E, a potência média em idle foi $3{,}455$ W e em carga
+$3{,}923$ W, resultando em $\Delta P = 0{,}468$ W e energia de $0{,}0151$ mJ/inf
+($30905{,}08$ amostras/s). No 2201117SG, a potência média em idle foi $8{,}158$ W e em carga
+$8{,}204$ W, resultando em $\Delta P = 0{,}046$ W e energia de $2{,}8532$ mJ/inf
+($16121{,}71$ amostras/s). Em todos os casos foram coletadas 200 amostras de potência
+(Tabela~\ref{tab:energy_android}).
 
 \begin{table}[ht!]
 \centering
@@ -167,6 +176,8 @@ amostras/s, a energia por inferência estimada foi de $0{,}0104$ mJ/inf, baseada
 $P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & Amostras \\
 \midrule
 1{,}977 & 2{,}106 & 0{,}128 & 0{,}0104 & 200 \\
+3{,}455 & 3{,}923 & 0{,}468 & 0{,}0151 & 200 \\
+8{,}158 & 8{,}204 & 0{,}046 & 2{,}8532 & 200 \\
 \bottomrule
 \end{tabular}
 \label{tab:energy_android}
