@@ -1,0 +1,20 @@
+{
+  "device": "ESP32",
+  "cores": 2,
+  "cpu_mhz": 160,
+  "features": 5,
+  "hidden": 64,
+  "outputs": 3,
+  "time_steps": 15,
+  "latency_mean_ms": 1.8174,
+  "latency_std_ms": 0.0024,
+  "throughput": 550.25,
+  "warmup_runs": 10,
+  "benchmark_runs": 1000,
+  "ph_mae": 0.0984,
+  "od_mae": 0.1825,
+  "turb_mae": 0.8542,
+  "total_spikes": 8578,
+  "firing_rate": 14.89,
+  "timestamp": "2026-02-09T20:49:40"
+}

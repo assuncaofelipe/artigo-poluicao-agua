@@ -1,0 +1,2 @@
+device,cores,cpu_mhz,features,hidden,outputs,time_steps,latency_mean_ms,latency_std_ms,throughput,ph_mae,od_mae,turb_mae,total_spikes,firing_rate,warmup_runs,benchmark_runs,timestamp,notes
+ESP32,2,160,5,64,3,15,1.8174,0.0024,550.25,0.0984,0.1825,0.8542,8578,14.89,10,1000,2026-02-09T20:49:40,

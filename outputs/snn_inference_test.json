@@ -1,0 +1,38 @@
+[
+  {
+    "case": "Caso 1: \u00c1gua segura",
+    "inputs": [
+      30.5,
+      85.0,
+      2.0
+    ],
+    "output": 11.159621238708496,
+    "pollution_index": 0.4630964398384094,
+    "level": "MEDIUM (Attention)",
+    "latency_ms": 1.142263412475586
+  },
+  {
+    "case": "Caso 2: \u00c1gua moderada",
+    "inputs": [
+      32.0,
+      95.0,
+      3.5
+    ],
+    "output": 33.64869689941406,
+    "pollution_index": 0.597,
+    "level": "MEDIUM (Attention)",
+    "latency_ms": 1.0991096496582031
+  },
+  {
+    "case": "Caso 3: \u00c1gua polu\u00edda",
+    "inputs": [
+      28.0,
+      110.0,
+      5.0
+    ],
+    "output": 7.053535461425781,
+    "pollution_index": 0.2695237994194031,
+    "level": "LOW (Safe)",
+    "latency_ms": 1.1601448059082031
+  }
+]
