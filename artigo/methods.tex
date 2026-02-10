@@ -2,8 +2,8 @@
 
 \subsection{Dados, pré-processamento e divisão}
 Os dados foram obtidos de medições pontuais no Lago do Serpa (Itacoatiara-AM) e organizados em CSV com
-coordenadas ($x, y$) e variáveis físico-químicas (\textit{pH}, OD, temperatura, cor aparente, turbidez
-e cor verdadeira). A limpeza consistiu em converter separadores decimais, garantir consistência numérica
+coordenadas ($x, y$) e variáveis físico-químicas (\textit{pH}, oxigênio dissolvido (OD), temperatura,
+cor aparente, turbidez e cor verdadeira). A limpeza consistiu em converter separadores decimais, garantir consistência numérica
 e remover linhas incompletas. As entradas foram definidas como $x, y, TEMP, COR\_A$ e COR\_V; no modelo
 univariado a saída foi o pH, enquanto no multimodal as saídas foram pH, OD e turbidez, sem incluir
 variáveis-alvo nas entradas para evitar vazamento. O conjunto contém \textbf{60 amostras georreferenciadas}
@@ -16,7 +16,8 @@ com ruído gaussiano leve, apenas para estabilização do treinamento.
 	\centering
 	\includegraphics[width=0.75\textwidth]{./figuras/map_points_osm_21S.png}
 	\caption{Localização dos pontos de amostragem no Lago do Serpa (Itacoatiara-AM) em mapa base
-	do OpenStreetMap. As coordenadas foram convertidas para latitude/longitude (WGS84, UTM 21S).}
+	do OpenStreetMap. As coordenadas foram convertidas para latitude/longitude no sistema
+	World Geodetic System 1984 (WGS84), projeção Universal Transverse Mercator (UTM), zona 21S.}
 	\label{fig:mapa_pontos}
 \end{figure}
 \FloatBarrier
@@ -58,7 +59,7 @@ como \textbf{referência normativa de interpretação} dos níveis estimados, se
 \cite{conama3572005}. O índice foi categorizado em três níveis relativos: baixo ($[0,0{,}33)$), médio
 ($[0{,}33,0{,}66)$) e alto ($[0{,}66,1]$), para facilitar a leitura dos mapas. As análises exploratórias
 incluíram boxplots e correlação entre variáveis, enquanto a interpretação espacial foi realizada com
-mapas de pontos e superfícies IDW para pH, OD, turbidez e índice de poluição. A avaliação comparativa
+mapas de pontos e superfícies IDW (inverse distance weighting) para pH, OD, turbidez e índice de poluição. A avaliação comparativa
 entre modelos foi feita com benchmark multissemente e teste pareado de sinais (sign test) nas métricas
 macro, adequado para amostras pequenas e sem pressupor normalidade.
 
@@ -70,7 +71,7 @@ aplicativo Flutter, o modelo \textit{.tflite} e os parâmetros de normalização
 são carregados no início da sessão, permitindo que cada amostra seja normalizada localmente e enviada
 ao interpretador TFLite. A saída do modelo (pH, OD e turbidez) é desnormalizada e usada para calcular o
 índice composto de poluição em tempo real. Para garantir operações em campo sem conectividade, o mapa
-é exibido em modo offline com base vetorial MBTiles, preservando o contexto espacial e permitindo
+é exibido em modo offline com base vetorial MBTiles (formato de tiles), preservando o contexto espacial e permitindo
 visualização geoespacial mesmo sem internet.
 
 \subsection{Arquitetura e Integração}
@@ -119,7 +120,8 @@ O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes e
 Para assegurar a reprodutibilidade dos experimentos e a validação eficaz dos modelos neuromórficos, 
 foi utilizada uma estação de trabalho dedicada para o desenvolvimento, treinamento offline das redes 
 e simulações preliminares de inferência. As especificações detalhadas de hardware e software 
-empregadas são apresentadas na Tabela~\ref{tab:hardware}.
+empregadas são apresentadas na Tabela~\ref{tab:hardware}, incluindo CPU (central processing unit) e
+GPU (graphics processing unit).
 
 \begin{table}[H]
 \centering
@@ -142,8 +144,8 @@ no método de surrogate gradient, essenciais para contornar a não-diferenciabil
 nas SNNs, antes da etapa final de portabilidade e implantação otimizada no dispositivo móvel
 de borda alvo.
 
-Para caracterizar a viabilidade de inferência em hardware de baixo consumo, o modelo TFLite
-foi executado em uma Raspberry Pi 4B (ARM64) com delegate XNNPACK, seguindo o fluxo de
+Para caracterizar a viabilidade de inferência em hardware de baixo consumo, o modelo TensorFlow Lite (TFLite)
+foi executado em uma Raspberry Pi 4B (ARM64) com delegate XNNPACK (aceleração de CPU), seguindo o fluxo de
 exportação descrito na Seção 3.7. As especificações do dispositivo de inferência são
 apresentadas na Tabela~\ref{tab:hardware_rpi}.
 

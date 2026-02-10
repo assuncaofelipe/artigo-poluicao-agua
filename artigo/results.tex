@@ -1,6 +1,6 @@
 \section{RESULTADOS}
 
-Os resultados apresentados a seguir correspondem ao modelo SNN ajustado com
+Os resultados apresentados a seguir correspondem ao modelo SNN (Spiking Neural Network) ajustado com
 aumento de dados (ruído gaussiano leve) e seleção de hiperparâmetros
 via busca em grade. As análises exploratórias mostram a distribuição das
 variáveis e suas correlações, enquanto as figuras de desempenho destacam a
@@ -8,7 +8,8 @@ estabilidade do treinamento e a qualidade das predições em relação aos valor
 observados.
 
 Com a melhor configuração do grid search (Tabela~\ref{tab:grid_top5}), o modelo
-atingiu desempenho de teste $MSE=0{,}0327$ e $MAE=0{,}1437$ para a predição de pH.
+atingiu desempenho de teste $MSE=0{,}0327$ (mean squared error) e $MAE=0{,}1437$
+(mean absolute error) para a predição de pH.
 Considerando a faixa observada de pH (aprox. 5{,}16 a 6{,}52), o erro médio absoluto
 representa uma fração reduzida do intervalo total, indicando boa precisão relativa
 para um conjunto de dados pequeno.
@@ -40,11 +41,11 @@ realista.
 Para avaliar robustez, foi executado um benchmark com múltiplas sementes
 ($n=10$: 7, 13, 21, 42, 84, 101, 123, 202, 303 e 404), comparando SNN multimodal
 com Random Forest, MLP e LSTM multissaída, usando o mesmo particionamento por
-semente. Em termos de erro global (macro), Random Forest e LSTM apresentaram
-melhores médias de $MAE$ e $RMSE$, enquanto a SNN manteve desempenho competitivo.
-O MLP apresentou maior instabilidade entre sementes.
+semente. Em termos de erro global (macro), Random Forest e LSTM (Long Short-Term Memory) apresentaram
+melhores médias de $MAE$ e $RMSE$ (root mean squared error), enquanto a SNN manteve desempenho competitivo.
+O MLP (Multilayer Perceptron) apresentou maior instabilidade entre sementes.
 \par A Tabela~\ref{tab:benchmark_multiseed} resume as médias e desvios padrão do benchmark multissemente. 
-Observa-se que todos os valores de $R^2$ apresentados estão no intervalo matematicamente
+Observa-se que todos os valores de $R^2$ (coeficiente de determinação) apresentados estão no intervalo matematicamente
 válido para o coeficiente de determinação ($R^2 \leq 1$). No teste pareado de sinais (SNN vs Random Forest, $n=10$ sementes),
 foram obtidos $p=0{,}3438$ para $MAE_{macro}$, $p=1{,}0000$ para $RMSE_{macro}$ e
 $p=1{,}0000$ para $R^2_{macro}$. Assim, para $\alpha=0{,}05$, não há evidência estatística
