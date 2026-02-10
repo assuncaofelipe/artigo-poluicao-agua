@@ -3,7 +3,7 @@ import sys
 import time
 
 try:
-    ser = serial.Serial('COM4', 115200, timeout=1)
+    ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
     print('========== MONITOR SERIAL SNN ==========')
     print('Aguardando boot do ESP32...\n')
     

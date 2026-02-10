@@ -26,7 +26,7 @@ em treino/validação/teste foi feita com proporções fixas e embaralhamento co
 
 \begin{table}[H]
 \centering
-\caption{Divisão do conjunto de dados (N=60).}
+\caption{Divisão do conjunto de dados.}
 \begin{tabular}{lcc}
 \toprule
 Partição & Proporção & Número de amostras \\
@@ -164,11 +164,14 @@ Runtime & TFLite (delegate XNNPACK) \\
 \end{table}
 
 Adicionalmente, para avaliar a execução no dispositivo móvel de borda, o aplicativo Android
-foi testado no aparelho \textit{23021RAAEG} (SoC Qualcomm, Android 15), com aproximadamente
-5{,}5~GiB de memória RAM disponível (MemTotal: 5{,}77~GB). Essa configuração foi utilizada
-para o benchmark de latência no aplicativo.
+foi testado em três aparelhos: \textit{23021RAAEG} (SoC Qualcomm, Android 15), com aproximadamente
+5{,}5~GiB de memória RAM disponível (MemTotal: 5{,}77~GB), \textit{SM-A566E} (SoC s5e8855,
+Android 16), com aproximadamente 7{,}3~GiB de memória RAM disponível (MemTotal: 7{,}60~GB) e
+\textit{2201117SG} (SoC mt6781, Android 13), com aproximadamente 5{,}6~GiB de memória RAM
+disponível (MemTotal: 5{,}86~GB). Essas configurações foram utilizadas para os benchmarks de
+latência no aplicativo.
 
-\subsection{Medição de energia com ACS712}
+\subsection{Medição de energia}
 Para quantificar o consumo incremental durante a inferência, foi utilizado o sensor de corrente
 ACS712-20A em série com a alimentação da Raspberry Pi 4B. O procedimento foi conduzido com calibração
 do offset do sensor sem carga para garantir leitura próxima de zero, seguida de amostragem contínua da
@@ -179,6 +182,18 @@ tensão. Duas janelas de medição foram consideradas: \textit{idle} com a Raspb
 e a potência incremental como $\Delta P = P_{carga} - P_{idle}$. A energia por inferência foi então
 estimada como $\Delta P / \mathrm{throughput}$, produzindo uma métrica em mJ/inf para comparação entre
 cenários de borda.
+
+Para o dispositivo móvel, a estimativa de energia foi realizada diretamente no aplicativo Android.
+A corrente foi obtida via \textit{BatteryManager} (propriedade \texttt{BATTERY\_PROPERTY\_CURRENT\_NOW})
+e a tensão via \textit{ACTION\_BATTERY\_CHANGED} (campo \texttt{EXTRA\_VOLTAGE}), com amostragem
+periódica durante janelas de \textit{idle} e de \textit{carga} (benchmark). A potência foi calculada
+como $P = V \cdot I$ e a potência incremental como $\Delta P = P_{carga} - P_{idle}$, permitindo
+estimar a energia por inferência pela razão $\Delta P / \mathrm{throughput}$ a partir de 200 amostras
+de potência em cada aparelho.
+
+Para a ESP32, a inferência foi executada em C/C++ (ESP-IDF), com rotina de benchmark dedicada.
+Foram realizados 10 \textit{warmup runs}, 1000 execuções para estimativa de latência média e
+throughput, e 200 amostras individuais para o desvio padrão, conforme o log serial do firmware.
 
 %----------------------------------------------------------------------------------------
 %   RESULTADOS

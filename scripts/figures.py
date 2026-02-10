@@ -99,8 +99,8 @@ def save_loss_curve(
 ):
     _ensure_dir(out_dir)
     plt.figure(figsize=(5, 4))
-    plt.plot(train_losses, label="treino")
-    plt.plot(val_losses, label="validação")
+    plt.plot(train_losses, label="train")
+    plt.plot(val_losses, label="validation")
     plt.xlabel("Epoch")
     plt.ylabel("MSE (normalized)")
     plt.legend()

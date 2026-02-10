@@ -22,9 +22,15 @@ da representação temporal e latência de inferência no celular por meio do pa
 o estudo ainda depende de base amostral local e reduzida, o que restringe a generalização para outros
 corpos hídricos e regimes sazonais; além disso, o aumento de dados sintético não substitui coletas reais,
 e diferenças entre modelos podem variar com novas campanhas de campo. A validação prática foi feita em
-Android e Raspberry Pi, de modo que a extrapolação para microcontroladores ultra-restritos (ex. ESP32)
-requer testes adicionais. Como continuidade desta pesquisa, recomenda-se ampliar campanhas de coleta,
-validar o modelo em múltiplos cenários ambientais e medir de forma sistemática latência, consumo energético
-e robustez operacional em diferentes dispositivos de borda. Também é relevante evoluir a calibração do
-índice composto de poluição com apoio de especialistas ambientais e testar estratégias de atualização
-de modelo em campo para diferentes regimes hidrológicos.
+Android, Raspberry Pi e ESP32, mas a extrapolação para outros microcontroladores e diferentes perfis de
+energia requer medições adicionais e campanhas de campo mais amplas. Como continuidade desta pesquisa,
+recomenda-se ampliar campanhas de coleta, validar o modelo em múltiplos cenários ambientais e medir de
+forma sistemática latência, consumo energético e robustez operacional em diferentes dispositivos de borda.
+Também é relevante evoluir a calibração do índice composto de poluição com apoio de especialistas
+ambientais e testar estratégias de atualização de modelo em campo para diferentes regimes hidrológicos.
+
+Como contribuição adicional, a validação em ESP32 mostrou que a inferência multimodal é viável
+em microcontroladores, com latência de ordem de milissegundos e erros absolutos compatíveis com
+o cenário móvel. A comparação energética entre ESP32, Raspberry Pi e smartphones evidenciou
+trade-offs claros entre throughput e energia por inferência, reforçando a importância de escolher
+plataforma e regime de amostragem conforme o contexto operacional.

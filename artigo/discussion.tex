@@ -21,7 +21,10 @@ físico-químicos esperados em ambientes lênticos, fornecendo suporte adicional
 modelo proposto.
 Além do desempenho preditivo, a execução do modelo em Raspberry Pi 4B apresentou latência
 sub-milissegundo por amostra, reforçando a viabilidade de inferência local em hardware de
-baixo consumo e compatível com cenários remotos e offline.
+baixo consumo e compatível com cenários remotos e offline. A validação em ESP32 amplia esse
+resultado para a classe de microcontroladores: mesmo com menor throughput, o benchmark indicou
+latência média da ordem de milissegundos e erro absoluto consistente, demonstrando que o modelo
+multimodal pode operar de forma autônoma em dispositivos altamente restritos.
 \par
 Do ponto de vista prático, a diferença entre modelos sugere que a escolha depende do objetivo
 operacional. Random Forest e LSTM tendem a minimizar erro médio, enquanto a SNN oferece uma
@@ -31,6 +34,14 @@ densos clássicos são sensíveis em bases pequenas e podem variar de forma sign
 sementes. Além disso, a dificuldade sistemática na turbidez indica que esse parâmetro exige
 informação adicional (por exemplo, variáveis hidrodinâmicas ou sazonais) para melhorar a
 generalização.
+
+Em termos energéticos, a comparação entre ESP32, Raspberry Pi e dispositivos Android evidencia
+que o consumo incremental por inferência varia significativamente conforme o hardware e o
+throughput disponível. A ESP32 apresentou maior energia por inferência, mas permanece adequada
+para aplicações de baixa taxa de amostragem, enquanto Raspberry Pi e smartphones oferecem melhor
+eficiência por inferência em cenários que exigem maior volume de predições. Esses resultados
+confirmam que a escolha da plataforma deve considerar não apenas a acurácia, mas também o regime
+de amostragem e as restrições energéticas do ambiente de implantação.
 
 \par
 Outra consideração importante é que a codificação temporal por \textit{rate coding} implica

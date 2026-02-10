@@ -5,13 +5,8 @@ aumento de dados (ruído gaussiano leve) e seleção de hiperparâmetros
 via busca em grade. As análises exploratórias mostram a distribuição das
 variáveis e suas correlações, enquanto as figuras de desempenho destacam a
 estabilidade do treinamento e a qualidade das predições em relação aos valores
-observados.
-
-Com a melhor configuração do grid search (Tabela~\ref{tab:grid_top5}), o modelo
-atingiu desempenho de teste $MSE=0{,}0327$ e $MAE=0{,}1437$ para a predição de pH.
-Considerando a faixa observada de pH (aprox. 5{,}16 a 6{,}52), o erro médio absoluto
-representa uma fração reduzida do intervalo total, indicando boa precisão relativa
-para um conjunto de dados pequeno.
+observados. A Tabela~\ref{tab:grid_top5} resume as cinco melhores combinações do
+grid search do modelo multimodal, ordenadas pela menor perda de validação.
 
 \begin{table}[ht!]
 \centering
@@ -148,29 +143,112 @@ organiza esses valores para facilitar a comparação com a Raspberry.
 Dispositivo & Latência média (ms) & Desvio padrão (ms) & Throughput (amostras/s) \\
 \midrule
 Android 23021RAAEG & $0{,}093$ & $0{,}005$ & $10780{,}37$ \\
+Android SM-A566E & $0{,}030$ & $0{,}002$ & $33425{,}81$ \\
+Android 2201117SG & $0{,}61$ & $0{,}014$ & $16313{,}16$ \\
 \bottomrule
 \end{tabular}
 \label{tab:latency_android}
 \end{table}
 
 Além da latência, a energia incremental foi estimada diretamente no celular via leitura
-de corrente e tensão do sistema. A potência média em idle foi $1{,}977$ W e em carga
-$2{,}106$ W, resultando em $\Delta P = 0{,}128$ W. Com throughput de $12337{,}40$
-amostras/s, a energia por inferência estimada foi de $0{,}0104$ mJ/inf, baseada em
-200 amostras de potência (Tabela~\ref{tab:energy_android}).
+de corrente e tensão do sistema. No 23021RAAEG, a potência média em idle foi $1{,}977$ W e em
+carga $2{,}106$ W, resultando em $\Delta P = 0{,}128$ W e energia de $0{,}0104$ mJ/inf
+($12337{,}40$ amostras/s). No SM-A566E, a potência média em idle foi $3{,}455$ W e em carga
+$3{,}923$ W, resultando em $\Delta P = 0{,}468$ W e energia de $0{,}0151$ mJ/inf
+($30905{,}08$ amostras/s). No 2201117SG, a potência média em idle foi $8{,}158$ W e em carga
+$8{,}204$ W, resultando em $\Delta P = 0{,}046$ W e energia de $0{,}00285$ mJ/inf
+($16121{,}71$ amostras/s). Em todos os casos foram coletadas 200 amostras de potência
+(Tabela~\ref{tab:energy_android}).
 
 \begin{table}[ht!]
 \centering
 \caption{Estimativa de energia incremental por inferência no dispositivo Android.}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-$P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & Amostras \\
+Dispositivo & $P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & Amostras \\
 \midrule
-1{,}977 & 2{,}106 & 0{,}128 & 0{,}0104 & 200 \\
+Android 23021RAAEG & 1{,}977 & 2{,}106 & 0{,}128 & 0{,}0104 & 200 \\
+Android SM-A566E & 3{,}455 & 3{,}923 & 0{,}468 & 0{,}0151 & 200 \\
+Android 2201117SG & 8{,}158 & 8{,}204 & 0{,}046 & 0{,}00285 & 200 \\
 \bottomrule
 \end{tabular}
 \label{tab:energy_android}
 \end{table}
+
+Na ESP32 (dual-core, 160 MHz), o benchmark embarcado reportou latência média de
+$1{,}8174$ ms (desvio padrão $0{,}0024$ ms) e throughput de $550{,}25$ amostras/s,
+com 1000 execuções. Além disso, as métricas embarcadas indicaram $MAE_{pH}=0{,}0984$,
+$MAE_{OD}=0{,}1825$ e $MAE_{TURB}=0{,}8542$, evidenciando viabilidade de inferência
+multimodal em microcontrolador com precisão consistente ao cenário móvel (Tabela~\ref{tab:esp32_benchmark}).
+
+\begin{table}[ht!]
+\centering
+\caption{Benchmark de inferência na ESP32.}
+\begin{tabular}{lcc}
+\toprule
+Métrica & Valor & Unidade \\
+\midrule
+Latência média & $1{,}8174$ & ms \\
+Desvio padrão & $0{,}0024$ & ms \\
+Throughput & $550{,}25$ & amostras/s \\
+$MAE_{pH}$ & $0{,}0984$ & -- \\
+$MAE_{OD}$ & $0{,}1825$ & -- \\
+$MAE_{TURB}$ & $0{,}8542$ & -- \\
+\bottomrule
+\end{tabular}
+\label{tab:esp32_benchmark}
+\end{table}
+
+Para a energia da ESP32, o consumo médio em \textit{idle} foi de $0{,}570$ W e em
+\textit{carga} (inferência contínua) de $1{,}949$ W, resultando em $\Delta P=1{,}380$ W.
+Com throughput de $550{,}25$ amostras/s, a energia por inferência estimada foi de
+$2{,}507$ mJ/inf. Esses valores foram obtidos a partir de 88 amostras de \textit{idle}
+e 39 amostras de \textit{carga}, usando a mesma fonte de 5 V e o sensor ACS712 (Tabela~\ref{tab:energy_esp32}).
+
+\begin{table}[H]
+\centering
+\caption{Estimativa de energia incremental por inferência (ESP32).}
+\begin{tabular}{lcccc}
+\toprule
+$P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & $N_{idle}/N_{carga}$ \\
+\midrule
+0{,}570 & 1{,}949 & 1{,}380 & 2{,}507 & 88/39 \\
+\bottomrule
+\end{tabular}
+\label{tab:energy_esp32}
+\end{table}
+
+
+
+Em termos comparativos (Tabela~\ref{tab:energy_summary}), a ESP32 apresenta maior energia por
+inferência, o que é esperado dada a menor taxa de processamento (throughput) e a ausência de
+aceleração vetorial dedicada. Apesar disso, o valor permanece viável para cenários de amostragem
+intermitente, típicos de redes de sensores de baixa taxa. A Raspberry Pi 4B e os smartphones
+apresentam menores valores de mJ/inf, refletindo maior capacidade computacional e otimizações
+em nível de CPU/sistema operacional. O aparelho SM-A566E, por exemplo, combina alto throughput
+com consumo incremental moderado, resultando em baixa energia por inferência.
+
+\begin{table}[ht!]
+\centering
+\caption{Resumo comparativo de energia por inferência em diferentes plataformas.}
+\begin{tabular}{lccc}
+\toprule
+Plataforma & $\Delta P$ (W) & Energia (mJ/inf) & Throughput (amostras/s) \\
+\midrule
+ESP32 & 1{,}380 & 2{,}507 & 550{,}25 \\
+Raspberry Pi 4B & 0{,}239 & 0{,}020 & 11639{,}71 \\
+Android 23021RAAEG & 0{,}128 & 0{,}0104 & 12337{,}40 \\
+Android SM-A566E & 0{,}468 & 0{,}0151 & 30905{,}08 \\
+Android 2201117SG & 0{,}046 & 0{,}00285 & 16121{,}71 \\
+\bottomrule
+\end{tabular}\label{tab:energy_summary}
+\end{table}
+
+Já o dispositivo 2201117SG apresentou energia por inferência elevada mesmo com throughput
+alto, sugerindo maior consumo incremental do sistema durante a execução do benchmark. Esse
+resultado destaca que, em dispositivos móveis, o consumo pode variar significativamente entre
+modelos e configurações de sistema, reforçando a importância de medições empíricas por aparelho
+quando a eficiência energética é requisito de projeto.
 
 Para estimar o custo energético incremental da inferência, foi utilizado o sensor
 ACS712-20A em série com a alimentação da Raspberry Pi 4B, medindo a corrente em

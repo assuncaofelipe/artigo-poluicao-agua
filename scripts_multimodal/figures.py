@@ -10,8 +10,8 @@ def _ensure_dir(path: str):
 def save_loss_curve(train_losses: list, val_losses: list, out_dir: str, dpi: int):
     _ensure_dir(out_dir)
     plt.figure(figsize=(5, 4))
-    plt.plot(train_losses, label="treino")
-    plt.plot(val_losses, label="validação")
+    plt.plot(train_losses, label="train")
+    plt.plot(val_losses, label="validation")
     plt.xlabel("Época")
     plt.ylabel("MSE")
     plt.legend()
