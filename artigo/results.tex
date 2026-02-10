@@ -34,7 +34,7 @@ realista.
 
 Para avaliar robustez, foi executado um benchmark com múltiplas sementes
 ($n=10$: 7, 13, 21, 42, 84, 101, 123, 202, 303 e 404), comparando SNN multimodal
-com Random Forest, MLP e LSTM multissaída, usando o mesmo particionamento por
+com Random Forest (RF), Multilayer Perceptron (MLP) e LSTM multissaída, usando o mesmo particionamento por
 semente. Em termos de erro global (macro), Random Forest e LSTM apresentaram
 melhores médias de $MAE$ e $RMSE$, enquanto a SNN manteve desempenho competitivo.
 O MLP apresentou maior instabilidade entre sementes.
@@ -301,20 +301,11 @@ isoladas.
 	\label{fig:exploratoria}
 \end{figure}
 
-Na Figura~\ref{fig:hist_loss}(a), a distribuição do pH em faixa relativamente estreita indica que
-pequenas diferenças absolutas já representam mudanças ambientalmente relevantes; por isso, erros
-médios modestos têm impacto prático na interpretação da qualidade da água. A Figura~\ref{fig:hist_loss}(b)
-mostra queda rápida das perdas de treino e validação nas primeiras épocas e posterior estabilização,
-com baixa divergência entre curvas. Esse comportamento sugere aprendizado efetivo sem sobreajuste
-dominante, validando o uso de \textit{early stopping} para interromper o treinamento no ponto de
-melhor generalização.
-
-Do ponto de vista ambiental, uma distribuição estreita implica maior sensibilidade do modelo a
-variações pequenas, o que é desejável para detecção de mudanças sutis no Lago do Serpa. Ao mesmo
-tempo, ressalta a necessidade de rigor na calibração do sensor e na padronização das coletas,
-pois ruídos instrumentais podem se traduzir em variações aparentes relevantes. A estabilidade das
-curvas de perda reforça que o modelo aprendeu padrões consistentes sem depender de flutuações
-aleatórias do conjunto reduzido.
+Na Figura~\ref{fig:hist_loss}(a), a faixa relativamente estreita de pH indica que pequenas
+variações absolutas já são ambientalmente relevantes; portanto, erros médios modestos têm impacto
+prático na interpretação. A Figura~\ref{fig:hist_loss}(b) apresenta queda rápida das perdas de
+treino/validação e estabilização com baixa divergência, sugerindo aprendizado efetivo e justificando
+o uso de \textit{early stopping}.
 
 \begin{figure}[ht!]
 	\centering
@@ -332,17 +323,9 @@ aleatórias do conjunto reduzido.
 \end{figure}
 
 
-A Figura~\ref{fig:aug_compare_hist} apresenta histogramas em dois painéis: o primeiro reúne
-variáveis espaciais e físico-químicas de entrada e o segundo inclui a variável de cor remanescente
-e os alvos preditos. Em ambos, as distribuições permanecem nas mesmas faixas após o aumento de
-dados, com forte sobreposição entre original e aumentado. Isso indica que o ruído gaussiano não
-deslocou as médias nem criou modos espúrios, apenas densificou a amostra em torno do comportamento
-observado, o que é desejável em bases pequenas.
-
-Esse resultado sugere que o fator de aumento e o desvio-padrão escolhidos foram conservadores o
-suficiente para preservar a identidade estatística do conjunto. Em termos práticos, isso mantém a
-coerência física das variáveis e evita que o modelo aprenda padrões artificiais. Assim, o aumento
-de dados atua como regularizador e não como fonte de viés.
+A Figura~\ref{fig:aug_compare_hist} mostra forte sobreposição entre dados originais e aumentados,
+indicando que o ruído gaussiano densificou a amostra sem deslocar médias nem criar modos espúrios.
+Isso preserva a coerência física e atua como regularizador em base reduzida.
 
 \begin{figure*}[!t]
 	\centering
@@ -357,16 +340,9 @@ de dados atua como regularizador e não como fonte de viés.
 	\caption{Original vs. augmented data distributions (x10, Gaussian noise): histograms.}\label{fig:aug_compare_hist}
 \end{figure*}
 
-A Figura~\ref{fig:aug_compare_box} reforça essa interpretação nos mesmos dois conjuntos de
-variáveis: medianas e quartis permanecem próximos, enquanto há leve aumento de dispersão. Esse
-comportamento é coerente com um acréscimo controlado de variabilidade, ampliando o suporte
-estatístico do treinamento sem distorcer a distribuição original. Na prática, tende a reduzir a
-sensibilidade a ruídos de medição e a melhorar a robustez em coletas futuras.
-
-Os boxplots também permitem verificar que não houve criação de outliers extremos fora do intervalo
-original, aspecto crítico para evitar extrapolações espúrias. A leve ampliação da dispersão é
-compatível com cenários reais de campo, onde pequenas flutuações são comuns. Isso contribui para
-um modelo menos sensível a variações pontuais e mais estável para uso em monitoramento contínuo.
+A Figura~\ref{fig:aug_compare_box} reforça essa interpretação: medianas e quartis permanecem próximos,
+com leve aumento de dispersão e sem outliers extremos fora do intervalo original. Isso indica
+variabilidade controlada, reduzindo sensibilidade a ruídos de medição e favorecendo robustez.
 
 
 \begin{figure*}[!t]
@@ -489,7 +465,7 @@ com a turbidez real, o que indica potencial de melhoria com novas variáveis e m
 		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_TURB_multi.png}
 		\caption*{(c) Turbidez}
 	\end{minipage}
-\caption{Predicted vs.true values for the multimodal model (pH, dissolved oxygen, turbidity).}\label{fig:multi_pred}
+\caption{Predicted vs. true values for the multimodal model (pH, dissolved oxygen, turbidity).}\label{fig:multi_pred}
 \end{figure}
 
 Na Figura~\ref{fig:multi_res}(a) e (b), os resíduos de pH e OD oscilam ao redor de zero sem

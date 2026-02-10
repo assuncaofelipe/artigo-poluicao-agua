@@ -6,10 +6,9 @@ coordenadas ($x, y$) e variáveis físico-químicas (\textit{pH}, OD, temperatur
 e cor verdadeira). A limpeza consistiu em converter separadores decimais, garantir consistência numérica
 e remover linhas incompletas. As entradas foram definidas como $x, y, TEMP, COR\_A$ e COR\_V; no modelo
 univariado a saída foi o pH, enquanto no multimodal as saídas foram pH, OD e turbidez, sem incluir
-variáveis-alvo nas entradas para evitar vazamento. O conjunto contém \textbf{60 amostras georreferenciadas}
-no Lago do Serpa (Figura~\ref{fig:mapa_pontos}) e, para reduzir overfitting em base pequena, aplicou-se
-\textbf{aumento de dados sintético} (fator 10)
-com ruído gaussiano leve, apenas para estabilização do treinamento. 
+variáveis-alvo nas entradas para evitar vazamento. O conjunto foi georreferenciado no Lago do Serpa
+(Figura~\ref{fig:mapa_pontos}) e, para reduzir overfitting em base pequena, aplicou-se
+\textbf{aumento de dados sintético} (fator 10) com ruído gaussiano leve, apenas para estabilização do treinamento.
 
 
 \begin{figure}[!t]
@@ -58,7 +57,7 @@ como \textbf{referência normativa de interpretação} dos níveis estimados, se
 \cite{conama3572005}. O índice foi categorizado em três níveis relativos: baixo ($[0,0{,}33)$), médio
 ($[0{,}33,0{,}66)$) e alto ($[0{,}66,1]$), para facilitar a leitura dos mapas. As análises exploratórias
 incluíram boxplots e correlação entre variáveis, enquanto a interpretação espacial foi realizada com
-mapas de pontos e superfícies IDW para pH, OD, turbidez e índice de poluição. A avaliação comparativa
+mapas de pontos e superfícies de inverso da distância (IDW) para pH, OD, turbidez e índice de poluição. A avaliação comparativa
 entre modelos foi feita com benchmark multissemente e teste pareado de sinais (sign test) nas métricas
 macro, adequado para amostras pequenas e sem pressupor normalidade.
 
@@ -70,12 +69,12 @@ aplicativo Flutter, o modelo \textit{.tflite} e os parâmetros de normalização
 são carregados no início da sessão, permitindo que cada amostra seja normalizada localmente e enviada
 ao interpretador TFLite. A saída do modelo (pH, OD e turbidez) é desnormalizada e usada para calcular o
 índice composto de poluição em tempo real. Para garantir operações em campo sem conectividade, o mapa
-é exibido em modo offline com base vetorial MBTiles, preservando o contexto espacial e permitindo
+é exibido em modo offline com base vetorial MBTiles (Mapbox Tiles), preservando o contexto espacial e permitindo
 visualização geoespacial mesmo sem internet.
 
 \subsection{Arquitetura e Integração}
 Para avaliar a viabilidade de redes neuromórficas em hardware restrito, esta pesquisa se concentrou
-na implementação e análise de Redes Neurais Pulsadas (SNNs) em dispositivo móvel de borda.
+na implementação e análise de SNNs em dispositivo móvel de borda.
 O foco do estudo foi a capacidade da SNN de operar com eficiência e precisão sob restrições de
 memória, processamento e energia típicas de dispositivos de borda.
  A SNN proposta utiliza o modelo de neurônio Leaky Integrate-and-Fire (LIF), configurado para otimizar
@@ -84,7 +83,7 @@ o processamento de eventos esparsos típicos de dados ambientais. A arquitetura 
  processamento principalmente quando há variações relevantes nos parâmetros monitorados, o que favorece
  eficiência energética em sistemas autônomos.
 
-O núcleo do sistema é a Rede Neural Pulsada (SNN), estruturada nos seguintes estágios:
+O núcleo do sistema é a SNN, estruturada nos seguintes estágios:
 
 \begin{compactitem}
   \item Camada de entrada (codificação): conversão dos dados escalares normalizados em trens de
@@ -143,7 +142,8 @@ nas SNNs, antes da etapa final de portabilidade e implantação otimizada no dis
 de borda alvo.
 
 Para caracterizar a viabilidade de inferência em hardware de baixo consumo, o modelo TFLite
-foi executado em uma Raspberry Pi 4B (ARM64) com delegate XNNPACK, seguindo o fluxo de
+foi executado em uma Raspberry Pi 4B (ARM64) com delegate XNNPACK (otimizador de kernels
+do TensorFlow Lite), seguindo o fluxo de
 exportação descrito na Seção 3.7. As especificações do dispositivo de inferência são
 apresentadas na Tabela~\ref{tab:hardware_rpi}.
 
@@ -191,7 +191,7 @@ como $P = V \cdot I$ e a potência incremental como $\Delta P = P_{carga} - P_{i
 estimar a energia por inferência pela razão $\Delta P / \mathrm{throughput}$ a partir de 200 amostras
 de potência em cada aparelho.
 
-Para a ESP32, a inferência foi executada em C/C++ (ESP-IDF), com rotina de benchmark dedicada.
+Para a ESP32 (microcontrolador Espressif), a inferência foi executada em C/C++ (ESP-IDF), com rotina de benchmark dedicada.
 Foram realizados 10 \textit{warmup runs}, 1000 execuções para estimativa de latência média e
 throughput, e 200 amostras individuais para o desvio padrão, conforme o log serial do firmware.
 
