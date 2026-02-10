@@ -83,28 +83,23 @@ o processamento de eventos esparsos típicos de dados ambientais. A arquitetura 
  processamento principalmente quando há variações relevantes nos parâmetros monitorados, o que favorece
  eficiência energética em sistemas autônomos.
 
-O núcleo do sistema é a SNN, estruturada nos seguintes estágios:
-
-\begin{compactitem}
-  \item Camada de entrada (codificação): conversão dos dados escalares normalizados em trens de
-  pulsos discretos no tempo (\textit{spike trains}) via \textit{rate coding}; quanto maior o valor de
-  entrada normalizada, maior a taxa de disparo esperada.
-
-  \item Camada oculta (processamento neuromórfico): neurônios Leaky Integrate-and-Fire (LIF), que
-  integram pulsos de entrada e disparam ao atingir limiar de tensão.
-
-  \item Camada de saída (regressão): decodificação da atividade de pulsos para gerar a predição
-  contínua dos parâmetros de qualidade da água.
-\end{compactitem}
+Na Entrada, os dados do Lago do Serpa são normalizados (z-score) e passam por aumento de dados
+sintético para estabilização do treinamento. Em seguida, a etapa neuromórfica inclui a codificação
+temporal (\textit{rate coding}) para transformar valores escalares em trens de pulsos e a inferência
+com neurônios LIF. A otimização envolve ajuste de pesos e hiperparâmetros (busca em grade e
+\textit{early stopping}), guiada pela função de perda. Após o treinamento, o modelo é exportado no
+pipeline PyTorch $\rightarrow$ ONNX $\rightarrow$ TFLite, permitindo uso em dispositivos de borda.
+Na implantação, o mesmo modelo é executado offline em smartphones, Raspberry Pi e ESP32, gerando
+predições multimodais (pH, OD e turbidez), índice de poluição e mapas para suporte à decisão em campo.
 
 \begin{figure}[ht!] 
 	\centering
 	\caption{ 
 		Fluxograma da arquitetura proposta para o sistema neuromórfico de predição da 
-		qualidade da água. A figura ilustra o pipeline completo, desde o pré-processamento 
-		e interpolação dos dados brutos (azul), passando pela definição e treinamento da SNN 
-		com neurônios LIF e gradiente substituto (amarelo e verde), até a geração do modelo 
-		final otimizado para implantação em dispositivos de borda (vermelho).
+		qualidade da água, destacando a entrada e o pré-processamento, o treinamento
+		neuromórfico com SNN (LIF) e \textit{rate coding}, o pipeline de exportação
+		PyTorch $\rightarrow$ ONNX $\rightarrow$ TFLite, e a implantação offline em
+		dispositivos de borda.
 	}
 	\includegraphics[width=0.8\textwidth]{./figuras/Arquitetura.png}
 	\centering
