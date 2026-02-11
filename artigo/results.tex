@@ -1,16 +1,15 @@
-\section{RESULTADOS}
+\section{RESULTS}
 
-Os resultados apresentados a seguir correspondem ao modelo SNN ajustado com
-aumento de dados (ruído gaussiano leve) e seleção de hiperparâmetros
-via busca em grade. As análises exploratórias mostram a distribuição das
-variáveis e suas correlações, enquanto as figuras de desempenho destacam a
-estabilidade do treinamento e a qualidade das predições em relação aos valores
-observados. A Tabela~\ref{tab:grid_top5} resume as cinco melhores combinações do
-grid search do modelo multimodal, ordenadas pela menor perda de validação.
+The results below correspond to the SNN model tuned with data augmentation
+(light Gaussian noise) and hyperparameter selection via grid search. Exploratory
+analyses show variable distributions and correlations, while performance figures
+highlight training stability and prediction quality relative to observed values.
+Table~\ref{tab:grid_top5} summarizes the five best multimodal grid-search combinations,
+ranked by lowest validation loss.
 
 \begin{table}[ht!]
 \centering
-\caption{Top-5 configurações do grid search (ordem por menor perda de validação).}
+\caption{Top-5 grid-search configurations (ranked by lowest validation loss).}
 \begin{tabular}{lcccccc}
 \toprule
 Hidden & $T$ & $lr$ & $\beta$ & $thresh$ & $\sigma$ & $val\_loss$ \\
@@ -25,38 +24,35 @@ Hidden & $T$ & $lr$ & $\beta$ & $thresh$ & $\sigma$ & $val\_loss$ \\
 \label{tab:grid_top5}
 \end{table}
 
-Também foi treinado um modelo multimodal (multi-saída) para prever simultaneamente
-pH, OD e turbidez. O melhor ajuste multimodal apresentou, no conjunto de teste,
-as seguintes métricas: $MAE_{pH}=0{,}107$, $MAE_{OD}=0{,}222$ e $MAE_{TURB}=0{,}971$.
-No cenário sem vazamento de informação entre entradas e saídas, observou-se maior
-dificuldade para turbidez, indicando um problema de predição mais desafiador e mais
-realista.
+A multimodal (multi-output) model was trained to jointly predict pH, dissolved oxygen,
+and turbidity. The best multimodal model achieved test metrics of $MAE_{pH}=0{,}107$,
+$MAE_{OD}=0{,}222$, and $MAE_{TURB}=0{,}971$. Without leakage between inputs and targets,
+turbidity remained the hardest variable, indicating a more challenging and realistic
+prediction task.
 
-Para avaliar robustez, foi executado um benchmark com múltiplas sementes
-($n=10$: 7, 13, 21, 42, 84, 101, 123, 202, 303 e 404), comparando SNN multimodal
-com Random Forest (RF), Multilayer Perceptron (MLP) e LSTM multissaída, usando o mesmo particionamento por
-semente. Em termos de erro global (macro), Random Forest e LSTM apresentaram
-melhores médias de $MAE$ e $RMSE$, enquanto a SNN manteve desempenho competitivo.
-O MLP apresentou maior instabilidade entre sementes.
-\par A Tabela~\ref{tab:benchmark_multiseed} resume as médias e desvios padrão do benchmark multissemente. 
-Observa-se que todos os valores de $R^2$ apresentados estão no intervalo matematicamente
-válido para o coeficiente de determinação ($R^2 \leq 1$). No teste pareado de sinais (SNN vs Random Forest, $n=10$ sementes),
-foram obtidos $p=0{,}3438$ para $MAE_{macro}$, $p=1{,}0000$ para $RMSE_{macro}$ e
-$p=1{,}0000$ para $R^2_{macro}$. Assim, para $\alpha=0{,}05$, não há evidência estatística
-suficiente de superioridade global da SNN sobre Random Forest neste conjunto. Quando comparada ao MLP no mesmo protocolo, a SNN apresentou vantagem clara em desempenho médio
-e estabilidade. O teste de sinais resultou em $p=0{,}0020$ para
-$MAE_{macro}$, $RMSE_{macro}$ e $R^2_{macro}$ (SNN vs MLP), reforçando que o MLP
-variou significativamente entre sementes e foi sensível à pequena quantidade de dados.
-Além disso, o $R^2_{macro}$ do MLP foi negativo em média ($-5{,}460 \pm 5{,}220$),
-indicando baixa robustez para este cenário.
+To assess robustness, we ran a multi-seed benchmark
+($n=10$: 7, 13, 21, 42, 84, 101, 123, 202, 303, 404), comparing the multimodal SNN
+with Random Forest (RF), Multilayer Perceptron (MLP), and multi-output LSTM using the
+same seed-based split. In terms of global (macro) error, Random Forest and LSTM achieved
+lower average $MAE$ and $RMSE$, while the SNN remained competitive. The MLP showed higher
+instability across seeds. Table~\ref{tab:benchmark_multiseed} summarizes mean and standard
+deviation values. All reported $R^2$ values fall within the mathematically valid range
+($R^2 \leq 1$). In the paired sign test (SNN vs Random Forest, $n=10$ seeds), we obtained
+$p=0{,}3438$ for $MAE_{macro}$, $p=1{,}0000$ for $RMSE_{macro}$, and $p=1{,}0000$ for
+$R^2_{macro}$. Thus, for $\alpha=0{,}05$, there is no statistical evidence of global
+superiority of the SNN over Random Forest on this dataset. When compared to MLP under
+the same protocol, the SNN showed a clear advantage in average performance and stability.
+The sign test yielded $p=0{,}0020$ for $MAE_{macro}$, $RMSE_{macro}$, and $R^2_{macro}$
+(SNN vs MLP), indicating MLP sensitivity to small data. In addition, the MLP $R^2_{macro}$
+was negative on average ($-5{,}460 \pm 5{,}220$), indicating low robustness in this setting.
 
 
 \begin{table}[ht!]
 \centering
-\caption{Comparação multissemente (média $\pm$ desvio padrão) entre modelos multimodais.}
+\caption{Multi-seed comparison (mean $\pm$ standard deviation) among multimodal models.}
 \begin{tabular}{lccc}
 \toprule
-Modelo & MAE macro & RMSE macro & $R^2$ macro \\
+Model & MAE macro & RMSE macro & $R^2$ macro \\
 \midrule
 Random Forest & $\mathbf{0{,}409 \pm 0{,}062}$ & $\mathbf{0{,}557 \pm 0{,}086}$ & $\mathbf{0{,}335 \pm 0{,}131}$ \\
 LSTM & $0{,}428 \pm 0{,}059$ & $0{,}548 \pm 0{,}073$ & $0{,}313 \pm 0{,}139$ \\
@@ -68,30 +64,30 @@ MLP & $0{,}781 \pm 0{,}193$ & $0{,}983 \pm 0{,}178$ & $-5{,}460 \pm 5{,}220$ \\
 \end{table}
 
 
-Na comparação SNN vs LSTM, o teste de sinais apresentou $p=0{,}3438$ para
-$MAE_{macro}$, $p=0{,}3438$ para $RMSE_{macro}$ e $p=0{,}1094$ para $R^2_{macro}$,
-sem evidência de diferença estatística significativa para $\alpha=0{,}05$. Com foco específico em turbidez, foi realizada varredura de pesos da função de perda da
-SNN, priorizando o alvo TURB. O melhor compromisso foi obtido com pesos
-$(0{,}05,\ 0{,}15,\ 0{,}8)$ para (pH, OD, TURB), reduzindo o $MAE_{TURB}$ médio para
-$1{,}006$ (10 sementes), em relação à configuração base $(0{,}2,\ 0{,}2,\ 0{,}6)$, que
-apresentou $MAE_{TURB}=1{,}012$. Esse ajuste melhora o alvo mais difícil, mas com leve
-degradação de $R^2_{macro}$ e mudança marginal em $MAE_{macro}$, indicando trade-off entre
-foco em turbidez e desempenho global.
+In the SNN vs LSTM comparison, the sign test yielded $p=0{,}3438$ for $MAE_{macro}$,
+$p=0{,}3438$ for $RMSE_{macro}$, and $p=0{,}1094$ for $R^2_{macro}$, with no statistically
+significant difference at $\alpha=0{,}05$. Focusing on turbidity, we performed a loss-weight
+sweep in the SNN, prioritizing TURB. The best compromise was achieved with weights
+$(0{,}05,\ 0{,}15,\ 0{,}8)$ for (pH, OD, TURB), reducing mean $MAE_{TURB}$ to $1{,}006$
+(10 seeds) relative to the base configuration $(0{,}2,\ 0{,}2,\ 0{,}6)$, which yielded
+$MAE_{TURB}=1{,}012$. This adjustment improves the most difficult target, with a slight
+decrease in $R^2_{macro}$ and marginal change in $MAE_{macro}$, indicating a trade-off
+between turbidity focus and global performance.
 
 
 
-Como síntese, a Tabela~\ref{tab:snn_weight_sweep} apresenta a varredura de pesos e evidencia o
-trade-off entre reduzir o erro de turbidez e preservar o desempenho global. Quando o peso de TURB
-é aumentado para 0,80, o $MAE_{TURB}$ diminui para $1{,}006$, mas o $R^2_{macro}$ cai para $0{,}280$,
-indicando perda de ajuste agregado. Já a configuração base $(0{,}20,0{,}20,0{,}60)$ mantém melhor
-equilíbrio entre as três variáveis, com $MAE_{macro}$ ligeiramente menor e $R^2_{macro}$ mais alto.
+In summary, Table~\ref{tab:snn_weight_sweep} shows the loss-weight sweep and highlights the trade-off
+between reducing turbidity error and preserving global performance. When the TURB weight increases to
+0.80, $MAE_{TURB}$ decreases to $1{,}006$, but $R^2_{macro}$ drops to $0{,}280$, indicating weaker
+overall fit. The base configuration $(0{,}20,0{,}20,0{,}60)$ provides a better balance across variables,
+with slightly lower $MAE_{macro}$ and higher $R^2_{macro}$.
 
 \begin{table}[ht!]
 \centering
-\caption{Varredura dos pesos da perda da SNN (10 sementes).}
+\caption{SNN loss-weight sweep (10 seeds).}
 \begin{tabular}{lccc}
 \toprule
-Pesos (pH, OD, TURB) & MAE macro & MAE TURB & $R^2$ macro \\
+Weights (pH, OD, TURB) & MAE macro & MAE TURB & $R^2$ macro \\
 \midrule
 $(0{,}20,\ 0{,}20,\ 0{,}60)$ & $\mathbf{0{,}447}$ & $1{,}012$ & $\mathbf{0{,}291}$ \\
 $(0{,}15,\ 0{,}15,\ 0{,}70)$ & $0{,}452$ & $1{,}022$ & $0{,}289$ \\
@@ -102,23 +98,19 @@ $(0{,}05,\ 0{,}15,\ 0{,}80)$ & $0{,}448$ & $\mathbf{1{,}006}$ & $0{,}280$ \\
 \label{tab:snn_weight_sweep}
 \end{table}
 
-A versão final em TFLite foi executada em uma Raspberry Pi 4B (ARM64), com
-delegate XNNPACK habilitado. A latência média de inferência foi de
-$0{,}214$ ms/amostra (desvio padrão $0{,}023$ ms), com throughput de
-$4670{,}50$ amostras/s, conforme Tabela~\ref{tab:latency_rpi}. Esses resultados
-evidenciam a viabilidade da execução local em hardware de baixo consumo,
-com custo computacional por amostra bastante reduzido.
-Em termos práticos, esses valores indicam que a inferência é sub-milissegundo
-por amostra e suporta milhares de predições por segundo, o que é compatível
-com cenários de monitoramento em tempo quase real e com baixo impacto de
-latência em dispositivos embarcados.
+The final TFLite model was executed on a Raspberry Pi 4B (ARM64) with XNNPACK enabled.
+Mean inference latency was $0{,}214$ ms/sample (standard deviation $0{,}023$ ms), with
+throughput of $4670{,}50$ samples/s (Table~\ref{tab:latency_rpi}). These results confirm
+the feasibility of local execution on low-power hardware with very low per-sample cost.
+In practical terms, inference is sub-millisecond per sample and supports thousands of
+predictions per second, compatible with near-real-time monitoring.
 
 \begin{table}[ht!]
 \centering
-\caption{Latência de inferência do modelo TFLite em Raspberry Pi 4B.}
+\caption{TFLite inference latency on Raspberry Pi 4B.}
 \begin{tabular}{lccc}
 \toprule
-Dispositivo & Latência média (ms) & Desvio padrão (ms) & Throughput (amostras/s) \\
+Device & Mean latency (ms) & Std. dev. (ms) & Throughput (samples/s) \\
 \midrule
 Raspberry Pi 4B & $0{,}214$ & $0{,}023$ & $4670{,}50$ \\
 \bottomrule
@@ -126,21 +118,20 @@ Raspberry Pi 4B & $0{,}214$ & $0{,}023$ & $4670{,}50$ \\
 \label{tab:latency_rpi}
 \end{table}
 
-No dispositivo móvel Android (modelo 23021RAAEG, Android 15), o benchmark embarcado no
-aplicativo reportou latência média de $0{,}093$ ms/amostra (desvio padrão $0{,}005$ ms)
-e throughput de $10780{,}37$ amostras/s, com 5000 execuções. Esses valores indicam que
-a inferência local no celular é viável em tempo quase real, mesmo sem aceleração dedicada.
-Além de confirmar a viabilidade, o resultado mostra que a execução no smartphone mantém
-latência menor que 1 ms por amostra e throughput acima de 10 mil amostras/s, o que é
-suficiente para uso em campo com atualização frequente dos parâmetros. A Tabela~\ref{tab:latency_android}
-organiza esses valores para facilitar a comparação com a Raspberry.
+On the Android device (model 23021RAAEG, Android 15), the in-app benchmark reported mean
+latency of $0{,}093$ ms/sample (std. dev. $0{,}005$ ms) and throughput of $10780{,}37$
+samples/s over 5000 runs. These values indicate that local inference is feasible in
+near-real-time even without dedicated acceleration. Latency remains below 1 ms per
+sample and throughput exceeds 10k samples/s, sufficient for field use with frequent
+updates. Table~\ref{tab:latency_android} organizes these values for comparison with
+the Raspberry Pi.
 
 \begin{table}[ht!]
 \centering
-\caption{Latência de inferência no dispositivo móvel Android.}
+\caption{Inference latency on Android devices.}
 \begin{tabular}{lccc}
 \toprule
-Dispositivo & Latência média (ms) & Desvio padrão (ms) & Throughput (amostras/s) \\
+Device & Mean latency (ms) & Std. dev. (ms) & Throughput (samples/s) \\
 \midrule
 Android 23021RAAEG & $0{,}093$ & $0{,}005$ & $10780{,}37$ \\
 Android SM-A566E & $0{,}030$ & $0{,}002$ & $33425{,}81$ \\
@@ -150,22 +141,21 @@ Android 2201117SG & $0{,}61$ & $0{,}014$ & $16313{,}16$ \\
 \label{tab:latency_android}
 \end{table}
 
-Além da latência, a energia incremental foi estimada diretamente no celular via leitura
-de corrente e tensão do sistema. No 23021RAAEG, a potência média em idle foi $1{,}977$ W e em
-carga $2{,}106$ W, resultando em $\Delta P = 0{,}128$ W e energia de $0{,}0104$ mJ/inf
-($12337{,}40$ amostras/s). No SM-A566E, a potência média em idle foi $3{,}455$ W e em carga
-$3{,}923$ W, resultando em $\Delta P = 0{,}468$ W e energia de $0{,}0151$ mJ/inf
-($30905{,}08$ amostras/s). No 2201117SG, a potência média em idle foi $8{,}158$ W e em carga
-$8{,}204$ W, resultando em $\Delta P = 0{,}046$ W e energia de $0{,}00285$ mJ/inf
-($16121{,}71$ amostras/s). Em todos os casos foram coletadas 200 amostras de potência
-(Tabela~\ref{tab:energy_android}).
+Beyond latency, incremental energy was estimated directly on the phones via system current
+and voltage. For 23021RAAEG, mean idle power was $1{,}977$ W and load power $2{,}106$ W,
+yielding $\Delta P = 0{,}128$ W and $0{,}0104$ mJ/inf ($12337{,}40$ samples/s). For SM-A566E,
+mean idle power was $3{,}455$ W and load power $3{,}923$ W, yielding $\Delta P = 0{,}468$ W
+and $0{,}0151$ mJ/inf ($30905{,}08$ samples/s). For 2201117SG, mean idle power was $8{,}158$ W
+and load power $8{,}204$ W, yielding $\Delta P = 0{,}046$ W and $0{,}00285$ mJ/inf
+($16121{,}71$ samples/s). In all cases, 200 power samples were collected
+(Table~\ref{tab:energy_android}).
 
 \begin{table}[ht!]
 \centering
-\caption{Estimativa de energia incremental por inferência no dispositivo Android.}
+\caption{Incremental energy per inference on Android devices.}
 \begin{tabular}{lccccc}
 \toprule
-Dispositivo & $P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & Amostras \\
+Device & $P_{idle}$ (W) & $P_{load}$ (W) & $\Delta P$ (W) & Energy (mJ/inf) & Samples \\
 \midrule
 Android 23021RAAEG & 1{,}977 & 2{,}106 & 0{,}128 & 0{,}0104 & 200 \\
 Android SM-A566E & 3{,}455 & 3{,}923 & 0{,}468 & 0{,}0151 & 200 \\
@@ -175,22 +165,22 @@ Android 2201117SG & 8{,}158 & 8{,}204 & 0{,}046 & 0{,}00285 & 200 \\
 \label{tab:energy_android}
 \end{table}
 
-Na ESP32 (dual-core, 160 MHz), o benchmark embarcado reportou latência média de
-$1{,}8174$ ms (desvio padrão $0{,}0024$ ms) e throughput de $550{,}25$ amostras/s,
-com 1000 execuções. Além disso, as métricas embarcadas indicaram $MAE_{pH}=0{,}0984$,
-$MAE_{OD}=0{,}1825$ e $MAE_{TURB}=0{,}8542$, evidenciando viabilidade de inferência
-multimodal em microcontrolador com precisão consistente ao cenário móvel (Tabela~\ref{tab:esp32_benchmark}).
+On the ESP32 (dual-core, 160 MHz), the embedded benchmark reported mean latency of
+$1{,}8174$ ms (std. dev. $0{,}0024$ ms) and throughput of $550{,}25$ samples/s over
+1000 runs. Embedded metrics yielded $MAE_{pH}=0{,}0984$, $MAE_{OD}=0{,}1825$, and
+$MAE_{TURB}=0{,}8542$, indicating multimodal inference feasibility on a microcontroller
+with accuracy consistent with the mobile scenario (Table~\ref{tab:esp32_benchmark}).
 
 \begin{table}[ht!]
 \centering
-\caption{Benchmark de inferência na ESP32.}
+\caption{ESP32 inference benchmark.}
 \begin{tabular}{lcc}
 \toprule
-Métrica & Valor & Unidade \\
+Metric & Value & Unit \\
 \midrule
-Latência média & $1{,}8174$ & ms \\
-Desvio padrão & $0{,}0024$ & ms \\
-Throughput & $550{,}25$ & amostras/s \\
+Mean latency & $1{,}8174$ & ms \\
+Std. dev. & $0{,}0024$ & ms \\
+Throughput & $550{,}25$ & samples/s \\
 $MAE_{pH}$ & $0{,}0984$ & -- \\
 $MAE_{OD}$ & $0{,}1825$ & -- \\
 $MAE_{TURB}$ & $0{,}8542$ & -- \\
@@ -199,18 +189,18 @@ $MAE_{TURB}$ & $0{,}8542$ & -- \\
 \label{tab:esp32_benchmark}
 \end{table}
 
-Para a energia da ESP32, o consumo médio em \textit{idle} foi de $0{,}570$ W e em
-\textit{carga} (inferência contínua) de $1{,}949$ W, resultando em $\Delta P=1{,}380$ W.
-Com throughput de $550{,}25$ amostras/s, a energia por inferência estimada foi de
-$2{,}507$ mJ/inf. Esses valores foram obtidos a partir de 88 amostras de \textit{idle}
-e 39 amostras de \textit{carga}, usando a mesma fonte de 5 V e o sensor ACS712 (Tabela~\ref{tab:energy_esp32}).
+For ESP32 energy, mean idle power was $0{,}570$ W and load power (continuous inference)
+$1{,}949$ W, yielding $\Delta P=1{,}380$ W. With throughput of $550{,}25$ samples/s,
+estimated energy per inference was $2{,}507$ mJ/inf. These values were obtained from
+88 idle samples and 39 load samples using the same 5 V supply and ACS712 sensor
+(Table~\ref{tab:energy_esp32}).
 
 \begin{table}[H]
 \centering
-\caption{Estimativa de energia incremental por inferência (ESP32).}
+\caption{Incremental energy per inference (ESP32).}
 \begin{tabular}{lcccc}
 \toprule
-$P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & $N_{idle}/N_{carga}$ \\
+$P_{idle}$ (W) & $P_{load}$ (W) & $\Delta P$ (W) & Energy (mJ/inf) & $N_{idle}/N_{load}$ \\
 \midrule
 0{,}570 & 1{,}949 & 1{,}380 & 2{,}507 & 88/39 \\
 \bottomrule
@@ -220,20 +210,20 @@ $P_{idle}$ (W) & $P_{carga}$ (W) & $\Delta P$ (W) & Energia (mJ/inf) & $N_{idle}
 
 
 
-Em termos comparativos (Tabela~\ref{tab:energy_summary}), a ESP32 apresenta maior energia por
-inferência, o que é esperado dada a menor taxa de processamento (throughput) e a ausência de
-aceleração vetorial dedicada. Apesar disso, o valor permanece viável para cenários de amostragem
-intermitente, típicos de redes de sensores de baixa taxa. A Raspberry Pi 4B e os smartphones
-apresentam menores valores de mJ/inf, refletindo maior capacidade computacional e otimizações
-em nível de CPU/sistema operacional. O aparelho SM-A566E, por exemplo, combina alto throughput
-com consumo incremental moderado, resultando em baixa energia por inferência.
+From a comparative perspective (Table~\ref{tab:energy_summary}), the ESP32 shows the highest
+energy per inference, which is expected given its lower processing rate (throughput) and the
+absence of dedicated vector acceleration. Even so, the value remains viable for intermittent
+sampling scenarios typical of low-rate sensor networks. The Raspberry Pi 4B and smartphones
+present lower mJ/inf values, reflecting higher computational capacity and CPU/system-level
+optimizations. The SM-A566E, for example, combines high throughput with moderate incremental
+power, resulting in low energy per inference.
 
 \begin{table}[ht!]
 \centering
-\caption{Resumo comparativo de energia por inferência em diferentes plataformas.}
+\caption{Comparative summary of energy per inference across platforms.}
 \begin{tabular}{lccc}
 \toprule
-Plataforma & $\Delta P$ (W) & Energia (mJ/inf) & Throughput (amostras/s) \\
+Platform & $\Delta P$ (W) & Energy (mJ/inf) & Throughput (samples/s) \\
 \midrule
 ESP32 & 1{,}380 & 2{,}507 & 550{,}25 \\
 Raspberry Pi 4B & 0{,}239 & 0{,}020 & 11639{,}71 \\
@@ -244,27 +234,25 @@ Android 2201117SG & 0{,}046 & 0{,}00285 & 16121{,}71 \\
 \end{tabular}\label{tab:energy_summary}
 \end{table}
 
-Já o dispositivo 2201117SG apresentou energia por inferência elevada mesmo com throughput
-alto, sugerindo maior consumo incremental do sistema durante a execução do benchmark. Esse
-resultado destaca que, em dispositivos móveis, o consumo pode variar significativamente entre
-modelos e configurações de sistema, reforçando a importância de medições empíricas por aparelho
-quando a eficiência energética é requisito de projeto.
+The 2201117SG device showed higher energy per inference despite high throughput, suggesting
+larger incremental system power during the benchmark. This highlights that, on mobile devices,
+consumption can vary significantly across models and system configurations, reinforcing the
+importance of device-specific empirical measurements when energy efficiency is a design
+requirement.
 
-Para estimar o custo energético incremental da inferência, foi utilizado o sensor
-ACS712-20A em série com a alimentação da Raspberry Pi 4B, medindo a corrente em
-estado ocioso (idle) e durante carga (benchmark). O consumo incremental foi
-calculado como $\Delta I = I_{carga} - I_{idle}$, e a potência incremental
-como $\Delta P = V \cdot \Delta I$, com $V=5{,}0$ V. A média foi calculada a partir
-de $N_{idle}=97$ amostras e $N_{carga}=440$ amostras. Com a corrente média em
-idle de $0{,}548$ A e em carga de $0{,}595$ A, obteve-se $\Delta P = 0{,}239$ W.
-Usando o throughput observado ($11639{,}71$ amostras/s), a energia por inferência
-estimada foi de $0{,}020$ mJ/inf (Tabela~\ref{tab:energy_rpi}). Estes valores
-representam uma estimativa prática do custo energético adicional do modelo em
-hardware embarcado.
+To estimate incremental inference energy, an ACS712-20A sensor was placed in series with the
+Raspberry Pi 4B supply, measuring current in idle state and under load (benchmark). Incremental
+consumption was computed as $\Delta I = I_{load} - I_{idle}$, and incremental power as
+$\Delta P = V \cdot \Delta I$, with $V=5{,}0$ V. Averages were computed from $N_{idle}=97$
+samples and $N_{load}=440$ samples. With mean idle current of $0{,}548$ A and load current of
+$0{,}595$ A, we obtained $\Delta P = 0{,}239$ W. Using the observed throughput
+($11639{,}71$ samples/s), the estimated energy per inference was $0{,}020$ mJ/inf
+(Table~\ref{tab:energy_rpi}). These values provide a practical estimate of the additional energy
+cost of the model on embedded hardware.
 
 \begin{table}[ht!]
 \centering
-\caption{Estimativa de energia incremental por inferência (Raspberry Pi 4B).}
+\caption{Incremental energy per inference (Raspberry Pi 4B).}
 \begin{tabular}{lcccc}
 \toprule
 $I_{idle}$ (A) & $I_{carga}$ (A) & $N_{idle}/N_{carga}$ & $\Delta P$ (W) & Energia (mJ/inf) \\
@@ -276,36 +264,36 @@ $I_{idle}$ (A) & $I_{carga}$ (A) & $N_{idle}/N_{carga}$ & $\Delta P$ (W) & Energ
 
 
 
-Na Figura~\ref{fig:exploratoria}(a), a matriz de correlação evidencia dependências relevantes entre
-parâmetros físico-químicos e variáveis de contexto, indicando que a predição multivariada é adequada
-para o problema. Em particular, correlações mais altas sugerem que parte da variabilidade dos alvos
-pode ser explicada por combinações entre temperatura, cor aparente, turbidez e OD, enquanto correlações
-mais baixas apontam componentes de variabilidade local e não linearidade. Na Figura~\ref{fig:exploratoria}(b),
-os boxplots mostram dispersões heterogêneas e presença de valores extremos, o que justifica o uso de
-normalização, aumento de dados e regularização para evitar sensibilidade excessiva do modelo a amostras
-isoladas.
+In Figure~\ref{fig:exploratoria}(a), the correlation matrix reveals relevant dependencies among
+physicochemical parameters and contextual variables, indicating that multivariate prediction is
+appropriate for the problem. Higher correlations suggest that part of target variability can be
+explained by combinations of temperature, apparent color, turbidity, and OD, while lower correlations
+point to local variability components and nonlinearity. In Figure~\ref{fig:exploratoria}(b), the
+boxplots show heterogeneous dispersions and the presence of extreme values, justifying the use of
+normalization, data augmentation, and regularization to avoid excessive sensitivity to isolated
+samples.
 
 \begin{figure}[ht!]
 	\centering
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/corr_heatmap.png}
-		\caption*{(a) Correlação entre variáveis}
+		\caption*{(a) Variable correlations}
 	\end{minipage}\hfill
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/boxplots_features.png}
-		\caption*{(b) Boxplots das variáveis}
+		\caption*{(b) Variable boxplots}
 	\end{minipage}
 \caption{Exploratory analysis: correlations and distribution of input variables.}
 	\label{fig:exploratoria}
 \end{figure}
 
-Na Figura~\ref{fig:hist_loss}(a), a faixa relativamente estreita de pH indica que pequenas
-variações absolutas já são ambientalmente relevantes; portanto, erros médios modestos têm impacto
-prático na interpretação. A Figura~\ref{fig:hist_loss}(b) apresenta queda rápida das perdas de
-treino/validação e estabilização com baixa divergência, sugerindo aprendizado efetivo e justificando
-o uso de \textit{early stopping}.
+In Figure~\ref{fig:hist_loss}(a), the relatively narrow pH range indicates that small absolute
+changes are environmentally meaningful; therefore, modest average errors can still be relevant in
+practice. Figure~\ref{fig:hist_loss}(b) shows a rapid drop in training/validation loss followed by
+stabilization with low divergence, suggesting effective learning and justifying the use of
+\textit{early stopping}.
 
 \begin{figure}[ht!]
 	\centering
@@ -323,9 +311,9 @@ o uso de \textit{early stopping}.
 \end{figure}
 
 
-A Figura~\ref{fig:aug_compare_hist} mostra forte sobreposição entre dados originais e aumentados,
-indicando que o ruído gaussiano densificou a amostra sem deslocar médias nem criar modos espúrios.
-Isso preserva a coerência física e atua como regularizador em base reduzida.
+Figure~\ref{fig:aug_compare_hist} shows strong overlap between original and augmented data,
+indicating that Gaussian noise densified the sample without shifting means or creating spurious
+modes. This preserves physical coherence and acts as a regularizer for a small dataset.
 
 \begin{figure*}[!t]
 	\centering
@@ -340,9 +328,9 @@ Isso preserva a coerência física e atua como regularizador em base reduzida.
 	\caption{Original vs. augmented data distributions (x10, Gaussian noise): histograms.}\label{fig:aug_compare_hist}
 \end{figure*}
 
-A Figura~\ref{fig:aug_compare_box} reforça essa interpretação: medianas e quartis permanecem próximos,
-com leve aumento de dispersão e sem outliers extremos fora do intervalo original. Isso indica
-variabilidade controlada, reduzindo sensibilidade a ruídos de medição e favorecendo robustez.
+Figure~\ref{fig:aug_compare_box} reinforces this interpretation: medians and quartiles remain close,
+with a slight increase in dispersion and no extreme outliers beyond the original range. This
+indicates controlled variability, reducing sensitivity to measurement noise and favoring robustness.
 
 
 \begin{figure*}[!t]
@@ -360,17 +348,17 @@ variabilidade controlada, reduzindo sensibilidade a ruídos de medição e favor
 
 
 
-Na Figura~\ref{fig:pred_pH}(a), a concentração de pontos próxima à linha de identidade indica boa
-capacidade do modelo em reproduzir o pH observado, com erros residuais mais evidentes nas extremidades
-da faixa, onde há menor densidade amostral. Esse padrão é esperado em bases pequenas e reforça a
-necessidade de ampliar coletas para reduzir incerteza em regiões menos representadas. Na Figura~\ref{fig:pred_pH}(b),
-o mapa espacial de pH evidencia gradiente geográfico consistente, mostrando que o modelo preserva
-coerência espacial e não gera predições aleatórias ao longo do corpo d'água.
+In Figure~\ref{fig:pred_pH}(a), the concentration of points near the identity line indicates good
+ability to reproduce observed pH, with residual errors more evident at range extremes where sample
+density is lower. This pattern is expected in small datasets and reinforces the need to increase
+sampling to reduce uncertainty in underrepresented regions. In Figure~\ref{fig:pred_pH}(b), the pH
+spatial map shows a consistent geographic gradient, indicating that the model preserves spatial
+coherence rather than producing random predictions across the lake.
 
-Além de refletir o ajuste global, o gráfico predito vs. real sugere que as maiores discrepâncias
-estão associadas a valores extremos, onde o modelo tem menos exemplos para aprender o padrão. No
-mapa, a continuidade espacial do pH indica que a predição respeita a estrutura geográfica do lago,
-o que é importante para análises de microzonas e para priorização de áreas de inspeção.
+Beyond global fit, the predicted-vs-true plot suggests that the largest discrepancies occur at
+extreme values, where the model has fewer examples to learn the pattern. On the map, spatial
+continuity of pH indicates that predictions respect the lake's geographic structure, which is
+important for micro-zone analysis and prioritizing inspection areas.
 
 \begin{figure}[ht!]
 	\centering
@@ -387,18 +375,17 @@ o que é importante para análises de microzonas e para priorização de áreas 
 \caption{Predictive performance and spatial pattern of pH in Lago do Serpa.}\label{fig:pred_pH}
 \end{figure}
 
-Na Figura~\ref{fig:mapas}(a), o OD apresenta variação espacial compatível com ambientes aquáticos
-heterogêneos, com zonas de menor oxigenação potencialmente mais sensíveis a estresse ambiental.
-Na Figura~\ref{fig:mapas}(b), a turbidez mostra contrastes mais acentuados, indicando regiões com
-maior carga particulada. A interpretação conjunta de OD e turbidez é relevante porque combina um
-indicador de condição bioquímica com um indicador físico de material em suspensão, fortalecendo
-o diagnóstico ambiental por múltiplas evidências.
+In Figure~\ref{fig:mapas}(a), dissolved oxygen exhibits spatial variation consistent with
+heterogeneous aquatic environments, with low-oxygen zones potentially more sensitive to
+environmental stress. In Figure~\ref{fig:mapas}(b), turbidity shows stronger contrasts, indicating
+regions with higher particulate load. Interpreting OD and turbidity together is important because
+it combines a biochemical indicator with a physical indicator of suspended material, strengthening
+environmental diagnosis through multiple lines of evidence.
 
-Em termos interpretativos, regiões de baixo OD podem indicar maior demanda biológica de oxigênio
-ou menor renovação hídrica, enquanto turbidez elevada costuma estar associada a sedimentos, matéria
-orgânica em suspensão ou aporte externo. Quando ambas as variáveis apontam para degradação na mesma
-região, há maior confiança na identificação de hotspots ambientais, mesmo em um conjunto de amostras
-limitado.
+Interpretively, low OD regions may indicate higher biological oxygen demand or reduced water
+renewal, while high turbidity is often associated with sediments, suspended organic matter, or
+external inputs. When both variables point to degradation in the same region, confidence in
+identifying environmental hotspots increases, even with a limited sample set.
 
 \begin{figure}[ht!]
 	\centering
@@ -417,17 +404,17 @@ limitado.
 
 
 
-A Figura~\ref{fig:idw} transforma medições pontuais em superfícies contínuas via IDW, permitindo
-visualizar ``manchas'' e transições espaciais de cada variável. Embora interpolação não substitua
-medição direta, ela melhora a leitura integrada do sistema ao destacar zonas de maior contraste e
-áreas prioritárias para amostragem futura. A coerência entre as superfícies estimadas e os padrões
-pontuais reforça a consistência interna do conjunto de dados.
+Figure~\ref{fig:idw} transforms point measurements into continuous surfaces via IDW, enabling the
+visualization of ``patches'' and spatial transitions for each variable. Although interpolation
+does not replace direct measurement, it improves integrated reading of the system by highlighting
+high-contrast zones and areas prioritized for future sampling. The coherence between estimated
+surfaces and point patterns reinforces the dataset's internal consistency.
 
-As superfícies interpoladas também ajudam a comunicar resultados a gestores e equipes de campo,
-pois oferecem uma visão contínua do lago sem exigir interpretação ponto a ponto. Como a densidade
-amostral é limitada, essas superfícies devem ser entendidas como aproximações exploratórias e não
-como mapas definitivos, mas ainda assim são úteis para orientar campanhas futuras e validar hipóteses
-sobre dinâmica espacial.
+Interpolated surfaces also help communicate results to managers and field teams because they provide
+a continuous view of the lake without requiring point-by-point interpretation. Given the limited
+sampling density, these surfaces should be understood as exploratory approximations rather than
+definitive maps, but they are still useful for guiding future campaigns and validating hypotheses
+about spatial dynamics.
 
 \begin{figure}[ht!]
 	\centering
@@ -436,17 +423,17 @@ sobre dinâmica espacial.
 \end{figure}
 
 
-Na Figura~\ref{fig:multi_pred}(a) e (b), as nuvens para pH e OD apresentam alinhamento mais próximo
-da linha identidade, refletindo melhor ajuste nesses alvos. Já na Figura~\ref{fig:multi_pred}(c),
-a maior dispersão para turbidez indica dificuldade adicional de modelagem, coerente com a variabilidade
-intrínseca desse parâmetro e com possíveis efeitos locais não totalmente capturados pelas entradas.
-Ainda assim, a tendência global permanece crescente, indicando que o modelo preserva estrutura
-previsível também para turbidez.
+In Figure~\ref{fig:multi_pred}(a) and (b), the point clouds for pH and OD align more closely to the
+identity line, reflecting better fit for these targets. In Figure~\ref{fig:multi_pred}(c), higher
+dispersion for turbidity indicates additional modeling difficulty, consistent with the intrinsic
+variability of this parameter and possible local effects not fully captured by the inputs.
+Even so, the global trend remains increasing, indicating that the model preserves predictable
+structure for turbidity as well.
 
-O comportamento observado sugere que as variáveis pH e OD são mais diretamente explicadas pelas
-entradas disponíveis, enquanto turbidez pode depender de fatores locais não medidos, como eventos
-de chuva, ressuspensão ou aporte pontual. Mesmo com maior erro, o modelo mantém relação monotônica
-com a turbidez real, o que indica potencial de melhoria com novas variáveis e maior densidade de dados.
+The observed behavior suggests that pH and OD are more directly explained by the available inputs,
+while turbidity may depend on unmeasured local factors such as rainfall events, resuspension, or
+point-source inputs. Even with higher error, the model maintains a monotonic relationship with
+true turbidity, indicating potential improvement with new variables and denser data.
 
 \begin{figure}[ht!]
 	\centering
@@ -463,22 +450,23 @@ com a turbidez real, o que indica potencial de melhoria com novas variáveis e m
 	\begin{minipage}{0.32\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_TURB_multi.png}
-		\caption*{(c) Turbidez}
+		\caption*{(c) Turbidity}
 	\end{minipage}
 \caption{Predicted vs. true values for the multimodal model (pH, dissolved oxygen, turbidity).}\label{fig:multi_pred}
 \end{figure}
 
-Na Figura~\ref{fig:multi_res}(a) e (b), os resíduos de pH e OD oscilam ao redor de zero sem
-padrão direcional forte, o que sugere ausência de viés sistemático dominante nesses alvos.
-Na Figura~\ref{fig:multi_res}(c), a amplitude residual de turbidez é maior e menos homogênea,
-apontando incerteza superior nesse componente. Essa evidência sustentou a etapa de ajuste de pesos
-da função de perda, com priorização de turbidez para reduzir erro específico sem perda substancial
-de desempenho global.
+In Figure~\ref{fig:multi_res}(a) and (b), residuals for pH and OD oscillate around zero with no
+strong directional pattern, suggesting the absence of dominant systematic bias. In
+Figure~\ref{fig:multi_res}(c), residual amplitude for turbidity is larger and less homogeneous,
+indicating higher uncertainty for this component. This evidence motivated the loss-weight tuning
+stage, prioritizing turbidity to reduce specific error without substantial loss in overall
+performance.
 
-A distribuição dos resíduos também indica que erros extremos são mais comuns na turbidez, o que
-corrobora a interpretação dos gráficos predito vs. real. Ao priorizar turbidez na função de perda,
-buscou-se reduzir o impacto desses erros altos sem comprometer pH e OD. Esse trade-off é esperado em
-modelos multissaída e deve ser explicitado para transparência na aplicação prática.
+The residual distribution also indicates that extreme errors are more common for turbidity, which
+corroborates the interpretation of the predicted-vs-true plots. By prioritizing turbidity in the
+loss function, we sought to reduce the impact of these larger errors without compromising pH and
+OD. This trade-off is expected in multi-output models and should be explicit for transparency in
+practical applications.
 
 \begin{figure}[ht!]
 	\centering
@@ -502,20 +490,19 @@ modelos multissaída e deve ser explicitado para transparência na aplicação p
 
 
 
-Na Figura~\ref{fig:pollution}(a), o índice composto permite ordenar espacialmente os pontos por
-intensidade relativa de degradação, integrando em uma única escala os efeitos de pH, OD e turbidez.
-Neste trabalho, o índice é normalizado para a faixa $[0,1]$, em que valores mais altos indicam pior
-condição relativa no conjunto analisado.
-Na Figura~\ref{fig:pollution}(b), a superfície IDW amplia essa leitura ao delinear a mancha estimada
-de poluição, útil para priorização de inspeções de campo. Essa representação não substitui análise
-laboratorial, mas funciona como ferramenta de triagem operacional para monitoramento contínuo e
-apoio à tomada de decisão.
+In Figure~\ref{fig:pollution}(a), the composite index spatially orders points by relative degradation
+intensity, integrating pH, OD, and turbidity into a single scale. In this work, the index is
+normalized to the $[0,1]$ range, where higher values indicate worse relative condition in the
+analyzed set. In Figure~\ref{fig:pollution}(b), the IDW surface extends this reading by delineating
+the estimated pollution patch, useful for prioritizing field inspections. This representation does
+not replace laboratory analysis, but functions as an operational screening tool for continuous
+monitoring and decision support.
 
-O índice composto sintetiza múltiplos sinais em um único indicador operacional, facilitando a
-comunicação com usuários não especialistas e a priorização de áreas críticas. A superfície IDW
-mostra que a mancha estimada não é uniforme, sugerindo padrões espaciais que podem orientar novas
-coletas ou intervenções. Esse tipo de visualização é particularmente útil em contextos de borda,
-onde decisões rápidas e interpretáveis são essenciais.
+The composite index synthesizes multiple signals into a single operational indicator, facilitating
+communication with non-specialist users and prioritization of critical areas. The IDW surface
+shows that the estimated patch is not uniform, suggesting spatial patterns that can guide new
+sampling or interventions. This type of visualization is particularly useful in edge contexts,
+where fast and interpretable decisions are essential.
 
 
 \begin{figure}[H]
@@ -528,7 +515,7 @@ onde decisões rápidas e interpretáveis são essenciais.
 	\begin{minipage}{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/pollution_idw.png}
-		\caption*{(b) Mancha (IDW) do índice}
+		\caption*{(b) IDW surface of the index}
 	\end{minipage}
 \caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$).}\label{fig:pollution}
 \end{figure}

@@ -1,51 +1,49 @@
-\section{DISCUSSÃO}
+\section{DISCUSSION}
 
-Os resultados indicam que a abordagem neuromórfica proposta é viável para predição de
-parâmetros físico-químicos da água em ambiente amazônico, com desempenho consistente após
-ajuste de hiperparâmetros e regularização por \textit{early stopping}. No cenário multimodal
-sem vazamento de informação (sem uso das variáveis-alvo nas entradas), observou-se aumento da
-dificuldade de predição, especialmente para turbidez, o que torna a avaliação mais realista
-para uso em campo.
+The results indicate that the proposed neuromorphic approach is viable for predicting
+physicochemical water parameters in the Amazonian context, with consistent performance after
+hyperparameter tuning and \textit{early stopping} regularization. In the multimodal scenario
+without information leakage (i.e., target variables are not used as inputs), prediction
+difficulty increases, especially for turbidity, which makes the evaluation more realistic for
+field use.
 
-No benchmark com 10 sementes, Random Forest e LSTM apresentaram menores erros médios
-globais, enquanto a SNN permaneceu competitiva e claramente superior ao MLP em robustez.
-Os testes estatísticos reforçam essa leitura: não houve evidência de superioridade estatística
-da SNN sobre Random Forest e LSTM para $\alpha=0{,}05$, mas houve vantagem significativa
-da SNN sobre MLP. Portanto, os resultados sustentam a SNN como alternativa viável em
-cenário de borda, ainda que não dominante em erro absoluto no conjunto atual.
-Em termos espaciais, os mapas de pH, OD e turbidez revelam padrões coerentes de gradientes
-e agrupamentos, o que reforça a consistência dos dados de campo e sugere que as variáveis
-de entrada carregam informação relevante para a predição. As correlações entre temperatura,
-cor aparente e turbidez observadas na análise exploratória estão alinhadas com processos
-físico-químicos esperados em ambientes lênticos, fornecendo suporte adicional para o
-modelo proposto.
-Além do desempenho preditivo, a execução do modelo em Raspberry Pi 4B apresentou latência
-sub-milissegundo por amostra, reforçando a viabilidade de inferência local em hardware de
-baixo consumo e compatível com cenários remotos e offline. A validação em ESP32 amplia esse
-resultado para a classe de microcontroladores: mesmo com menor throughput, o benchmark indicou
-latência média da ordem de milissegundos e erro absoluto consistente, demonstrando que o modelo
-multimodal pode operar de forma autônoma em dispositivos altamente restritos.
-\par
-Do ponto de vista prático, a diferença entre modelos sugere que a escolha depende do objetivo
-operacional. Random Forest e LSTM tendem a minimizar erro médio, enquanto a SNN oferece uma
-alternativa robusta quando se prioriza inferência local com menor custo computacional e
-potencial de eficiência energética. O comportamento mais instável do MLP confirma que modelos
-densos clássicos são sensíveis em bases pequenas e podem variar de forma significativa entre
-sementes. Além disso, a dificuldade sistemática na turbidez indica que esse parâmetro exige
-informação adicional (por exemplo, variáveis hidrodinâmicas ou sazonais) para melhorar a
-generalização.
+In the 10-seed benchmark, Random Forest and LSTM achieved lower global mean errors, while the
+SNN remained competitive and clearly more robust than the MLP. Statistical tests reinforce
+this reading: there was no evidence of statistical superiority of the SNN over Random Forest
+and LSTM at $\alpha=0{,}05$, but there was a significant advantage of the SNN over MLP.
+Therefore, the results support SNN as a viable edge alternative, even if it is not dominant
+in absolute error on the current dataset. Spatially, the pH, OD, and turbidity maps reveal
+coherent gradients and clusters, reinforcing the consistency of field data and suggesting
+that input variables carry relevant information for prediction. The correlations between
+temperature, apparent color, and turbidity observed in the exploratory analysis align with
+expected physicochemical processes in lentic environments, providing additional support for
+the proposed model.
 
-Em termos energéticos, a comparação entre ESP32, Raspberry Pi e dispositivos Android evidencia
-que o consumo incremental por inferência varia significativamente conforme o hardware e o
-throughput disponível. A ESP32 apresentou maior energia por inferência, mas permanece adequada
-para aplicações de baixa taxa de amostragem, enquanto Raspberry Pi e smartphones oferecem melhor
-eficiência por inferência em cenários que exigem maior volume de predições. Esses resultados
-confirmam que a escolha da plataforma deve considerar não apenas a acurácia, mas também o regime
-de amostragem e as restrições energéticas do ambiente de implantação.
+Beyond predictive performance, model execution on the Raspberry Pi 4B achieved sub-millisecond
+latency per sample, reinforcing the feasibility of local inference on low-power hardware
+compatible with remote and offline scenarios. Validation on the ESP32 extends this result to
+microcontrollers: despite lower throughput, the benchmark indicated millisecond-level latency
+and consistent absolute error, demonstrating that the multimodal model can operate autonomously
+on highly constrained devices.
 
-\par
-Outra consideração importante é que a codificação temporal por \textit{rate coding} implica
-um compromisso entre fidelidade temporal e custo computacional: valores maiores de $T$ podem
-aumentar a qualidade da representação, mas ampliam latência de inferência e consumo. Isso
-sugere que, em cenários de uso real, a escolha de $T$ deve ser calibrada em função do contexto
-operacional e das restrições energéticas do dispositivo de borda.
+From a practical standpoint, differences among models suggest that the choice depends on the
+operational objective. Random Forest and LSTM tend to minimize mean error, while the SNN offers
+a robust alternative when local inference with lower computational cost and potential energy
+efficiency is prioritized. The more unstable behavior of the MLP confirms that dense classical
+models are sensitive on small datasets and can vary significantly across seeds. Additionally,
+systematic difficulty in turbidity indicates that this parameter requires additional
+information (e.g., hydrodynamic or seasonal variables) to improve generalization.
+
+In energy terms, the comparison among ESP32, Raspberry Pi, and Android devices shows that
+incremental energy per inference varies significantly with hardware and available throughput.
+The ESP32 yielded higher energy per inference but remains suitable for low-rate sampling
+applications, while Raspberry Pi and smartphones offer better per-inference efficiency in
+scenarios requiring higher prediction volumes. These results confirm that platform choice
+should consider not only accuracy, but also sampling regime and energy constraints in the
+deployment environment.
+
+Another important consideration is that temporal encoding via \textit{rate coding} implies a
+trade-off between temporal fidelity and computational cost: larger $T$ values can improve
+representation quality, but increase inference latency and energy use. This suggests that, in
+real-world deployments, $T$ should be calibrated according to operational context and energy
+constraints of the edge device.

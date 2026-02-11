@@ -1,38 +1,39 @@
-\section{MATERIAL E MÉTODOS}
+\section{MATERIALS AND METHODS}
 
-\subsection{Dados, pré-processamento e divisão}
-Os dados foram obtidos de medições pontuais no Lago do Serpa (Itacoatiara-AM) e organizados em CSV com
-coordenadas ($x, y$) e variáveis físico-químicas (\textit{pH}, OD, temperatura, cor aparente, turbidez
-e cor verdadeira). A limpeza consistiu em converter separadores decimais, garantir consistência numérica
-e remover linhas incompletas. As entradas foram definidas como $x, y, TEMP, COR\_A$ e COR\_V; no modelo
-univariado a saída foi o pH, enquanto no multimodal as saídas foram pH, OD e turbidez, sem incluir
-variáveis-alvo nas entradas para evitar vazamento. O conjunto foi georreferenciado no Lago do Serpa
-(Figura~\ref{fig:mapa_pontos}) e, para reduzir overfitting em base pequena, aplicou-se
-\textbf{aumento de dados sintético} (fator 10) com ruído gaussiano leve, apenas para estabilização do treinamento.
+\subsection{Data, preprocessing, and split}
+Data were collected from point measurements in Lago do Serpa (Itacoatiara, AM) and organized in CSV with
+coordinates ($x, y$) and physicochemical variables (\textit{pH}, dissolved oxygen, temperature, apparent color,
+turbidity, and true color). Cleaning included decimal separator conversion, numerical consistency checks,
+and removal of incomplete rows. Inputs were defined as $x, y, TEMP, COR\_A,$ and COR\_V; in the univariate
+model the output was pH, while in the multimodal model the outputs were pH, dissolved oxygen, and turbidity,
+without including target variables as inputs to avoid leakage. The dataset was georeferenced in Lago do Serpa
+(Figure~\ref{fig:mapa_pontos}), and to mitigate overfitting in a small dataset we applied \textbf{synthetic data
+augmentation} (factor 10) with light Gaussian noise to stabilize training.
 
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.75\textwidth]{./figuras/map_points_osm_21S.png}
-	\caption{Localização dos pontos de amostragem no Lago do Serpa (Itacoatiara-AM) em mapa base
-	do OpenStreetMap. As coordenadas foram convertidas para latitude/longitude (WGS84, UTM 21S).}
+\caption{Sampling locations in Lago do Serpa (Itacoatiara, AM) on an OpenStreetMap basemap.
+Coordinates were converted to latitude/longitude (WGS84, UTM 21S).}
 	\label{fig:mapa_pontos}
 \end{figure}
 \FloatBarrier
 
-As entradas foram normalizadas via z-score usando estatísticas do treino; as saídas do multimodal foram opcionalmente normalizadas. A divisão
-em treino/validação/teste foi feita com proporções fixas e embaralhamento controlado por semente. Essa divisão, apresentada na Tabela~\ref{tab:data_split}, é usada em todos os experimentos descritos neste trabalho.
+Inputs were normalized via z-score using training statistics; multimodal outputs were optionally normalized. The
+train/validation/test split used fixed proportions with seed-controlled shuffling. This split (Table~\ref{tab:data_split})
+is used in all experiments.
 
 \begin{table}[H]
 \centering
-\caption{Divisão do conjunto de dados.}
+\caption{Dataset split.}
 \begin{tabular}{lcc}
 \toprule
-Partição & Proporção & Número de amostras \\
+Split & Proportion & Number of samples \\
 \midrule
-Treino & 70\% & 42 \\
-Validação & 10\% & 6 \\
-Teste & 20\% & 12 \\
+Train & 70\% & 42 \\
+Validation & 10\% & 6 \\
+Test & 20\% & 12 \\
 \bottomrule
 \end{tabular}
 \label{tab:data_split}
@@ -41,65 +42,56 @@ Teste & 20\% & 12 \\
 
 
 
-\subsection{Modelagem, treinamento e avaliação}
-As entradas normalizadas foram codificadas em trens de pulsos usando \textit{rate coding}, no qual a
-probabilidade de disparo é função sigmoidal da entrada. A SNN foi construída com uma camada de entrada
-densa, uma camada oculta com neurônios Leaky Integrate-and-Fire (LIF) e uma camada de saída linear. A
-inferência ocorre ao longo de $T$ passos temporais, acumulando a atividade dos neurônios ocultos, o que
-permite processamento esparso; valores maiores de $T$ aumentam a resolução temporal, mas elevam latência
-e consumo no dispositivo móvel. O treinamento utilizou Adam e MSE com \textit{early stopping} e busca em
-grade para $T$, taxa de aprendizado, limiar, decaimento e tamanho da camada oculta, além da intensidade
-do ruído do aumento de dados; o melhor conjunto foi selecionado pelo menor erro de validação. Para o
-modelo multimodal, adotou-se perda ponderada e normalização dos alvos, gerando pH, OD e turbidez em
-uma única rede. A partir das previsões, definiu-se um índice composto de poluição com (i) desvio do pH
-em relação ao neutro, (ii) OD inverso e (iii) turbidez normalizada; a Resolução CONAMA 357/2005 é usada
-como \textbf{referência normativa de interpretação} dos níveis estimados, sem substituir índices oficiais
-\cite{conama3572005}. O índice foi categorizado em três níveis relativos: baixo ($[0,0{,}33)$), médio
-($[0{,}33,0{,}66)$) e alto ($[0{,}66,1]$), para facilitar a leitura dos mapas. As análises exploratórias
-incluíram boxplots e correlação entre variáveis, enquanto a interpretação espacial foi realizada com
-mapas de pontos e superfícies de inverso da distância (IDW) para pH, OD, turbidez e índice de poluição. A avaliação comparativa
-entre modelos foi feita com benchmark multissemente e teste pareado de sinais (sign test) nas métricas
-macro, adequado para amostras pequenas e sem pressupor normalidade.
+\subsection{Modeling, training, and evaluation}
+Normalized inputs were encoded into spike trains using \textit{rate coding}, where firing probability is a
+sigmoidal function of the input. The SNN used a dense input layer, a hidden layer with Leaky Integrate-and-Fire
+(LIF) neurons, and a linear output layer. Inference runs over $T$ time steps, accumulating hidden activity,
+which enables sparse processing; larger $T$ increases temporal resolution but also latency and power consumption.
+Training used Adam and MSE with \textit{early stopping} and grid search over $T$, learning rate, threshold,
+decay, and hidden size, as well as augmentation noise intensity; the best configuration was selected by the
+lowest validation error. For the multimodal model, we used weighted loss and optional target normalization to
+predict pH, dissolved oxygen, and turbidity in a single network. From predictions, we defined a composite
+pollution index using (i) deviation from neutral pH, (ii) inverse dissolved oxygen, and (iii) normalized
+turbidity; CONAMA Resolution 357/2005 is used as a \textbf{normative reference} to interpret estimated levels,
+without replacing official indices \cite{conama3572005}. The index was categorized into three relative levels:
+low ($[0,0{,}33)$), medium ($[0{,}33,0{,}66)$), and high ($[0{,}66,1]$). Exploratory analyses included boxplots
+and correlations, while spatial interpretation used point maps and inverse-distance weighting (IDW) surfaces
+for pH, dissolved oxygen, turbidity, and the pollution index. Model comparison used a multiseed benchmark and
+a paired sign test on macro metrics, suitable for small samples without normality assumptions.
 
-\subsection{Exportação e implantação móvel}
-Após o treinamento final, o modelo multimodal foi exportado para inferência em dispositivo móvel por
-meio de serialização do modelo PyTorch com os pesos finais, conversão para ONNX preservando a assinatura
-de entrada/saída e transformação para TensorFlow Lite (TFLite) para uso em runtime leve no Android. No
-aplicativo Flutter, o modelo \textit{.tflite} e os parâmetros de normalização (média e desvio padrão)
-são carregados no início da sessão, permitindo que cada amostra seja normalizada localmente e enviada
-ao interpretador TFLite. A saída do modelo (pH, OD e turbidez) é desnormalizada e usada para calcular o
-índice composto de poluição em tempo real. Para garantir operações em campo sem conectividade, o mapa
-é exibido em modo offline com base vetorial MBTiles (Mapbox Tiles), preservando o contexto espacial e permitindo
-visualização geoespacial mesmo sem internet.
+\subsection{Export and mobile deployment}
+After final training, the multimodal model was exported for mobile inference by serializing PyTorch
+weights, converting to ONNX while preserving the input/output signature, and transforming to TensorFlow
+Lite (TFLite) for a lightweight Android runtime. In the Flutter app, the \textit{.tflite} model and
+normalization parameters (mean and standard deviation) are loaded at startup so each sample is normalized
+locally before being passed to the TFLite interpreter. Model outputs (pH, dissolved oxygen, turbidity)
+are de-normalized and used to compute the composite pollution index in real time. For field operations
+without connectivity, the map is shown offline using MBTiles (Mapbox Tiles), preserving spatial context
+without internet access.
 
-\subsection{Arquitetura e Integração}
-Para avaliar a viabilidade de redes neuromórficas em hardware restrito, esta pesquisa se concentrou
-na implementação e análise de SNNs em dispositivo móvel de borda.
-O foco do estudo foi a capacidade da SNN de operar com eficiência e precisão sob restrições de
-memória, processamento e energia típicas de dispositivos de borda.
- A SNN proposta utiliza o modelo de neurônio Leaky Integrate-and-Fire (LIF), configurado para otimizar
-o processamento de eventos esparsos típicos de dados ambientais. A arquitetura (Figura~\ref{fig:minhafigura}) organiza o
- fluxo em macro-estágios de Entrada, Processamento e Saída, explorando esparsidade temporal e ativando
- processamento principalmente quando há variações relevantes nos parâmetros monitorados, o que favorece
- eficiência energética em sistemas autônomos.
+\subsection{Architecture and integration}
+To assess neuromorphic feasibility on constrained hardware, this study focused on implementing and
+analyzing SNNs on edge devices. The goal was to evaluate efficiency and accuracy under memory,
+processing, and energy constraints typical of edge deployment. The proposed SNN uses Leaky Integrate-and-Fire
+(LIF) neurons to optimize sparse event processing. The architecture (Figure~\ref{fig:minhafigura}) organizes
+the flow into Input, Processing, and Output stages, exploiting temporal sparsity and activating computation
+mainly when relevant changes occur, which favors energy efficiency in autonomous systems.
 
-Na Entrada, os dados do Lago do Serpa são normalizados (z-score) e passam por aumento de dados
-sintético para estabilização do treinamento. Em seguida, a etapa neuromórfica inclui a codificação
-temporal (\textit{rate coding}) para transformar valores escalares em trens de pulsos e a inferência
-com neurônios LIF. A otimização envolve ajuste de pesos e hiperparâmetros (busca em grade e
-\textit{early stopping}), guiada pela função de perda. Após o treinamento, o modelo é exportado no
-pipeline PyTorch $\rightarrow$ ONNX $\rightarrow$ TFLite, permitindo uso em dispositivos de borda.
-Na implantação, o mesmo modelo é executado offline em smartphones, Raspberry Pi e ESP32, gerando
-predições multimodais (pH, OD e turbidez), índice de poluição e mapas para suporte à decisão em campo.
+At the Input stage, Lago do Serpa data are normalized (z-score) and augmented to stabilize training.
+The neuromorphic stage performs temporal encoding (\textit{rate coding}) to convert scalar values into
+spike trains and runs LIF-based inference. Optimization includes weight and hyperparameter tuning (grid
+search and \textit{early stopping}), guided by the loss function. After training, the model is exported
+via PyTorch $\rightarrow$ ONNX $\rightarrow$ TFLite for edge deployment. In operation, the same model
+runs offline on smartphones, Raspberry Pi, and ESP32, producing multimodal predictions (pH, dissolved
+oxygen, turbidity), a pollution index, and spatial maps to support field decision-making.
 
 \begin{figure}[ht!] 
 	\centering
 	\caption{ 
-		Fluxograma da arquitetura proposta para o sistema neuromórfico de predição da 
-		qualidade da água, destacando a entrada e o pré-processamento, o treinamento
-		neuromórfico com SNN (LIF) e \textit{rate coding}, o pipeline de exportação
-		PyTorch $\rightarrow$ ONNX $\rightarrow$ TFLite, e a implantação offline em
-		dispositivos de borda.
+		Proposed neuromorphic architecture for water-quality prediction, highlighting input
+		and preprocessing, neuromorphic training with SNN (LIF) and \textit{rate coding}, the
+		PyTorch $\rightarrow$ ONNX $\rightarrow$ TFLite export pipeline, and offline deployment
+		on edge devices.
 	}
 	\includegraphics[width=0.8\textwidth]{./figuras/Arquitetura.png}
 	\centering
@@ -108,87 +100,75 @@ predições multimodais (pH, OD e turbidez), índice de poluição e mapas para 
 \end{figure}
 
 \FloatBarrier
-\subsection{Especificações de Hardware para Treinamento e Inferência}
+\subsection{Hardware specifications for training and inference}
 
-Para assegurar a reprodutibilidade dos experimentos e a validação eficaz dos modelos neuromórficos, 
-foi utilizada uma estação de trabalho dedicada para o desenvolvimento, treinamento offline das redes 
-e simulações preliminares de inferência. As especificações detalhadas de hardware e software 
-empregadas são apresentadas na Tabela~\ref{tab:hardware}.
+To ensure experimental reproducibility and effective validation, a dedicated workstation was used for
+development, offline training, and preliminary inference simulations. Hardware and software specifications
+are listed in Table~\ref{tab:hardware}.
 
 \begin{table}[H]
 \centering
-\caption{Especificações da máquina utilizada nos experimentos.}
+\caption{Workstation specifications used in the experiments.}
 \begin{tabular}{ll}
 \toprule
-Componente & Especificação \\
+Component & Specification \\
 \midrule
 CPU & Intel(R) Core(TM) i7-14650HX (24 threads) \\
-Memória RAM & 15 GiB \\
- GPU & NVIDIA GeForce RTX 4060 (8 GB VRAM), Driver 550.163.01, CUDA 12.4 \\
-Sistema Operacional & Ubuntu 22.04.5 LTS (64-bit) \\
+Memory & 15 GiB \\
+GPU & NVIDIA GeForce RTX 4060 (8 GB VRAM), Driver 550.163.01, CUDA 12.4 \\
+Operating System & Ubuntu 22.04.5 LTS (64-bit) \\
 \bottomrule
 \end{tabular}
 \label{tab:hardware}
 \end{table}
 
-Este ambiente computacional permitiu a execução eficiente dos algoritmos de aprendizado baseados 
-no método de surrogate gradient, essenciais para contornar a não-diferenciabilidade dos pulsos 
-nas SNNs, antes da etapa final de portabilidade e implantação otimizada no dispositivo móvel
-de borda alvo.
+This environment enabled efficient training with surrogate gradients, which are essential to handle
+spike non-differentiability prior to portability and optimized deployment on edge devices.
 
-Para caracterizar a viabilidade de inferência em hardware de baixo consumo, o modelo TFLite
-foi executado em uma Raspberry Pi 4B (ARM64) com delegate XNNPACK (otimizador de kernels
-do TensorFlow Lite), seguindo o fluxo de
-exportação descrito na Seção 3.7. As especificações do dispositivo de inferência são
-apresentadas na Tabela~\ref{tab:hardware_rpi}.
+To characterize low-power inference feasibility, the TFLite model was executed on a Raspberry Pi 4B
+(ARM64) with the XNNPACK delegate (TFLite kernel optimizer), following the export pipeline described
+in Section 3.7. Device specifications are listed in Table~\ref{tab:hardware_rpi}.
 
 \begin{table}[H]
 \centering
-\caption{Especificações do dispositivo de inferência (Raspberry Pi 4B).}
+\caption{Inference device specifications (Raspberry Pi 4B).}
 \begin{tabular}{ll}
 \toprule
-Componente & Especificação \\
+Component & Specification \\
 \midrule
-Placa & Raspberry Pi 4B \\
-Arquitetura & ARM64 \\
-Sistema Operacional & Linux 6.12.34+rpt-rpi-v8-aarch64 \\
+Board & Raspberry Pi 4B \\
+Architecture & ARM64 \\
+Operating System & Linux 6.12.34+rpt-rpi-v8-aarch64 \\
 Runtime & TFLite (delegate XNNPACK) \\
 \bottomrule
 \end{tabular}
 \label{tab:hardware_rpi}
 \end{table}
 
-Adicionalmente, para avaliar a execução no dispositivo móvel de borda, o aplicativo Android
-foi testado em três aparelhos: \textit{23021RAAEG} (SoC Qualcomm, Android 15), com aproximadamente
-5{,}5~GiB de memória RAM disponível (MemTotal: 5{,}77~GB), \textit{SM-A566E} (SoC s5e8855,
-Android 16), com aproximadamente 7{,}3~GiB de memória RAM disponível (MemTotal: 7{,}60~GB) e
-\textit{2201117SG} (SoC mt6781, Android 13), com aproximadamente 5{,}6~GiB de memória RAM
-disponível (MemTotal: 5{,}86~GB). Essas configurações foram utilizadas para os benchmarks de
-latência no aplicativo.
+Additionally, to evaluate execution on mobile edge devices, the Android app was tested on three phones:
+\textit{23021RAAEG} (Qualcomm SoC, Android 15, MemTotal: 5.77 GB), \textit{SM-A566E} (s5e8855 SoC,
+Android 16, MemTotal: 7.60 GB), and \textit{2201117SG} (mt6781 SoC, Android 13, MemTotal: 5.86 GB).
+These configurations were used for latency benchmarks in the app.
 
-\subsection{Medição de energia}
-Para quantificar o consumo incremental durante a inferência, foi utilizado o sensor de corrente
-ACS712-20A em série com a alimentação da Raspberry Pi 4B. O procedimento foi conduzido com calibração
-do offset do sensor sem carga para garantir leitura próxima de zero, seguida de amostragem contínua da
-tensão de saída do ACS712 e conversão para corrente pela sensibilidade do sensor. As leituras foram
-registradas via Arduino e enviadas por serial, sendo armazenadas em CSV com timestamp, corrente e
-tensão. Duas janelas de medição foram consideradas: \textit{idle} com a Raspberry ociosa e
-\textit{carga} durante a execução do benchmark TFLite. A potência média foi calculada como $P = V \cdot I$
-e a potência incremental como $\Delta P = P_{carga} - P_{idle}$. A energia por inferência foi então
-estimada como $\Delta P / \mathrm{throughput}$, produzindo uma métrica em mJ/inf para comparação entre
-cenários de borda.
+\subsection{Energy measurement}
+To quantify incremental energy during inference, an ACS712-20A current sensor was placed in series with
+the Raspberry Pi 4B power supply. The sensor offset was calibrated without load, followed by continuous
+sampling of the ACS712 output voltage and conversion to current using the sensor sensitivity. Readings
+were logged via Arduino and serial into CSV files with timestamp, current, and voltage. Two windows were
+considered: \textit{idle} (Raspberry idle) and \textit{load} (TFLite benchmark). Average power was
+computed as $P = V \cdot I$, incremental power as $\Delta P = P_{load} - P_{idle}$, and energy per
+inference as $\Delta P / \mathrm{throughput}$, yielding mJ/inf for cross-platform comparison.
 
-Para o dispositivo móvel, a estimativa de energia foi realizada diretamente no aplicativo Android.
-A corrente foi obtida via \textit{BatteryManager} (propriedade \texttt{BATTERY\_PROPERTY\_CURRENT\_NOW})
-e a tensão via \textit{ACTION\_BATTERY\_CHANGED} (campo \texttt{EXTRA\_VOLTAGE}), com amostragem
-periódica durante janelas de \textit{idle} e de \textit{carga} (benchmark). A potência foi calculada
-como $P = V \cdot I$ e a potência incremental como $\Delta P = P_{carga} - P_{idle}$, permitindo
-estimar a energia por inferência pela razão $\Delta P / \mathrm{throughput}$ a partir de 200 amostras
-de potência em cada aparelho.
+For mobile devices, energy was estimated directly in the Android app. Current was obtained via
+\textit{BatteryManager} (\texttt{BATTERY\_PROPERTY\_CURRENT\_NOW}) and voltage via
+\textit{ACTION\_BATTERY\_CHANGED} (\texttt{EXTRA\_VOLTAGE}), sampled periodically during \textit{idle}
+and \textit{load} (benchmark) windows. Power was computed as $P = V \cdot I$ and incremental power as
+$\Delta P = P_{load} - P_{idle}$, enabling energy per inference as $\Delta P / \mathrm{throughput}$
+from 200 power samples per device.
 
-Para a ESP32 (microcontrolador Espressif), a inferência foi executada em C/C++ (ESP-IDF), com rotina de benchmark dedicada.
-Foram realizados 10 \textit{warmup runs}, 1000 execuções para estimativa de latência média e
-throughput, e 200 amostras individuais para o desvio padrão, conforme o log serial do firmware.
+For the ESP32 (Espressif microcontroller), inference ran in C/C++ (ESP-IDF) with a dedicated benchmark
+routine. We performed 10 \textit{warmup runs}, 1000 executions to estimate mean latency and throughput,
+and 200 individual samples for standard deviation, as reported in the firmware serial log.
 
 %----------------------------------------------------------------------------------------
 %   RESULTADOS

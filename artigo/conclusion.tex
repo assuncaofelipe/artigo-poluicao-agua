@@ -1,38 +1,37 @@
-\section{CONCLUSÃO}
+\section{CONCLUSION}
 
-Este trabalho confirmou a viabilidade técnica da predição neuromórfica de qualidade
-da água no Lago do Serpa, combinando modelagem multimodal, análise espacial e
-implantação embarcada. Em nível de desempenho, a SNN apresentou resultados
-competitivos e estáveis, superando o MLP no benchmark multissemente e mantendo
-proximidade de desempenho com baselines clássicos. No conjunto avaliado, Random
-Forest e LSTM apresentaram menor erro médio absoluto global, enquanto a SNN
-permaneceu como alternativa robusta para inferência neuromórfica em borda.
-Além disso, o ajuste de pesos da função de perda mostrou melhora específica em
-turbidez com trade-off moderado no desempenho macro.
+This work confirmed the technical feasibility of neuromorphic prediction of water quality in
+Lago do Serpa by combining multimodal modeling, spatial analysis, and embedded deployment. In
+terms of performance, the SNN achieved competitive and stable results, outperforming the MLP in
+the multi-seed benchmark and remaining close to classical baselines. In the evaluated dataset,
+Random Forest and LSTM achieved lower global mean absolute error, while the SNN remained a robust
+alternative for neuromorphic edge inference. In addition, loss-weight tuning produced a specific
+improvement in turbidity with a moderate trade-off in macro performance.
 
-No eixo de aplicação, o modelo foi exportado para TensorFlow Lite e integrado em
-aplicativo móvel offline, com inferência local de pH, OD e turbidez, cálculo de
-índice de poluição e visualização geoespacial com mapa offline (MBTiles). Esse
-resultado avança o trabalho além de uma prova de conceito puramente algorítmica,
-demonstrando um fluxo completo de dados, treinamento, inferência embarcada e apoio
-à decisão em campo.
-No desenho neuromórfico, a adoção de \textit{rate coding} também se mostrou coerente
-com o cenário de borda, pois permite ajustar explicitamente o equilíbrio entre qualidade
-da representação temporal e latência de inferência no celular por meio do parâmetro $T$. Como limitações,
-o estudo ainda depende de base amostral local e reduzida, o que restringe a generalização para outros
-corpos hídricos e regimes sazonais; além disso, o aumento de dados sintético não substitui coletas reais,
-e diferenças entre modelos podem variar com novas campanhas de campo. A validação prática foi feita em
-Android, Raspberry Pi e ESP32, mas a extrapolação para outros microcontroladores e diferentes perfis de
-energia requer medições adicionais e campanhas de campo mais amplas. Como continuidade desta pesquisa,
-recomenda-se ampliar campanhas de coleta, validar o modelo em múltiplos cenários ambientais e medir de
-forma sistemática latência, consumo energético e robustez operacional em diferentes dispositivos de borda.
-Também é relevante evoluir a calibração do índice composto de poluição com apoio de especialistas
-ambientais e testar estratégias de atualização de modelo em campo para diferentes regimes hidrológicos.
+On the application axis, the model was exported to TensorFlow Lite and integrated into an offline
+mobile app, enabling local inference of pH, OD, and turbidity, composite pollution index
+calculation, and geospatial visualization with an offline map (MBTiles). This result advances
+the work beyond a purely algorithmic proof of concept by demonstrating a full pipeline of data,
+training, embedded inference, and field decision support.
 
-Como contribuição adicional, a validação em ESP32 mostrou que a inferência multimodal é viável
-em microcontroladores, com latência de ordem de milissegundos e erros absolutos compatíveis com
-o cenário móvel. A comparação energética entre ESP32, Raspberry Pi e smartphones evidenciou
-trade-offs claros entre throughput e energia por inferência, reforçando a importância de escolher
-plataforma e regime de amostragem conforme o contexto operacional. Assim, o diferencial central
-do trabalho não é apenas o uso de SNNs, mas a entrega de um fluxo completo e mensurável de
-inferência offline: dados \(\rightarrow\) modelo \(\rightarrow\) aplicação \(\rightarrow\) mapa \(\rightarrow\) energia.
+In neuromorphic design, \textit{rate coding} was also coherent with the edge scenario, as it
+allows explicit control of the balance between temporal representation quality and mobile
+inference latency via the parameter $T$. As limitations, the study still relies on a local and
+reduced sample base, which restricts generalization to other water bodies and seasonal regimes;
+synthetic data augmentation does not replace real-world collection, and model differences may
+vary with new field campaigns. Practical validation was carried out on Android, Raspberry Pi,
+and ESP32, but extrapolation to other microcontrollers and different energy profiles requires
+additional measurements and broader field campaigns. As future continuity, it is recommended to
+expand data collection, validate the model across multiple environmental scenarios, and
+systematically measure latency, energy consumption, and operational robustness on different edge
+devices. It is also relevant to refine the calibration of the composite pollution index with
+support from environmental specialists and to test field model-update strategies under different
+hydrological regimes.
+
+As an additional contribution, ESP32 validation showed that multimodal inference is feasible on
+microcontrollers, with millisecond-level latency and absolute errors compatible with the mobile
+scenario. The energy comparison among ESP32, Raspberry Pi, and smartphones revealed clear
+trade-offs between throughput and energy per inference, reinforcing the importance of selecting
+platform and sampling regime according to operational context. Thus, the core differentiator of
+this work is not only the use of SNNs, but the delivery of a complete and measurable offline
+inference pipeline: data \(\rightarrow\) model \(\rightarrow\) app \(\rightarrow\) map \(\rightarrow\) energy.

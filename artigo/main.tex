@@ -64,7 +64,7 @@
 \makeatother
 
 \title{
-	Computação Neuromórfica para Monitoramento da Qualidade da Água no Lago do Serpa: Modelagem Multimodal e Implantação Offline
+	Neuromorphic Computing for Water Quality Monitoring in Lago do Serpa: Multimodal Modeling and Offline Deployment
 }
 
 \author{%
@@ -96,23 +96,18 @@
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-	\noindent
-	O monitoramento da qualidade da água na Bacia Amazônica é um desafio logístico e
-	operacional devido à sua vasta extensão territorial e infraestrutura limitada.
-	Este artigo investiga a viabilidade da implementação de Redes Neurais Pulsadas (SNNs)
-	em dispositivos de borda para a predição de parâmetros da qualidade da água,
-	visando reduzir dependência de conectividade e viabilizar inferência local em campo.
-	A pesquisa propõe uma abordagem quantitativa, utilizando dados coletados no Lago 
-	do Serpa, em Itacoatiara - AM, para avaliar o desempenho preditivo das SNNs aplicadas a 
-	variáveis físico-químicas como pH, turbidez e oxigênio dissolvido. Os resultados obtidos
-	indicam viabilidade técnica da abordagem em cenário real, com desempenho competitivo para
-	modelagem multimodal e suporte à inferência embarcada em dispositivo móvel, contribuindo
-	para o avanço das
-	tecnologias de monitoramento ambiental na região amazônica. O principal diferencial do
-	trabalho não está apenas no uso de SNNs, mas na integração de um pipeline completo: seleção
-	de hiperparâmetros, geração de mapas, implantação offline em aplicativo móvel e medições
-	empíricas de latência e energia em hardware de borda.
+\noindent
+Water quality monitoring in the Amazon basin is a logistical challenge due to vast distances and
+limited infrastructure. This paper evaluates the feasibility of deploying Spiking Neural Networks
+(SNNs) at the edge to predict water-quality parameters with offline inference. Using data collected
+in Lago do Serpa (Itacoatiara, AM), we model pH, turbidity, and dissolved oxygen and assess a
+multimodal SNN pipeline that includes preprocessing, hyperparameter search, spatial mapping, and
+deployment on mobile and embedded devices. Results show competitive predictive performance and
+practical feasibility for offline operation. The main contribution is not only the SNN model itself,
+but the end-to-end pipeline with empirical latency and energy measurements on edge hardware.
 \end{abstract}
+
+\noindent\textbf{Index Terms—} Spiking Neural Networks, edge AI, water quality, offline inference, neuromorphic computing, environmental monitoring.
 
 %----------------------------------------------------------------------------------------
 %   INTRODUÇÃO
@@ -126,14 +121,14 @@
 \input{discussion}
 \input{conclusion}
 
-\section*{Agradecimentos}
-Os autores agradecem ao Laboratório de Automação, Visão Computacional, Inteligência Artificial e
-Robótica (NAVIR), ao Programa de Pós-Graduação em Ciência, Tecnologia e Saúde (PPGCTS), à
-Universidade Federal do Amazonas (UFAM), à Motorola Mobility Comércio de Produtos Eletrônicos Ltda
-e à Flextronics da Amazônia Ltda, conforme previsto nos Arts. 21 e 22 do Decreto nº 10.521/2020,
-nos termos da Lei Federal nº 8.387/1991 e do convênio nº 008/2024, firmado com o ICET/UFAM, por
-meio do Projeto de Pesquisa, Desenvolvimento e Inovação Tecnológica (PDI) “Mob4Ai - Advanced
-Artificial Intelligence for neuromorphic mobile system”.
+\section*{ACKNOWLEDGMENTS}
+The authors thank the Automation, Computer Vision, Artificial Intelligence, and Robotics
+Laboratory (NAVIR), the Graduate Program in Science, Technology and Health (PPGCTS), the Federal
+University of Amazonas (UFAM), Motorola Mobility Comércio de Produtos Eletrônicos Ltda and
+Flextronics da Amazônia Ltda, as provided for in Arts. 21 and 22 of Decree No. 10.521/2020, under
+Federal Law No. 8.387/1991 and agreement No. 008/2024, signed with ICET/UFAM, through the
+Research, Development, and Technological Innovation Project (PDI) “Mob4Ai - Advanced Artificial
+Intelligence for neuromorphic mobile system”.
 
 %----------------------------------------------------------------------------------------
 %   REFERÊNCIAS (via BibTeX / referencias.bib)
