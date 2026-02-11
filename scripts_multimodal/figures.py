@@ -1,5 +1,6 @@
 import os
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 import torch
 
 
@@ -92,8 +93,7 @@ def save_pollution_scatter(x, y, score, out_dir: str, dpi: int):
     plt.figure(figsize=(5, 4))
     sc = plt.scatter(x, y, c=score, s=24, cmap="inferno")
     plt.colorbar(sc, fraction=0.046, pad=0.04, label="Pollution index (0–1)")
-    plt.xlabel("x (UTM, m)")
-    plt.ylabel("y (UTM, m)")
+    _format_utm_axes_km(plt.gca())
     # no title
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "pollution_scatter.png"), dpi=dpi)
@@ -125,8 +125,7 @@ def save_pollution_idw(x, y, score, out_dir: str, dpi: int, power: int = 2):
         aspect="auto",
     )
     plt.scatter(x, y, s=10, c="k", alpha=0.5)
-    plt.xlabel("x (UTM, m)")
-    plt.ylabel("y (UTM, m)")
+    _format_utm_axes_km(plt.gca())
     # no title
     plt.colorbar(im, fraction=0.046, pad=0.04, label="Pollution index (0–1)")
     plt.tight_layout()
@@ -159,8 +158,7 @@ def save_idw_map(x, y, z, title, fname, out_dir: str, dpi: int, power: int = 2):
         aspect="auto",
     )
     plt.scatter(x, y, s=10, c="k", alpha=0.5)
-    plt.xlabel("x (UTM, m)")
-    plt.ylabel("y (UTM, m)")
+    _format_utm_axes_km(plt.gca())
     label = _label_with_unit(title)
     # no title
     plt.colorbar(im, fraction=0.046, pad=0.04, label=label)
@@ -197,8 +195,7 @@ def save_idw_combined(x, y, zs, titles, fname, out_dir: str, dpi: int, power: in
         )
         ax.scatter(x, y, s=8, c="k", alpha=0.5)
         # no title
-        ax.set_xlabel("x (UTM, m)")
-        ax.set_ylabel("y (UTM, m)")
+        _format_utm_axes_km(ax)
         fig.colorbar(im, ax=ax, fraction=0.046, pad=0.02, label=label)
     fig.tight_layout()
     fig.savefig(os.path.join(out_dir, fname), dpi=dpi)
@@ -217,3 +214,10 @@ def _label_with_unit(name: str) -> str:
     if "POLLUTION" in key_up:
         return "Pollution index (0–1)"
     return key
+
+
+def _format_utm_axes_km(ax: plt.Axes):
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{v / 1000:.1f}"))
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{v / 1000:.1f}"))
+    ax.set_xlabel("x (UTM, km)")
+    ax.set_ylabel("y (UTM, km)")

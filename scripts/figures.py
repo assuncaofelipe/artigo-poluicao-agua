@@ -2,6 +2,7 @@ import os
 from typing import Dict, Tuple
 
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 import torch
 
 
@@ -67,8 +68,7 @@ def save_spatial_map(
     sc = plt.scatter(x.cpu().numpy(), y.cpu().numpy(), c=z.cpu().numpy(), s=26)
     label = _label_with_unit(name)
     plt.colorbar(sc, fraction=0.046, pad=0.04, label=label)
-    plt.xlabel("x (UTM, m)")
-    plt.ylabel("y (UTM, m)")
+    _format_utm_axes_km(plt.gca())
     # no title
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, f"map_{name}.png"), dpi=dpi)
@@ -123,3 +123,10 @@ def _label_with_unit(name: str) -> str:
     if key_up in {"COR_A", "COR_V"}:
         return key  # unknown unit
     return key
+
+
+def _format_utm_axes_km(ax: plt.Axes):
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{v / 1000:.1f}"))
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{v / 1000:.1f}"))
+    ax.set_xlabel("x (UTM, km)")
+    ax.set_ylabel("y (UTM, km)")
