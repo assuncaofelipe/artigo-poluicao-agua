@@ -47,7 +47,7 @@ class _ManualInputTabState extends State<ManualInputTab> {
       final msg = widget.model.errorMessage;
       return Center(
         child: Text(
-          msg == null ? 'Carregando modelo...' : 'Erro ao carregar modelo:\n$msg',
+          msg == null ? 'Loading model...' : 'Error loading model:\n$msg',
           textAlign: TextAlign.center,
         ),
       );
@@ -76,12 +76,12 @@ class _ManualInputTabState extends State<ManualInputTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Entrada manual',
+                    'Manual input',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Digite uma amostra para gerar a predição.',
+                    'Enter a sample to generate a prediction.',
                     style: TextStyle(color: Color(0xFF64748B)),
                   ),
                   const SizedBox(height: 12),
@@ -102,7 +102,7 @@ class _ManualInputTabState extends State<ManualInputTab> {
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(labelText: c),
                               validator: (v) =>
-                                  v == null || v.isEmpty ? 'Obrigatório' : null,
+                                  v == null || v.isEmpty ? 'Required' : null,
                             ),
                           );
                         }).toList(),
@@ -126,20 +126,20 @@ class _ManualInputTabState extends State<ManualInputTab> {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: const Text('Predição'),
+                              title: const Text('Prediction'),
                               content: Text(
                                 'pH: ${pred.pH.toStringAsFixed(3)}\n'
                                 'OD: ${pred.od.toStringAsFixed(3)}\n'
                                 'TURB: ${pred.turb.toStringAsFixed(3)}\n'
-                                'Índice: ${pred.pollution.toStringAsFixed(3)}\n'
-                                'Nível: ${pollutionLevel(pred.pollution)}',
+                                'Index: ${pred.pollution.toStringAsFixed(3)}\n'
+                                'Level: ${pollutionLevel(pred.pollution)}',
                               ),
                             ),
                           );
                         }
                       },
                       icon: const Icon(Icons.analytics_outlined),
-                      label: const Text('Predizer'),
+                      label: const Text('Predict'),
                     ),
                   ),
                 ],
@@ -163,12 +163,12 @@ class _ManualInputTabState extends State<ManualInputTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Benchmark de inferência',
+                    'Inference benchmark',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Mede a latência média no dispositivo.',
+                    'Measures average latency on the device.',
                     style: TextStyle(color: Color(0xFF64748B)),
                   ),
                   const SizedBox(height: 12),
@@ -204,15 +204,15 @@ class _ManualInputTabState extends State<ManualInputTab> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.speed),
-                      label: Text(_benchmarking ? 'Medindo...' : 'Rodar benchmark'),
+                      label: Text(_benchmarking ? 'Measuring...' : 'Run benchmark'),
                     ),
                   ),
                   if (_bench != null) ...[
                     const SizedBox(height: 12),
                     Text(
-                      'Latência média: ${_bench!.meanMs.toStringAsFixed(3)} ms\n'
-                      'Desvio padrão: ${_bench!.stdMs.toStringAsFixed(3)} ms\n'
-                      'Throughput: ${_bench!.throughput.toStringAsFixed(2)} amostras/s\n'
+                      'Average latency: ${_bench!.meanMs.toStringAsFixed(3)} ms\n'
+                      'Standard deviation: ${_bench!.stdMs.toStringAsFixed(3)} ms\n'
+                      'Throughput: ${_bench!.throughput.toStringAsFixed(2)} samples/s\n'
                       'Runs: ${_bench!.runs}',
                       style: const TextStyle(color: Color(0xFF0F172A)),
                     ),
@@ -238,12 +238,12 @@ class _ManualInputTabState extends State<ManualInputTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Energia estimada (mJ/inf)',
+                    'Estimated energy (mJ/inf)',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Mede corrente via Android e estima energia por inferência.',
+                    'Measures current via Android and estimates energy per inference.',
                     style: TextStyle(color: Color(0xFF64748B)),
                   ),
                   const SizedBox(height: 12),
@@ -305,18 +305,18 @@ class _ManualInputTabState extends State<ManualInputTab> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.bolt),
-                      label: Text(_energying ? 'Medindo...' : 'Medir energia'),
+                      label: Text(_energying ? 'Measuring...' : 'Measure energy'),
                     ),
                   ),
                   if (_energy != null) ...[
                     const SizedBox(height: 12),
                     Text(
-                      'Potência idle: ${_energy!.idlePowerW.toStringAsFixed(3)} W\n'
-                      'Potência carga: ${_energy!.loadPowerW.toStringAsFixed(3)} W\n'
+                      'Idle power: ${_energy!.idlePowerW.toStringAsFixed(3)} W\n'
+                      'Load power: ${_energy!.loadPowerW.toStringAsFixed(3)} W\n'
                       'ΔP: ${_energy!.deltaPowerW.toStringAsFixed(3)} W\n'
-                      'Energia: ${_energy!.energyPerInfMJ.toStringAsFixed(4)} mJ/inf\n'
-                      'Throughput: ${_energy!.throughput.toStringAsFixed(2)} amostras/s\n'
-                      'Amostras de power: ${_energy!.samples}',
+                      'Energy: ${_energy!.energyPerInfMJ.toStringAsFixed(4)} mJ/inf\n'
+                      'Throughput: ${_energy!.throughput.toStringAsFixed(2)} samples/s\n'
+                      'Power samples: ${_energy!.samples}',
                       style: const TextStyle(color: Color(0xFF0F172A)),
                     ),
                   ],

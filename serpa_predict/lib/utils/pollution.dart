@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 String pollutionLevel(double v) {
-  if (v < 0.25) return 'Baixo';
-  if (v < 0.5) return 'Moderado';
-  if (v < 0.75) return 'Ruim';
-  return 'Péssimo';
+  if (v < 0.25) return 'Low';
+  if (v < 0.5) return 'Moderate';
+  if (v < 0.75) return 'Poor';
+  return 'Very poor';
 }
 
 Color pollutionColor(double v) {

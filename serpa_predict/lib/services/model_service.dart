@@ -52,9 +52,9 @@ class ModelService {
 
   BenchmarkResult benchmark({int runs = 5000, int warmup = 200, int chunk = 100}) {
     if (!ready) {
-      throw Exception('Modelo não carregado.');
+      throw Exception('Model not loaded.');
     }
-    // Entrada default: média => normalização resulta em zero.
+    // Default input: mean => normalization results in zero.
     final x = List<double>.generate(featureCols.length, (i) => 0.0);
     final inputTensor = [x];
     final output = List.filled(targetCols.length, 0.0).reshape([1, 3]);
@@ -98,7 +98,7 @@ class ModelService {
     int chunk = 1000,
   }) async {
     if (!ready) {
-      throw Exception('Modelo não carregado.');
+      throw Exception('Model not loaded.');
     }
     final x = List<double>.generate(featureCols.length, (i) => 0.0);
     final inputTensor = [x];
@@ -196,7 +196,7 @@ class ModelService {
         continue;
       }
     }
-    throw Exception('Falha ao carregar norm_multi.json (asset nao encontrado)');
+    throw Exception('Failed to load norm_multi.json (asset not found)');
   }
 
   Future<Interpreter> _loadInterpreter(List<String> paths) async {
@@ -207,7 +207,7 @@ class ModelService {
         continue;
       }
     }
-    throw Exception('Falha ao carregar model.tflite (asset nao encontrado)');
+    throw Exception('Failed to load model.tflite (asset not found)');
   }
 }
 

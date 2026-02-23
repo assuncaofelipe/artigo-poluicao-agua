@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Serpa Predict'),
+        title: const Text('Quality Monitoring'),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -50,9 +50,9 @@ class _HomeScreenState extends State<HomeScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'Manual'),
+            Tab(text: 'Manual Input'),
             Tab(text: 'CSV'),
-            Tab(text: 'Mapa'),
+            Tab(text: 'Map'),
           ],
         ),
       ),

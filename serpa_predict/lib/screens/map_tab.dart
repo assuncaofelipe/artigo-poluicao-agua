@@ -27,7 +27,8 @@ class MapTab extends StatefulWidget {
   State<MapTab> createState() => _MapTabState();
 }
 
-class _MapTabState extends State<MapTab> {
+class _MapTabState extends State<MapTab>
+    with AutomaticKeepAliveClientMixin<MapTab> {
   MbTilesTileProvider? _mbtilesProvider;
   MbTiles? _mbtilesDb;
   vtr.Theme? _vectorTheme;
@@ -172,9 +173,10 @@ class _MapTabState extends State<MapTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (widget.store.samples.isEmpty) {
       return const Center(
-        child: Text('Carregue um CSV ou insira dados manualmente.'),
+        child: Text('Load a CSV or enter data manually.'),
       );
     }
     final center =
@@ -243,8 +245,8 @@ class _MapTabState extends State<MapTab> {
             ),
             child: Text(
               _mbtilesProvider == null && _mbtilesDb == null
-                  ? 'Mapa online'
-                  : 'Mapa offline (MBTiles)',
+                  ? 'Online map'
+                  : 'Offline map (MBTiles)',
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
@@ -270,13 +272,13 @@ class _MapTabState extends State<MapTab> {
               children: [
                 ElevatedButton(
                   onPressed: _pickingMbtiles ? null : _pickMbtiles,
-                  child: Text(_pickingMbtiles ? 'Abrindo...' : 'Usar MBTiles'),
+                  child: Text(_pickingMbtiles ? 'Opening...' : 'Use MBTiles'),
                 ),
                 const SizedBox(width: 8),
                 if (_mbtilesPath != null)
                   IconButton(
                     onPressed: _clearMbtiles,
-                    tooltip: 'Remover MBTiles',
+                    tooltip: 'Remove MBTiles',
                     icon: const Icon(Icons.close),
                   ),
               ],
@@ -307,7 +309,7 @@ class _MapTabState extends State<MapTab> {
                 ],
               ),
               child: Text(
-                'Arquivo: ${_mbtilesPath!.split('/').last}',
+                'File: ${_mbtilesPath!.split('/').last}',
                 style: const TextStyle(fontSize: 12),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -330,7 +332,7 @@ class _MapTabState extends State<MapTab> {
                   ),
                 ],
               ),
-              child: const Text('Carregando estilo vetorial...'),
+              child: const Text('Loading vector style...'),
             ),
           ),
         if (_themeError != null)
@@ -352,7 +354,7 @@ class _MapTabState extends State<MapTab> {
                 ],
               ),
               child: Text(
-                'Erro no estilo: $_themeError',
+                'Style error: $_themeError',
                 style: const TextStyle(fontSize: 12),
               ),
             ),
@@ -373,7 +375,7 @@ class _MapTabState extends State<MapTab> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                     SizedBox(width: 10),
-                    Text('Carregando tiles...'),
+                    Text('Loading tiles...'),
                   ],
                 ),
               ),
@@ -382,4 +384,7 @@ class _MapTabState extends State<MapTab> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
