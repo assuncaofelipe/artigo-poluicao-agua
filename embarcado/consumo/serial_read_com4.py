@@ -1,7 +1,7 @@
 import serial
 
 # Configurações da porta serial
-PORTA = 'COM4'
+PORTA = '/dev/ttyUSB0'
 BAUDRATE = 115200  # Ajuste conforme necessário
 TIMEOUT = 1     # Timeout em segundos
 

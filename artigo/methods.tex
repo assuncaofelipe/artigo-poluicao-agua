@@ -151,13 +151,34 @@ Android 16, MemTotal: 7.60 GB), and \textit{2201117SG} (mt6781 SoC, Android 13, 
 These configurations were used for latency benchmarks in the app.
 
 \subsection{Energy measurement}
-To quantify incremental energy during inference, an ACS712-20A current sensor was placed in series with
-the Raspberry Pi 4B power supply. The sensor offset was calibrated without load, followed by continuous
-sampling of the ACS712 output voltage and conversion to current using the sensor sensitivity. Readings
-were logged via Arduino and serial into CSV files with timestamp, current, and voltage. Two windows were
-considered: \textit{idle} (Raspberry idle) and \textit{load} (TFLite benchmark). Average power was
-computed as $P = V \cdot I$, incremental power as $\Delta P = P_{load} - P_{idle}$, and energy per
-inference as $\Delta P / \mathrm{throughput}$, yielding mJ/inf for cross-platform comparison.
+To quantify incremental energy during inference, an INA219 current sensor was placed in series with
+the device power supply and sampled over I\textsuperscript{2}C. Telemetry was recorded periodically
+and smoothed with an exponential moving average (EMA), while energy was accumulated over time from the
+EMA power estimate. Two windows were considered: \textit{idle} (device idle) and \textit{load}
+(inference benchmark). Average power was computed as $P = V \cdot I$, incremental power as
+$\Delta P = P_{load} - P_{idle}$, and energy per inference as $\Delta P / \mathrm{throughput}$,
+yielding mJ/inf for cross-platform comparison.
+
+\begin{algorithm}[H]
+\caption{Energy measurement procedure using the INA219 sensor.}
+\begin{algorithmic}[1]
+\STATE \textbf{Initialization:}
+\STATE Configure INA219 and I\textsuperscript{2}C (calibration 32V/2A).
+\STATE Initialize serial communication at 9600 baud.
+\STATE Set telemetry period $\Delta t = 500$ ms and EMA coefficient $\alpha = 0.2$.
+\STATE \textbf{Real-time sampling:}
+\WHILE{running}
+\STATE Read bus voltage $V(t)$ and current $I(t)$ from INA219.
+\STATE Compute instantaneous power $P(t) = V(t)\cdot I(t)$.
+\STATE Update EMA power: $P_{EMA}(t) = \alpha P(t) + (1-\alpha)P_{EMA}(t-1)$.
+\STATE Accumulate energy: $E = E + P_{EMA}(t)\cdot \Delta t$.
+\STATE Send $(V(t), I(t), P_{EMA}(t), E)$ over serial.
+\ENDWHILE
+\STATE \textbf{Energy computation (host):}
+\STATE Compute mean idle power $\overline{P}_{idle}$ and mean load power $\overline{P}_{load}$.
+\STATE Compute $\Delta P = \overline{P}_{load} - \overline{P}_{idle}$ and $E_{inf} = \Delta P / \text{throughput}$.
+\end{algorithmic}
+\end{algorithm}
 
 For mobile devices, energy was estimated directly in the Android app. Current was obtained via
 \textit{BatteryManager} (\texttt{BATTERY\_PROPERTY\_CURRENT\_NOW}) and voltage via

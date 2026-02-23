@@ -165,11 +165,10 @@ Android 2201117SG & 8{,}158 & 8{,}204 & 0{,}046 & 0{,}00285 & 200 \\
 \label{tab:energy_android}
 \end{table}
 
-On the ESP32 (dual-core, 160 MHz), the embedded benchmark reported mean latency of
-$1{,}8174$ ms (std. dev. $0{,}0024$ ms) and throughput of $550{,}25$ samples/s over
-1000 runs. Embedded metrics yielded $MAE_{pH}=0{,}0984$, $MAE_{OD}=0{,}1825$, and
-$MAE_{TURB}=0{,}8542$, indicating multimodal inference feasibility on a microcontroller
-with accuracy consistent with the mobile scenario (Table~\ref{tab:esp32_benchmark}).
+On the ESP32 running MicroPython, the benchmark reported mean latency of
+$199{,}298$ ms (std. dev. $7{,}535$ ms) and throughput of $5{,}0$ samples/s over
+500 runs, indicating multimodal inference feasibility on a microcontroller with
+fully offline execution (Table~\ref{tab:esp32_benchmark}).
 
 \begin{table}[ht!]
 \centering
@@ -178,22 +177,20 @@ with accuracy consistent with the mobile scenario (Table~\ref{tab:esp32_benchmar
 \toprule
 Metric & Value & Unit \\
 \midrule
-Mean latency & $1{,}8174$ & ms \\
-Std. dev. & $0{,}0024$ & ms \\
-Throughput & $550{,}25$ & samples/s \\
-$MAE_{pH}$ & $0{,}0984$ & -- \\
-$MAE_{OD}$ & $0{,}1825$ & -- \\
-$MAE_{TURB}$ & $0{,}8542$ & -- \\
+Mean latency & $199{,}298$ & ms \\
+Std. dev. & $7{,}535$ & ms \\
+Throughput & $5{,}0$ & samples/s \\
+Total spikes & $136$ ($14{,}2\%$) & -- \\
+Free memory & $134{,}544$ & bytes \\
 \bottomrule
 \end{tabular}
 \label{tab:esp32_benchmark}
 \end{table}
 
-For ESP32 energy, mean idle power was $0{,}570$ W and load power (continuous inference)
-$1{,}949$ W, yielding $\Delta P=1{,}380$ W. With throughput of $550{,}25$ samples/s,
-estimated energy per inference was $2{,}507$ mJ/inf. These values were obtained from
-88 idle samples and 39 load samples using the same 5 V supply and ACS712 sensor
-(Table~\ref{tab:energy_esp32}).
+For ESP32 energy (MicroPython inference), mean idle power was $0{,}189$ W and load power
+$0{,}245$ W, yielding $\Delta P=0{,}056$ W. With throughput of $5{,}0$ samples/s,
+estimated energy per inference was $11{,}204$ mJ/inf. These values were obtained from
+50 idle samples and 50 load samples (Table~\ref{tab:energy_esp32}).
 
 \begin{table}[H]
 \centering
@@ -202,11 +199,19 @@ estimated energy per inference was $2{,}507$ mJ/inf. These values were obtained 
 \toprule
 $P_{idle}$ (W) & $P_{load}$ (W) & $\Delta P$ (W) & Energy (mJ/inf) & $N_{idle}/N_{load}$ \\
 \midrule
-0{,}570 & 1{,}949 & 1{,}380 & 2{,}507 & 88/39 \\
+0{,}189 & 0{,}245 & 0{,}056 & 11{,}204 & 50/50 \\
 \bottomrule
 \end{tabular}
 \label{tab:energy_esp32}
 \end{table}
+
+For the ESP32 running the MicroPython SNN, 50 idle samples yielded mean
+$V=4{,}873$~V, $I=38{,}906$~mA, and $P=189{,}426$~mW (std: $0{,}0059$~V,
+$0{,}169$~mA, $0{,}448$~mW). Under load (50 samples during inference),
+mean values were $V=4{,}877$~V, $I=51{,}538$~mA, and $P=245{,}447$~mW
+(std: $0{,}0059$~V, $2{,}822$~mA, $15{,}820$~mW). With throughput of
+$5{,}0$~samples/s, the incremental power was $\Delta P=56{,}021$~mW,
+yielding $11{,}204$~mJ/inf for the MicroPython setup.
 
 
 
@@ -225,7 +230,7 @@ power, resulting in low energy per inference.
 \toprule
 Platform & $\Delta P$ (W) & Energy (mJ/inf) & Throughput (samples/s) \\
 \midrule
-ESP32 & 1{,}380 & 2{,}507 & 550{,}25 \\
+ESP32 (MicroPython) & 0{,}056 & 11{,}204 & 5{,}0 \\
 Raspberry Pi 4B & 0{,}239 & 0{,}020 & 11639{,}71 \\
 Android 23021RAAEG & 0{,}128 & 0{,}0104 & 12337{,}40 \\
 Android SM-A566E & 0{,}468 & 0{,}0151 & 30905{,}08 \\

@@ -1,0 +1,7 @@
+n=50
+voltage_mean=4.8734 V
+voltage_std=0.0059 V
+current_mean=38.9060 mA
+current_std=0.1690 mA
+power_mean=189.4264 mW
+power_std=0.4479 mW
