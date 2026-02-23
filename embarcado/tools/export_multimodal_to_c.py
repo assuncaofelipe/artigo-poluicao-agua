@@ -9,7 +9,7 @@ import os
 import json
 
 # Add scripts_multimodal to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts_multimodal"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "scripts_multimodal"))
 
 try:
     import torch
@@ -25,8 +25,8 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 cfg = Config()
 
 # Carrega modelo multimodal (grid_best_multi.pt tem melhor desempenho)
-checkpoint_path = os.path.join(script_dir, "..", "scripts_multimodal", "outputs", "grid_best_multi.pt")
-norm_path = os.path.join(script_dir, "..", "scripts_multimodal", "outputs", "grid_norm_multi.json")
+checkpoint_path = os.path.join(script_dir, "..", "..", "scripts_multimodal", "outputs", "grid_best_multi.pt")
+norm_path = os.path.join(script_dir, "..", "..", "scripts_multimodal", "outputs", "grid_norm_multi.json")
 print(f"Carregando checkpoint multimodal de: {checkpoint_path}")
 print(f"Carregando estatísticas de normalização de: {norm_path}")
 
@@ -103,7 +103,7 @@ def dump_array_2d(name, arr, rows, cols, dtype="float"):
     return txt
 
 # Gerar weights.h
-output_path = os.path.join(script_dir, "main", "weights.h")
+output_path = os.path.join(script_dir, "..", "esp32_snn_water", "main", "weights.h")
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
 with open(output_path, "w") as f:
@@ -139,7 +139,7 @@ with open(output_path, "w") as f:
 print(f"✔ Pesos exportados para {output_path}")
 
 # Gerar model_config.h com metadados
-config_path = os.path.join(script_dir, "main", "model_config.h")
+config_path = os.path.join(script_dir, "..", "esp32_snn_water", "main", "model_config.h")
 with open(config_path, "w") as f:
     f.write("#pragma once\n")
     f.write("/**\n")

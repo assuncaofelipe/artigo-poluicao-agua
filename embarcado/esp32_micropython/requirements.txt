@@ -1,0 +1,48 @@
+# MicroPython ESP32 - Requisitos
+# Este arquivo documenta as dependências para rodar SNN em MicroPython na ESP32
+
+# ============================================================================
+# DEPENDÊNCIAS DO MICROPYTHON
+# ============================================================================
+# Todos estes módulos são built-in no MicroPython ESP32:
+# - ujson (JSON parser)
+# - math (funções matemáticas)
+# - time (funções de timing)
+# - machine (acesso a hardware ESP32)
+# - gc (garbage collection)
+
+# Nenhuma dependência externa é necessária!
+# O MicroPython já inclui tudo que é preciso.
+
+# ============================================================================
+# COMO INSTALAR MICROPYTHON NA ESP32
+# ============================================================================
+# 1. Baixar firmware: https://micropython.org/download/esp32/
+# 2. Instalar esptool: pip install esptool
+# 3. Flash na ESP32:
+#    esptool.py --chip esp32 --port COM4 erase_flash
+#    esptool.py --chip esp32 --port COM4 write_flash -z 0x1000 esp32-20231005-v1.21.0.bin
+
+# ============================================================================
+# COMO FAZER UPLOAD PARA ESP32
+# ============================================================================
+# Opção 1: mpremote (recomendado)
+#    pip install mpremote
+#    mpremote connect COM4 fs cp main.py :main.py
+#    mpremote connect COM4 fs cp model_weights.json :model_weights.json
+
+# Opção 2: ampy (alternativa)
+#    pip install adafruit-ampy
+#    ampy --port COM4 put main.py
+#    ampy --port COM4 put model_weights.json
+
+# ============================================================================
+# OPCIONAL: Ferramentas de desenvolvimento (PC)
+# ============================================================================
+# Para testar o código em Python antes de fazer upload:
+# - nenhuma! O código é Python puro
+
+# Para benchmarking em PC com PyTorch:
+# - torch
+# - numpy
+# (ver ../tools/benchmark_pytorch_vs_pure.py)
