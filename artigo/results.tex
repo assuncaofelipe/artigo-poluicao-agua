@@ -87,6 +87,33 @@ indicates controlled variability, reducing sensitivity to measurement noise and 
 	\caption{Original vs. augmented data distributions (x10, Gaussian noise): boxplots.}\label{fig:aug_compare_box}
 \end{figure*}
 
+\subsection{Augmentation ablation}
+To quantify the effect of synthetic augmentation on generalization, we ran an ablation with the SNN
+under the same protocol and hyperparameters, comparing \textit{no augmentation} (factor 1) versus
+\textit{augmentation x10} (Gaussian noise, $\sigma=0{,}01$) across 5 seeds
+$(7, 13, 21, 42, 84)$. Augmentation reduced macro MAE from $0{,}496 \pm 0{,}060$ to
+$0{,}483 \pm 0{,}075$, corresponding to a $2{,}53\%$ reduction in macro MAE. Macro $R^2$
+increased slightly ($0{,}254 \rightarrow 0{,}256$), while macro RMSE remained essentially stable
+($0{,}615 \rightarrow 0{,}617$). These results support augmentation as a stabilization strategy
+for the small dataset, especially by reducing turbidity MAE in this ablation
+($1{,}139 \rightarrow 1{,}102$).
+
+Figure~\ref{fig:aug_ablation} provides a visual summary of this ablation and helps clarify the
+practical effect of augmentation on model behavior: the main benefit is a reduction in macro MAE,
+which is consistent with improved average absolute prediction error under repeated splits, while the
+macro RMSE remains nearly unchanged and the macro $R^2$ shows only a slight increase, indicating
+that augmentation in this setting acts primarily as a training stabilizer for a small dataset rather
+than as a transformation that fundamentally changes the global fit of the model; in particular, the
+combined pattern is compatible with a modest but meaningful improvement in generalization, especially
+for the most difficult target (turbidity), without evidence of a broad distortion of the error
+profile across outputs.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.82\textwidth]{./figuras/augmentation_ablation_bar.png}
+	\caption{Augmentation ablation (5 seeds): no augmentation vs augmentation x10 for macro metrics.}\label{fig:aug_ablation}
+\end{figure}
+
 \subsection{Model performance and comparisons}
 Table~\ref{tab:grid_top5} summarizes the five best multimodal grid-search combinations,
 ranked by lowest validation loss.
@@ -145,6 +172,19 @@ MLP & $0{,}781 \pm 0{,}193$ & $0{,}983 \pm 0{,}178$ & $-5{,}460 \pm 5{,}220$ \\
 \end{tabular}
 \label{tab:benchmark_multiseed}
 \end{table}
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.78\textwidth]{./figuras/mae_vs_model_bar.png}
+	\caption{Comparative macro MAE across multimodal models (mean with standard deviation bars).}
+	\label{fig:mae_models}
+\end{figure}
+
+Figure~\ref{fig:mae_models} provides a compact visual comparison of the macro MAE for all evaluated
+multimodal models, making the ranking easier to interpret than the table alone by simultaneously
+showing central tendency and variability (standard deviation bars), and highlighting that Random
+Forest and LSTM achieve lower mean error while the SNN remains in the same performance band with
+substantially better behavior than the MLP in this small-data setting.
 
 In the SNN vs LSTM comparison, the sign test yielded $p=0{,}3438$ for $MAE_{macro}$,
 $p=0{,}3438$ for $RMSE_{macro}$, and $p=0{,}1094$ for $R^2_{macro}$, with no statistically
@@ -366,7 +406,7 @@ Raspberry Pi 4B & $0{,}214$ & $0{,}023$ & $4670{,}50$ \\
 \label{tab:latency_rpi}
 \end{table}
 
-On the Android device (model 23021RAAEG, Android 15), the in-app benchmark reported mean
+On Android Device A (Table~\ref{tab:android_devices}), the in-app benchmark reported mean
 latency of $0{,}093$ ms/sample (std. dev. $0{,}005$ ms) and throughput of $10780{,}37$
 samples/s over 5000 runs. These values indicate that local inference is feasible in
 near-real-time even without dedicated acceleration. Latency remains below 1 ms per
@@ -381,19 +421,19 @@ the Raspberry Pi.
 \toprule
 Device & Mean latency (ms) & Std. dev. (ms) & Throughput (samples/s) \\
 \midrule
-Android 23021RAAEG & $0{,}093$ & $0{,}005$ & $10780{,}37$ \\
-Android SM-A566E & $0{,}030$ & $0{,}002$ & $33425{,}81$ \\
-Android 2201117SG & $0{,}61$ & $0{,}014$ & $16313{,}16$ \\
+Device A & $0{,}093$ & $0{,}005$ & $10780{,}37$ \\
+Device B & $0{,}030$ & $0{,}002$ & $33425{,}81$ \\
+Device C & $0{,}61$ & $0{,}014$ & $16313{,}16$ \\
 \bottomrule
 \end{tabular}
 \label{tab:latency_android}
 \end{table}
 
 Beyond latency, incremental energy was estimated directly on the phones via system current
-and voltage. For 23021RAAEG, mean idle power was $1{,}977$ W and load power $2{,}106$ W,
-yielding $\Delta P = 0{,}128$ W and $0{,}0104$ mJ/inf ($12337{,}40$ samples/s). For SM-A566E,
+and voltage. For Device A, mean idle power was $1{,}977$ W and load power $2{,}106$ W,
+yielding $\Delta P = 0{,}128$ W and $0{,}0104$ mJ/inf ($12337{,}40$ samples/s). For Device B,
 mean idle power was $3{,}455$ W and load power $3{,}923$ W, yielding $\Delta P = 0{,}468$ W
-and $0{,}0151$ mJ/inf ($30905{,}08$ samples/s). For 2201117SG, mean idle power was $8{,}158$ W
+and $0{,}0151$ mJ/inf ($30905{,}08$ samples/s). For Device C, mean idle power was $8{,}158$ W
 and load power $8{,}204$ W, yielding $\Delta P = 0{,}046$ W and $0{,}00285$ mJ/inf
 ($16121{,}71$ samples/s). In all cases, 200 power samples were collected
 (Table~\ref{tab:energy_android}).
@@ -405,9 +445,9 @@ and load power $8{,}204$ W, yielding $\Delta P = 0{,}046$ W and $0{,}00285$ mJ/i
 \toprule
 Device & $P_{idle}$ (W) & $P_{load}$ (W) & $\Delta P$ (W) & Energy (mJ/inf) & Samples \\
 \midrule
-Android 23021RAAEG & 1{,}977 & 2{,}106 & 0{,}128 & 0{,}0104 & 200 \\
-Android SM-A566E & 3{,}455 & 3{,}923 & 0{,}468 & 0{,}0151 & 200 \\
-Android 2201117SG & 8{,}158 & 8{,}204 & 0{,}046 & 0{,}00285 & 200 \\
+Device A & 1{,}977 & 2{,}106 & 0{,}128 & 0{,}0104 & 200 \\
+Device B & 3{,}455 & 3{,}923 & 0{,}468 & 0{,}0151 & 200 \\
+Device C & 8{,}158 & 8{,}204 & 0{,}046 & 0{,}00285 & 200 \\
 \bottomrule
 \end{tabular}
 \label{tab:energy_android}
@@ -467,7 +507,7 @@ energy per inference, which is expected given its lower processing rate (through
 absence of dedicated vector acceleration. Even so, the value remains viable for intermittent
 sampling scenarios typical of low-rate sensor networks. The Raspberry Pi 4B and smartphones
 present lower mJ/inf values, reflecting higher computational capacity and CPU/system-level
-optimizations. The SM-A566E, for example, combines high throughput with moderate incremental
+optimizations. Device B, for example, combines high throughput with moderate incremental
 power, resulting in low energy per inference.
 
 \begin{table}[ht!]
@@ -479,14 +519,43 @@ Platform & $\Delta P$ (W) & Energy (mJ/inf) & Throughput (samples/s) \\
 \midrule
 ESP32 (MicroPython) & 0{,}056 & 11{,}204 & 5{,}0 \\
 Raspberry Pi 4B & 0{,}239 & 0{,}0512 & 4670{,}50 \\
-Android 23021RAAEG & 0{,}128 & 0{,}0104 & 12337{,}40 \\
-Android SM-A566E & 0{,}468 & 0{,}0151 & 30905{,}08 \\
-Android 2201117SG & 0{,}046 & 0{,}00285 & 16121{,}71 \\
+Device A (Android) & 0{,}128 & 0{,}0104 & 12337{,}40 \\
+Device B (Android) & 0{,}468 & 0{,}0151 & 30905{,}08 \\
+Device C (Android) & 0{,}046 & 0{,}00285 & 16121{,}71 \\
 \bottomrule
 \end{tabular}\label{tab:energy_summary}
 \end{table}
 
-The 2201117SG device showed higher energy per inference despite high throughput, suggesting
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.78\textwidth]{./figuras/snn_platform_radar.png}
+	\caption{SNN deployment comparison across platforms (radar chart, normalized metrics). Energy and latency measurements are available only for deployment platforms, not for all baseline models.}
+	\label{fig:snn_platform_radar}
+\end{figure}
+
+Figure~\ref{fig:energy_platforms} complements Table~\ref{tab:energy_summary} by presenting the
+energy-per-inference comparison on a logarithmic scale, which is necessary to visualize, in a single
+plot, the large gap between the ESP32 MicroPython implementation and the Raspberry/Android devices
+without visually compressing the lower-consumption platforms into an indistinguishable range.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.92\textwidth]{./figuras/energy_platforms_bar.png}
+	\caption{Comparative energy per inference across platforms (log scale).}
+	\label{fig:energy_platforms}
+\end{figure}
+
+
+
+Figure~\ref{fig:snn_platform_radar} summarizes the deployment trade-offs for the SNN across
+platforms using normalized metrics (accuracy reference, inverse latency, throughput, and inverse
+energy), which helps communicate that no single platform dominates all criteria simultaneously:
+smartphones and Raspberry Pi concentrate strong throughput/latency efficiency, whereas ESP32 remains
+operationally relevant for low-rate offline scenarios despite its weaker efficiency envelope.
+
+Device C showed higher energy per inference despite high throughput, suggesting
 larger incremental system power during the benchmark. This highlights that, on mobile devices,
 consumption can vary significantly across models and system configurations, reinforcing the
 importance of device-specific empirical measurements when energy efficiency is a design

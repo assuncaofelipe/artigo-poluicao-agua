@@ -186,9 +186,26 @@ Runtime & TFLite (delegate XNNPACK) \\
 \end{table}
 
 Additionally, to evaluate execution on mobile edge devices, the Android app was tested on three phones:
-\textit{23021RAAEG} (Qualcomm SoC, Android 15, MemTotal: 5.77 GB), \textit{SM-A566E} (s5e8855 SoC,
-Android 16, MemTotal: 7.60 GB), and \textit{2201117SG} (mt6781 SoC, Android 13, MemTotal: 5.86 GB).
-These configurations were used for latency benchmarks in the app.
+\textit{Device A} (model \textit{23021RAAEG}, Qualcomm SoC, Android 15, MemTotal: 5.77 GB),
+\textit{Device B} (model \textit{SM-A566E}, s5e8855 SoC, Android 16, MemTotal: 7.60 GB), and
+\textit{Device C} (model \textit{2201117SG}, mt6781 SoC, Android 13, MemTotal: 5.86 GB). These
+configurations were used for latency and energy benchmarks in the app and are summarized in
+Table~\ref{tab:android_devices}.
+
+\begin{table}[H]
+\centering
+\caption{Android devices used in the experiments.}
+\begin{tabular}{lllll}
+\toprule
+Device & Model ID & SoC & Android & RAM \\
+\midrule
+A & 23021RAAEG & Qualcomm & 15 & 5.77 GB \\
+B & SM-A566E & s5e8855 & 16 & 7.60 GB \\
+C & 2201117SG & mt6781 & 13 & 5.86 GB \\
+\bottomrule
+\end{tabular}
+\label{tab:android_devices}
+\end{table}
 
 \subsection{Energy measurement}
 To quantify incremental energy during inference, an INA219 current sensor was placed in series with

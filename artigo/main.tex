@@ -67,7 +67,7 @@
 \makeatother
 
 \title{
-	Water Quality Monitoring in Lago do Serpa: Offline Multimodal Neuromorphic Edge Inference and Energy Evaluation
+	Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference
 }
 
 \author{%
@@ -100,19 +100,7 @@
 
 \begin{abstract}
 \noindent
-This work investigates neuromorphic edge inference for water-quality monitoring in Lago do Serpa
-(Itacoatiara, AM) using a spiking neural network (SNN) deployed on low-cost devices. The proposed
-pipeline operates directly on field measurements (coordinates and physicochemical inputs) to jointly
-predict pH, dissolved oxygen, and turbidity without relying on cloud connectivity. A small,
-georeferenced dataset was expanded via light Gaussian augmentation to stabilize training, and the
-SNN was optimized through a systematic grid search over time steps, learning rate, threshold, decay,
-and hidden-layer size. The final model adopts a leaky integrate-and-fire (LIF) hidden layer and
-achieves competitive accuracy in the multimodal setting, while enabling fully offline inference. The
-study further reports latency and energy benchmarks on Raspberry Pi, Android devices, and ESP32,
-including INA219-based power telemetry and incremental energy estimates under idle/load conditions in
-MicroPython. Results demonstrate that neuromorphic inference is feasible on constrained hardware,
-with practical throughput for field use and measurable energy trade-offs across platforms, supporting
-autonomous monitoring where connectivity and power are limited.
+This work investigates energy-aware neuromorphic edge inference for multimodal water quality prediction in a remote Amazonian region of northern Brazil. A spiking neural network (SNN) is deployed on low-cost embedded platforms to jointly predict pH, dissolved oxygen, and turbidity directly from georeferenced physicochemical measurements, without reliance on cloud connectivity. To mitigate the limited size of the field dataset, light Gaussian augmentation is employed to improve training stability. The SNN architecture, based on a leaky integrate-and-fire (LIF) hidden layer, is optimized through systematic grid search over temporal steps, learning rate, threshold, decay factor, and hidden-layer size. The final model achieves competitive predictive performance while enabling fully offline inference on constrained hardware. Latency and energy benchmarks are reported across Raspberry Pi, Android devices, and ESP32 platforms, including INA219-based power telemetry and incremental energy-per-inference estimates derived from idle and load measurements. Results demonstrate the feasibility of neuromorphic inference for autonomous environmental monitoring, revealing measurable energy-latency trade-offs and supporting deployment in connectivity- and power-limited scenarios.
 \end{abstract}
 
 \noindent\textbf{Index Terms—} Spiking Neural Networks, edge AI, water quality, offline inference, neuromorphic computing, environmental monitoring.

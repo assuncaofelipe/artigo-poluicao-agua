@@ -1,0 +1,47 @@
+{
+  "seeds": [
+    7,
+    13,
+    21,
+    42,
+    84
+  ],
+  "device": "cpu",
+  "epochs": 200,
+  "factor_noaug": 1,
+  "factor_aug": 10,
+  "noise_std": 0.01,
+  "no_augmentation": {
+    "mae_macro_mean": 0.4955674037337303,
+    "mae_macro_std": 0.059581507892841015,
+    "rmse_macro_mean": 0.6154665188926172,
+    "rmse_macro_std": 0.07143714702315243,
+    "r2_macro_mean": 0.25377061367034914,
+    "r2_macro_std": 0.0970964559738206,
+    "mae_pH_mean": 0.1309347853064537,
+    "mae_pH_std": 0.03483500940577242,
+    "mae_OD_mean": 0.2165972799062729,
+    "mae_OD_std": 0.03555157455371113,
+    "mae_TURB_mean": 1.1391701459884644,
+    "mae_TURB_std": 0.18267592298048405
+  },
+  "augmentation": {
+    "mae_macro_mean": 0.48305300921201705,
+    "mae_macro_std": 0.07536994223588778,
+    "rmse_macro_mean": 0.6172917271657645,
+    "rmse_macro_std": 0.0996580679387571,
+    "r2_macro_mean": 0.2557411233584086,
+    "r2_macro_std": 0.12063455672856807,
+    "mae_pH_mean": 0.132990525662899,
+    "mae_pH_std": 0.044213620559984554,
+    "mae_OD_mean": 0.21403202116489412,
+    "mae_OD_std": 0.030399432734317573,
+    "mae_TURB_mean": 1.102136480808258,
+    "mae_TURB_std": 0.22967768805312735
+  },
+  "improvement": {
+    "mae_macro_pct_reduction": 2.5252658724982013,
+    "rmse_macro_pct_reduction": -0.2965568746828634,
+    "r2_macro_gain": 0.001970509688059452
+  }
+}

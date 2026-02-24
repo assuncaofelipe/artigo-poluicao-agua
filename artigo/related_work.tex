@@ -55,30 +55,11 @@ devices.
 
 \subsection{Local context and positioning of this work}
 
-In the Lago do Serpa context, local studies on territory and environment reinforce the social and
-ecological relevance of continuous monitoring \cite{nogueira2022}. The experiment was conducted in
-the Amazon region, specifically at Lago do Serpa (Itacoatiara, AM), a lentic environment embedded in
-complex hydrological dynamics and seasonal variability. Data collection relied on in-situ
-measurements and georeferenced sampling points distributed across the lake to capture spatial
-gradients and local heterogeneity in physicochemical parameters (Figure~\ref{fig:mapa_pontos}). The
-sampling design emphasizes coverage of the lake surface rather than dense temporal repetition at a
-single location, which is consistent with the goal of producing spatially interpretable maps and
-identifying potential micro-zones of degradation. This spatial emphasis is critical in Amazonian
-settings where access is logistically constrained and where localized inputs (e.g., sediment
-resuspension, small inflows, or human activity near the margins) can alter water quality within short
-distances. Classic ANN-based water-quality forecasting demonstrated modeling potential in different
-scenarios \cite{palani2008}, but without a focus on neuromorphic edge inference. LSTM and remote
-sensing studies report accuracy gains and thematic maps in large lakes \cite{qi2020}, while IoT
-frameworks and wireless sensor networks prioritize acquisition and prediction but typically depend
-on continuous connectivity \cite{rahu2023,rosero2020}. Bio-inspired models such as Liquid Neural
-Networks achieve good results for water-quality indices but operate in continuous regimes and do not
-fully exploit event-driven inference \cite{chadalavada2025}. Strategic Edge AI studies highlight the
-potential of SNNs for rural environments, yet lack complete experimental implementation
-\cite{aral2024}. This work positions itself by integrating (i) multimodal prediction of pH,
-dissolved oxygen, and turbidity; (ii) spatial analysis and pollution maps; and (iii) offline
-deployment on edge devices with latency and energy benchmarking. This combination remains
-underexplored and addresses practical gaps for Amazonian field operations with limited connectivity
-and energy.
+Within the broader Amazonian environmental context, Lago do Serpa represents a relevant case study where local territorial and ecological dynamics reinforce the need for continuous monitoring \cite{nogueira2022}. The experiment was conducted in the Amazon region (Itacoatiara, AM, Brazil), in a lentic environment characterized by complex hydrological dynamics and marked seasonal variability. Data collection relied on in-situ measurements and georeferenced sampling points distributed across the lake to capture spatial gradients and local heterogeneity in physicochemical parameters (Figure~\ref{fig:mapa_pontos}). The sampling design emphasizes spatial coverage rather than dense temporal repetition at a single location, aligning with the objective of producing spatially interpretable maps and identifying potential micro-zones of degradation. This spatial emphasis is particularly relevant in Amazonian settings, where access is logistically constrained and localized processes (e.g., sediment resuspension, small inflows, or human activity near the margins) can significantly alter water quality over short distances.
+
+Classic ANN-based water-quality forecasting demonstrated modeling potential in different scenarios \cite{palani2008}, but without a focus on neuromorphic edge inference. LSTM and remote sensing studies report accuracy gains and thematic maps in large lakes \cite{qi2020}, while IoT frameworks and wireless sensor networks prioritize acquisition and prediction but typically depend on continuous connectivity \cite{rahu2023,rosero2020}. Bio-inspired models such as Liquid Neural Networks achieve promising results for water-quality indices but operate in continuous regimes and do not fully exploit event-driven inference \cite{chadalavada2025}. Strategic Edge AI studies highlight the potential of SNNs for rural environments, yet often lack complete experimental validation under real hardware and energy constraints \cite{aral2024}.
+
+This work positions itself by integrating (i) multimodal prediction of pH, dissolved oxygen, and turbidity; (ii) spatial analysis and pollution mapping; and (iii) fully offline deployment on edge devices with latency and energy benchmarking. This integrated approach remains underexplored in the literature and directly addresses practical deployment gaps in remote environmental monitoring scenarios characterized by limited connectivity and constrained energy resources.
 
 %----------------------------------------------------------------------------------------
 %   MÉTODOS

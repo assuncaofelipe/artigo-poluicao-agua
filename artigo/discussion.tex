@@ -18,6 +18,10 @@ that input variables carry relevant information for prediction. The correlations
 temperature, apparent color, and turbidity observed in the exploratory analysis align with
 expected physicochemical processes in lentic environments, providing additional support for
 the proposed model.
+Although Random Forest achieved lower macro error on this dataset, it does not provide
+event-driven temporal processing or a direct path to neuromorphic deployment, which keeps the
+SNN relevant for low-power adaptive edge scenarios where hardware compatibility and temporal
+sparse computation are part of the design objective rather than only predictive accuracy.
 
 Beyond predictive performance, model execution on the Raspberry Pi 4B achieved sub-millisecond
 latency per sample, reinforcing the feasibility of local inference on low-power hardware
@@ -33,6 +37,10 @@ efficiency is prioritized. The more unstable behavior of the MLP confirms that d
 models are sensitive on small datasets and can vary significantly across seeds. Additionally,
 systematic difficulty in turbidity indicates that this parameter requires additional
 information (e.g., hydrodynamic or seasonal variables) to improve generalization.
+Although the original field dataset comprises 60 samples, synthetic augmentation and repeated
+seed-based splits were used to reduce variance and sensitivity to overfitting; however, these
+strategies do not replace broader field campaigns and external validation across additional
+hydrological contexts.
 
 In energy terms, the comparison among ESP32, Raspberry Pi, and Android devices shows that
 incremental energy per inference varies significantly with hardware and available throughput.
