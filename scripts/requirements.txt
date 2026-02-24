@@ -1,6 +1,7 @@
 torch
 numpy
 matplotlib
+contextily
 scikit-learn
 onnx==1.16.1
 onnx2tf

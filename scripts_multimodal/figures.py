@@ -3,6 +3,27 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 import torch
 
+try:
+    import contextily as ctx
+except Exception:  # pragma: no cover - optional basemap
+    ctx = None
+
+CRS_UTM21S = "EPSG:32721"
+
+
+def _add_osm_basemap(ax):
+    if ctx is None:
+        return
+    try:
+        ctx.add_basemap(
+            ax,
+            crs=CRS_UTM21S,
+            source=ctx.providers.OpenStreetMap.Mapnik,
+            alpha=0.6,
+        )
+    except Exception:
+        pass
+
 
 def _ensure_dir(path: str):
     os.makedirs(path, exist_ok=True)
@@ -91,7 +112,11 @@ def save_residuals(y_true: torch.Tensor, y_pred: torch.Tensor, names, out_dir: s
 def save_pollution_scatter(x, y, score, out_dir: str, dpi: int):
     _ensure_dir(out_dir)
     plt.figure(figsize=(5, 4))
-    sc = plt.scatter(x, y, c=score, s=24, cmap="inferno")
+    ax = plt.gca()
+    ax.set_xlim(min(x), max(x))
+    ax.set_ylim(min(y), max(y))
+    _add_osm_basemap(ax)
+    sc = plt.scatter(x, y, c=score, s=24, cmap="inferno", zorder=3)
     plt.colorbar(sc, fraction=0.046, pad=0.04, label="Pollution index (0–1)")
     _format_utm_axes_km(plt.gca())
     # no title
@@ -117,15 +142,20 @@ def save_pollution_idw(x, y, score, out_dir: str, dpi: int, power: int = 2):
     Z = (w * z[None, None, :]).sum(axis=2) / w.sum(axis=2)
 
     plt.figure(figsize=(5, 4))
+    ax = plt.gca()
+    ax.set_xlim(x.min(), x.max())
+    ax.set_ylim(y.min(), y.max())
+    _add_osm_basemap(ax)
     im = plt.imshow(
         Z,
         origin="lower",
         extent=[x.min(), x.max(), y.min(), y.max()],
         cmap="inferno",
         aspect="auto",
+        alpha=0.75,
     )
-    plt.scatter(x, y, s=10, c="k", alpha=0.5)
-    _format_utm_axes_km(plt.gca())
+    plt.scatter(x, y, s=10, c="k", alpha=0.6, zorder=3)
+    _format_utm_axes_km(ax)
     # no title
     plt.colorbar(im, fraction=0.046, pad=0.04, label="Pollution index (0–1)")
     plt.tight_layout()
@@ -150,15 +180,20 @@ def save_idw_map(x, y, z, title, fname, out_dir: str, dpi: int, power: int = 2):
     Z = (w * z[None, None, :]).sum(axis=2) / w.sum(axis=2)
 
     plt.figure(figsize=(5, 4))
+    ax = plt.gca()
+    ax.set_xlim(x.min(), x.max())
+    ax.set_ylim(y.min(), y.max())
+    _add_osm_basemap(ax)
     im = plt.imshow(
         Z,
         origin="lower",
         extent=[x.min(), x.max(), y.min(), y.max()],
         cmap="viridis",
         aspect="auto",
+        alpha=0.75,
     )
-    plt.scatter(x, y, s=10, c="k", alpha=0.5)
-    _format_utm_axes_km(plt.gca())
+    plt.scatter(x, y, s=10, c="k", alpha=0.6, zorder=3)
+    _format_utm_axes_km(ax)
     label = _label_with_unit(title)
     # no title
     plt.colorbar(im, fraction=0.046, pad=0.04, label=label)
@@ -186,14 +221,18 @@ def save_idw_combined(x, y, zs, titles, fname, out_dir: str, dpi: int, power: in
         w = 1.0 / (dist2 ** (power / 2))
         Z = (w * z[None, None, :]).sum(axis=2) / w.sum(axis=2)
         label = _label_with_unit(title)
+        ax.set_xlim(x.min(), x.max())
+        ax.set_ylim(y.min(), y.max())
+        _add_osm_basemap(ax)
         im = ax.imshow(
             Z,
             origin="lower",
             extent=[x.min(), x.max(), y.min(), y.max()],
             cmap="viridis",
             aspect="auto",
+            alpha=0.75,
         )
-        ax.scatter(x, y, s=8, c="k", alpha=0.5)
+        ax.scatter(x, y, s=8, c="k", alpha=0.6, zorder=3)
         # no title
         _format_utm_axes_km(ax)
         fig.colorbar(im, ax=ax, fraction=0.046, pad=0.02, label=label)

@@ -59,6 +59,46 @@ and correlations, while spatial interpretation used point maps and inverse-dista
 for pH, dissolved oxygen, turbidity, and the pollution index. Model comparison used a multiseed benchmark and
 a paired sign test on macro metrics, suitable for small samples without normality assumptions.
 
+To make the signal flow explicit (input $\rightarrow$ processing $\rightarrow$ output), the spike encoding and
+LIF dynamics are defined as follows. Given a normalized input vector $\mathbf{x}$, each feature is converted to
+a spike probability with a sigmoid:
+\begin{equation}
+p_i = \sigma(x_i) = \frac{1}{1 + e^{-x_i}}.
+\end{equation}
+At each time step $t$, the hidden membrane potential evolves according to the discrete LIF equation:
+\begin{equation}
+V_h[t+1] = \beta V_h[t] + \sum_i W_{hi} s_i[t] + b_h,
+\end{equation}
+where $\beta$ is the decay, $W_{hi}$ and $b_h$ are weights and bias, and $s_i[t]$ is the encoded spike input.
+A spike is emitted when $V_h[t+1]$ exceeds a threshold $\theta$; a subtractive reset is applied:
+\begin{equation}
+s_h[t] = \mathbb{1}(V_h[t+1] > \theta), \quad V_h[t+1] \leftarrow V_h[t+1] - s_h[t]\theta.
+\end{equation}
+The output is the temporal average of the linear readout:
+\begin{equation}
+\hat{\mathbf{y}} = \frac{1}{T}\sum_{t=1}^{T} (W_o \mathbf{s}_h[t] + \mathbf{b}_o).
+\end{equation}
+Algorithm~\ref{alg:snn_pipeline} summarizes the modeling, training, and evaluation pipeline.
+
+\begin{algorithm}[H]
+\caption{Modeling, training, and evaluation pipeline.}
+\label{alg:snn_pipeline}
+\begin{algorithmic}[1]
+\STATE \textbf{Input:} raw samples $(x,y,\mathrm{TEMP},\mathrm{COR\_A},\mathrm{COR\_V})$
+\STATE Normalize inputs with z-score (training statistics).
+\STATE Encode inputs into spike probabilities via sigmoid (rate coding).
+\FOR{$t=1$ to $T$}
+\STATE Update LIF membrane potential with decay and synaptic input.
+\STATE Generate spikes using threshold $\theta$ and apply reset.
+\STATE Accumulate readout $W_o \mathbf{s}_h[t] + \mathbf{b}_o$.
+\ENDFOR
+\STATE Average readout over time to obtain predictions $\hat{\mathbf{y}}$.
+\STATE Train with MSE (weighted for multimodal outputs) using Adam and early stopping.
+\STATE Select hyperparameters by grid search (min validation loss).
+\STATE Evaluate on test split with MAE/RMSE/$R^2$; run multiseed benchmark and sign test.
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{Export and mobile deployment}
 After final training, the multimodal model was exported for mobile inference by serializing PyTorch
 weights, converting to ONNX while preserving the input/output signature, and transforming to TensorFlow

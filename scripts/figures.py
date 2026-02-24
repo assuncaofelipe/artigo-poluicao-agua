@@ -5,6 +5,27 @@ import matplotlib.pyplot as plt
 from matplotlib import ticker
 import torch
 
+try:
+    import contextily as ctx
+except Exception:  # pragma: no cover - optional basemap
+    ctx = None
+
+CRS_UTM21S = "EPSG:32721"
+
+
+def _add_osm_basemap(ax):
+    if ctx is None:
+        return
+    try:
+        ctx.add_basemap(
+            ax,
+            crs=CRS_UTM21S,
+            source=ctx.providers.OpenStreetMap.Mapnik,
+            alpha=0.6,
+        )
+    except Exception:
+        pass
+
 
 def _ensure_dir(path: str):
     os.makedirs(path, exist_ok=True)
@@ -65,10 +86,16 @@ def save_spatial_map(
 ):
     _ensure_dir(out_dir)
     plt.figure(figsize=(5, 4))
-    sc = plt.scatter(x.cpu().numpy(), y.cpu().numpy(), c=z.cpu().numpy(), s=26)
+    ax = plt.gca()
+    xs = x.cpu().numpy()
+    ys = y.cpu().numpy()
+    ax.set_xlim(xs.min(), xs.max())
+    ax.set_ylim(ys.min(), ys.max())
+    _add_osm_basemap(ax)
+    sc = plt.scatter(xs, ys, c=z.cpu().numpy(), s=26, zorder=3)
     label = _label_with_unit(name)
     plt.colorbar(sc, fraction=0.046, pad=0.04, label=label)
-    _format_utm_axes_km(plt.gca())
+    _format_utm_axes_km(ax)
     # no title
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, f"map_{name}.png"), dpi=dpi)

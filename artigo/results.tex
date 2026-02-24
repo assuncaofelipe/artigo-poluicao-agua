@@ -1,9 +1,93 @@
 \section{RESULTS}
 
-The results below correspond to the SNN model tuned with data augmentation
-(light Gaussian noise) and hyperparameter selection via grid search. Exploratory
-analyses show variable distributions and correlations, while performance figures
-highlight training stability and prediction quality relative to observed values.
+\subsection{Exploratory analysis}
+The results below correspond to the SNN model tuned with data augmentation (light Gaussian noise)
+and hyperparameter selection via grid search. We first report exploratory analysis to characterize
+variable distributions and relationships before presenting model performance, spatial results, and
+energy/latency benchmarks.
+
+In Figure~\ref{fig:exploratoria}(a), the correlation matrix reveals relevant dependencies among
+physicochemical parameters and contextual variables, indicating that multivariate prediction is
+appropriate for the problem. Higher correlations suggest that part of target variability can be
+explained by combinations of temperature, apparent color, turbidity, and OD, while lower correlations
+point to local variability components and nonlinearity. In Figure~\ref{fig:exploratoria}(b), the
+boxplots show heterogeneous dispersions and the presence of extreme values, justifying the use of
+normalization, data augmentation, and regularization to avoid excessive sensitivity to isolated
+samples.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/corr_heatmap.png}
+		\caption*{(a) Variable correlations}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/boxplots_features.png}
+		\caption*{(b) Variable boxplots}
+	\end{minipage}
+\caption{Exploratory analysis: correlations and distribution of input variables.}
+	\label{fig:exploratoria}
+\end{figure}
+
+In Figure~\ref{fig:hist_loss}(a), the relatively narrow pH range indicates that small absolute
+changes are environmentally meaningful; therefore, modest average errors can still be relevant in
+practice. Figure~\ref{fig:hist_loss}(b) shows a rapid drop in training/validation loss followed by
+stabilization with low divergence, suggesting effective learning and justifying the use of
+\textit{early stopping}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/hist_pH.png}
+		\caption*{(a) pH histogram}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/loss_curve.png}
+		\caption*{(b) Loss curve (MSE)}
+	\end{minipage}
+	\caption{Target distribution and training/validation dynamics.}\label{fig:hist_loss}
+\end{figure}
+
+\subsection{Data augmentation}
+Figure~\ref{fig:aug_compare_hist} shows strong overlap between original and augmented data,
+indicating that Gaussian noise densified the sample without shifting means or creating spurious
+modes. This preserves physical coherence and acts as a regularizer for a small dataset.
+
+\begin{figure*}[!t]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/aug_compare_hist_1.png}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/aug_compare_hist_2.png}
+	\end{minipage}
+	\caption{Original vs. augmented data distributions (x10, Gaussian noise): histograms.}\label{fig:aug_compare_hist}
+\end{figure*}
+
+Figure~\ref{fig:aug_compare_box} reinforces this interpretation: medians and quartiles remain close,
+with a slight increase in dispersion and no extreme outliers beyond the original range. This
+indicates controlled variability, reducing sensitivity to measurement noise and favoring robustness.
+
+\begin{figure*}[!t]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/aug_compare_box_1.png}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/aug_compare_box_2.png}
+	\end{minipage}
+	\caption{Original vs. augmented data distributions (x10, Gaussian noise): boxplots.}\label{fig:aug_compare_box}
+\end{figure*}
+
+\subsection{Model performance and comparisons}
 Table~\ref{tab:grid_top5} summarizes the five best multimodal grid-search combinations,
 ranked by lowest validation loss.
 
@@ -46,7 +130,6 @@ The sign test yielded $p=0{,}0020$ for $MAE_{macro}$, $RMSE_{macro}$, and $R^2_{
 (SNN vs MLP), indicating MLP sensitivity to small data. In addition, the MLP $R^2_{macro}$
 was negative on average ($-5{,}460 \pm 5{,}220$), indicating low robustness in this setting.
 
-
 \begin{table}[ht!]
 \centering
 \caption{Multi-seed comparison (mean $\pm$ standard deviation) among multimodal models.}
@@ -63,7 +146,6 @@ MLP & $0{,}781 \pm 0{,}193$ & $0{,}983 \pm 0{,}178$ & $-5{,}460 \pm 5{,}220$ \\
 \label{tab:benchmark_multiseed}
 \end{table}
 
-
 In the SNN vs LSTM comparison, the sign test yielded $p=0{,}3438$ for $MAE_{macro}$,
 $p=0{,}3438$ for $RMSE_{macro}$, and $p=0{,}1094$ for $R^2_{macro}$, with no statistically
 significant difference at $\alpha=0{,}05$. Focusing on turbidity, we performed a loss-weight
@@ -73,8 +155,6 @@ $(0{,}05,\ 0{,}15,\ 0{,}8)$ for (pH, OD, TURB), reducing mean $MAE_{TURB}$ to $1
 $MAE_{TURB}=1{,}012$. This adjustment improves the most difficult target, with a slight
 decrease in $R^2_{macro}$ and marginal change in $MAE_{macro}$, indicating a trade-off
 between turbidity focus and global performance.
-
-
 
 In summary, Table~\ref{tab:snn_weight_sweep} shows the loss-weight sweep and highlights the trade-off
 between reducing turbidity error and preserving global performance. When the TURB weight increases to
@@ -98,6 +178,174 @@ $(0{,}05,\ 0{,}15,\ 0{,}80)$ & $0{,}448$ & $\mathbf{1{,}006}$ & $0{,}280$ \\
 \label{tab:snn_weight_sweep}
 \end{table}
 
+In Figure~\ref{fig:multi_pred}(a) and (b), the point clouds for pH and OD align more closely to the
+identity line, reflecting better fit for these targets. In Figure~\ref{fig:multi_pred}(c), higher
+dispersion for turbidity indicates additional modeling difficulty, consistent with the intrinsic
+variability of this parameter and possible local effects not fully captured by the inputs.
+Even so, the global trend remains increasing, indicating that the model preserves predictable
+structure for turbidity as well.
+
+The observed behavior suggests that pH and OD are more directly explained by the available inputs,
+while turbidity may depend on unmeasured local factors such as rainfall events, resuspension, or
+point-source inputs. Even with higher error, the model maintains a monotonic relationship with
+true turbidity, indicating potential improvement with new variables and denser data.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.32\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_pH_multi.png}
+		\caption*{(a) pH}
+	\end{minipage}\hfill
+	\begin{minipage}{0.32\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_OD_multi.png}
+		\caption*{(b) OD}
+	\end{minipage}\hfill
+	\begin{minipage}{0.32\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_TURB_multi.png}
+		\caption*{(c) Turbidity}
+	\end{minipage}
+\caption{Predicted vs. true values for the multimodal model (pH, dissolved oxygen, turbidity).}\label{fig:multi_pred}
+\end{figure}
+
+In Figure~\ref{fig:multi_res}(a) and (b), residuals for pH and OD oscillate around zero with no
+strong directional pattern, suggesting the absence of dominant systematic bias. In
+Figure~\ref{fig:multi_res}(c), residual amplitude for turbidity is larger and less homogeneous,
+indicating higher uncertainty for this component. This evidence motivated the loss-weight tuning
+stage, prioritizing turbidity to reduce specific error without substantial loss in overall
+performance.
+
+The residual distribution also indicates that extreme errors are more common for turbidity, which
+corroborates the interpretation of the predicted-vs-true plots. By prioritizing turbidity in the
+loss function, we sought to reduce the impact of these larger errors without compromising pH and
+OD. This trade-off is expected in multi-output models and should be explicit for transparency in
+practical applications.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.32\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/residuals_pH_multi.png}
+		\caption*{(a) pH}
+	\end{minipage}\hfill
+	\begin{minipage}{0.32\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/residuals_OD_multi.png}
+		\caption*{(b) OD}
+	\end{minipage}\hfill
+	\begin{minipage}{0.32\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/residuals_TURB_multi.png}
+		\caption*{(c) Turbidez}
+	\end{minipage}
+\caption{Residuals (predicted - true) of the multimodal model for each variable.}\label{fig:multi_res}
+\end{figure}
+
+\subsection{Spatial results and pollution index}
+In Figure~\ref{fig:pred_pH}(a), the concentration of points near the identity line indicates good
+ability to reproduce observed pH, with residual errors more evident at range extremes where sample
+density is lower. This pattern is expected in small datasets and reinforces the need to increase
+sampling to reduce uncertainty in underrepresented regions. In Figure~\ref{fig:pred_pH}(b), the pH
+spatial map shows a consistent geographic gradient, indicating that the model preserves spatial
+coherence rather than producing random predictions across the lake.
+
+Beyond global fit, the predicted-vs-true plot suggests that the largest discrepancies occur at
+extreme values, where the model has fewer examples to learn the pattern. On the map, spatial
+continuity of pH indicates that predictions respect the lake's geographic structure, which is
+important for micro-zone analysis and prioritizing inspection areas.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_pH.png}
+		\caption*{(a) Predicted vs. true}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/map_pH.png}
+		\caption*{(b) Spatial map of pH}
+	\end{minipage}
+\caption{Predictive performance and spatial pattern of pH in Lago do Serpa.}\label{fig:pred_pH}
+\end{figure}
+
+In Figure~\ref{fig:mapas}(a), dissolved oxygen exhibits spatial variation consistent with
+heterogeneous aquatic environments, with low-oxygen zones potentially more sensitive to
+environmental stress. In Figure~\ref{fig:mapas}(b), turbidity shows stronger contrasts, indicating
+regions with higher particulate load. Interpreting OD and turbidity together is important because
+it combines a biochemical indicator with a physical indicator of suspended material, strengthening
+environmental diagnosis through multiple lines of evidence.
+
+Interpretively, low OD regions may indicate higher biological oxygen demand or reduced water
+renewal, while high turbidity is often associated with sediments, suspended organic matter, or
+external inputs. When both variables point to degradation in the same region, confidence in
+identifying environmental hotspots increases, even with a limited sample set.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/map_OD.png}
+		\caption*{(a) Spatial map of dissolved oxygen}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/map_TURB.png}
+		\caption*{(b) Spatial map of turbidity}
+	\end{minipage}
+\caption{Spatial patterns of dissolved oxygen and turbidity.}\label{fig:mapas}
+\end{figure}
+
+Figure~\ref{fig:idw} transforms point measurements into continuous surfaces via IDW, enabling the
+visualization of ``patches'' and spatial transitions for each variable. Although interpolation
+does not replace direct measurement, it improves integrated reading of the system by highlighting
+high-contrast zones and areas prioritized for future sampling. The coherence between estimated
+surfaces and point patterns reinforces the dataset's internal consistency.
+
+Interpolated surfaces also help communicate results to managers and field teams because they provide
+a continuous view of the lake without requiring point-by-point interpretation. Given the limited
+sampling density, these surfaces should be understood as exploratory approximations rather than
+definitive maps, but they are still useful for guiding future campaigns and validating hypotheses
+about spatial dynamics.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.98\textwidth]{./figuras/idw_combined.png}
+\caption{IDW interpolated surfaces for pH, dissolved oxygen, and turbidity from sampled points.}\label{fig:idw}
+\end{figure}
+
+In Figure~\ref{fig:pollution}(a), the composite index spatially orders points by relative degradation
+intensity, integrating pH, OD, and turbidity into a single scale. In this work, the index is
+normalized to the $[0,1]$ range, where higher values indicate worse relative condition in the
+analyzed set. In Figure~\ref{fig:pollution}(b), the IDW surface extends this reading by delineating
+the estimated pollution patch, useful for prioritizing field inspections. This representation does
+not replace laboratory analysis, but functions as an operational screening tool for continuous
+monitoring and decision support.
+
+The composite index synthesizes multiple signals into a single operational indicator, facilitating
+communication with non-specialist users and prioritization of critical areas. The IDW surface
+shows that the estimated patch is not uniform, suggesting spatial patterns that can guide new
+sampling or interventions. This type of visualization is particularly useful in edge contexts,
+where fast and interpretable decisions are essential.
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/pollution_scatter.png}
+		\caption*{(a) Pollution index at sample points}
+	\end{minipage}\hfill
+	\begin{minipage}{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{./figuras/pollution_idw.png}
+		\caption*{(b) IDW surface of the index}
+	\end{minipage}
+\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$).}\label{fig:pollution}
+\end{figure}
+
+\subsection{Latency and energy}
 The final TFLite model was executed on a Raspberry Pi 4B (ARM64) with XNNPACK enabled.
 Mean inference latency was $0{,}214$ ms/sample (standard deviation $0{,}023$ ms), with
 throughput of $4670{,}50$ samples/s (Table~\ref{tab:latency_rpi}). These results confirm
@@ -190,7 +438,8 @@ Free memory & $134{,}544$ & bytes \\
 For ESP32 energy (MicroPython inference), mean idle power was $0{,}189$ W and load power
 $0{,}245$ W, yielding $\Delta P=0{,}056$ W. With throughput of $5{,}0$ samples/s,
 estimated energy per inference was $11{,}204$ mJ/inf. These values were obtained from
-50 idle samples and 50 load samples (Table~\ref{tab:energy_esp32}).
+50 idle samples and 50 load samples (Table~\ref{tab:energy_esp32}). Sensor verification
+was based on the stability of idle and load windows and on consistent EMA-smoothed readings.
 
 \begin{table}[H]
 \centering
@@ -213,8 +462,6 @@ mean values were $V=4{,}877$~V, $I=51{,}538$~mA, and $P=245{,}447$~mW
 $5{,}0$~samples/s, the incremental power was $\Delta P=56{,}021$~mW,
 yielding $11{,}204$~mJ/inf for the MicroPython setup.
 
-
-
 From a comparative perspective (Table~\ref{tab:energy_summary}), the ESP32 shows the highest
 energy per inference, which is expected given its lower processing rate (throughput) and the
 absence of dedicated vector acceleration. Even so, the value remains viable for intermittent
@@ -231,7 +478,7 @@ power, resulting in low energy per inference.
 Platform & $\Delta P$ (W) & Energy (mJ/inf) & Throughput (samples/s) \\
 \midrule
 ESP32 (MicroPython) & 0{,}056 & 11{,}204 & 5{,}0 \\
-Raspberry Pi 4B & 0{,}239 & 0{,}020 & 11639{,}71 \\
+Raspberry Pi 4B & 0{,}239 & 0{,}0512 & 4670{,}50 \\
 Android 23021RAAEG & 0{,}128 & 0{,}0104 & 12337{,}40 \\
 Android SM-A566E & 0{,}468 & 0{,}0151 & 30905{,}08 \\
 Android 2201117SG & 0{,}046 & 0{,}00285 & 16121{,}71 \\
@@ -245,13 +492,13 @@ consumption can vary significantly across models and system configurations, rein
 importance of device-specific empirical measurements when energy efficiency is a design
 requirement.
 
-To estimate incremental inference energy, an ACS712-20A sensor was placed in series with the
-Raspberry Pi 4B supply, measuring current in idle state and under load (benchmark). Incremental
+To estimate incremental inference energy on the Raspberry Pi 4B, an INA219 sensor was placed in
+series with the supply, measuring current in idle state and under load (benchmark). Incremental
 consumption was computed as $\Delta I = I_{load} - I_{idle}$, and incremental power as
 $\Delta P = V \cdot \Delta I$, with $V=5{,}0$ V. Averages were computed from $N_{idle}=97$
 samples and $N_{load}=440$ samples. With mean idle current of $0{,}548$ A and load current of
 $0{,}595$ A, we obtained $\Delta P = 0{,}239$ W. Using the observed throughput
-($11639{,}71$ samples/s), the estimated energy per inference was $0{,}020$ mJ/inf
+($4670{,}50$ samples/s), the estimated energy per inference was $0{,}0512$ mJ/inf
 (Table~\ref{tab:energy_rpi}). These values provide a practical estimate of the additional energy
 cost of the model on embedded hardware.
 
@@ -262,265 +509,7 @@ cost of the model on embedded hardware.
 \toprule
 $I_{idle}$ (A) & $I_{carga}$ (A) & $N_{idle}/N_{carga}$ & $\Delta P$ (W) & Energia (mJ/inf) \\
 \midrule
-0{,}548 & 0{,}595 & 97/440 & 0{,}239 & 0{,}020 \\
+0{,}548 & 0{,}595 & 97/440 & 0{,}239 & 0{,}0512 \\
 \bottomrule
 \end{tabular}\label{tab:energy_rpi}
 \end{table}
-
-
-
-In Figure~\ref{fig:exploratoria}(a), the correlation matrix reveals relevant dependencies among
-physicochemical parameters and contextual variables, indicating that multivariate prediction is
-appropriate for the problem. Higher correlations suggest that part of target variability can be
-explained by combinations of temperature, apparent color, turbidity, and OD, while lower correlations
-point to local variability components and nonlinearity. In Figure~\ref{fig:exploratoria}(b), the
-boxplots show heterogeneous dispersions and the presence of extreme values, justifying the use of
-normalization, data augmentation, and regularization to avoid excessive sensitivity to isolated
-samples.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/corr_heatmap.png}
-		\caption*{(a) Variable correlations}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/boxplots_features.png}
-		\caption*{(b) Variable boxplots}
-	\end{minipage}
-\caption{Exploratory analysis: correlations and distribution of input variables.}
-	\label{fig:exploratoria}
-\end{figure}
-
-In Figure~\ref{fig:hist_loss}(a), the relatively narrow pH range indicates that small absolute
-changes are environmentally meaningful; therefore, modest average errors can still be relevant in
-practice. Figure~\ref{fig:hist_loss}(b) shows a rapid drop in training/validation loss followed by
-stabilization with low divergence, suggesting effective learning and justifying the use of
-\textit{early stopping}.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/hist_pH.png}
-		\caption*{(a) pH histogram}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/loss_curve.png}
-		\caption*{(b) Loss curve (MSE)}
-	\end{minipage}
-	\caption{Target distribution and training/validation dynamics.}\label{fig:hist_loss}
-\end{figure}
-
-
-Figure~\ref{fig:aug_compare_hist} shows strong overlap between original and augmented data,
-indicating that Gaussian noise densified the sample without shifting means or creating spurious
-modes. This preserves physical coherence and acts as a regularizer for a small dataset.
-
-\begin{figure*}[!t]
-	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/aug_compare_hist_1.png}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/aug_compare_hist_2.png}
-	\end{minipage}
-	\caption{Original vs. augmented data distributions (x10, Gaussian noise): histograms.}\label{fig:aug_compare_hist}
-\end{figure*}
-
-Figure~\ref{fig:aug_compare_box} reinforces this interpretation: medians and quartiles remain close,
-with a slight increase in dispersion and no extreme outliers beyond the original range. This
-indicates controlled variability, reducing sensitivity to measurement noise and favoring robustness.
-
-
-\begin{figure*}[!t]
-	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/aug_compare_box_1.png}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/aug_compare_box_2.png}
-	\end{minipage}
-	\caption{Original vs. augmented data distributions (x10, Gaussian noise): boxplots.}\label{fig:aug_compare_box}
-\end{figure*}
-
-
-
-In Figure~\ref{fig:pred_pH}(a), the concentration of points near the identity line indicates good
-ability to reproduce observed pH, with residual errors more evident at range extremes where sample
-density is lower. This pattern is expected in small datasets and reinforces the need to increase
-sampling to reduce uncertainty in underrepresented regions. In Figure~\ref{fig:pred_pH}(b), the pH
-spatial map shows a consistent geographic gradient, indicating that the model preserves spatial
-coherence rather than producing random predictions across the lake.
-
-Beyond global fit, the predicted-vs-true plot suggests that the largest discrepancies occur at
-extreme values, where the model has fewer examples to learn the pattern. On the map, spatial
-continuity of pH indicates that predictions respect the lake's geographic structure, which is
-important for micro-zone analysis and prioritizing inspection areas.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_pH.png}
-		\caption*{(a) Predicted vs. true}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/map_pH.png}
-		\caption*{(b) Spatial map of pH}
-	\end{minipage}
-\caption{Predictive performance and spatial pattern of pH in Lago do Serpa.}\label{fig:pred_pH}
-\end{figure}
-
-In Figure~\ref{fig:mapas}(a), dissolved oxygen exhibits spatial variation consistent with
-heterogeneous aquatic environments, with low-oxygen zones potentially more sensitive to
-environmental stress. In Figure~\ref{fig:mapas}(b), turbidity shows stronger contrasts, indicating
-regions with higher particulate load. Interpreting OD and turbidity together is important because
-it combines a biochemical indicator with a physical indicator of suspended material, strengthening
-environmental diagnosis through multiple lines of evidence.
-
-Interpretively, low OD regions may indicate higher biological oxygen demand or reduced water
-renewal, while high turbidity is often associated with sediments, suspended organic matter, or
-external inputs. When both variables point to degradation in the same region, confidence in
-identifying environmental hotspots increases, even with a limited sample set.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/map_OD.png}
-		\caption*{(a) Spatial map of dissolved oxygen}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/map_TURB.png}
-		\caption*{(b) Spatial map of turbidity}
-	\end{minipage}
-\caption{Spatial patterns of dissolved oxygen and turbidity.}\label{fig:mapas}
-\end{figure}
-
-
-
-Figure~\ref{fig:idw} transforms point measurements into continuous surfaces via IDW, enabling the
-visualization of ``patches'' and spatial transitions for each variable. Although interpolation
-does not replace direct measurement, it improves integrated reading of the system by highlighting
-high-contrast zones and areas prioritized for future sampling. The coherence between estimated
-surfaces and point patterns reinforces the dataset's internal consistency.
-
-Interpolated surfaces also help communicate results to managers and field teams because they provide
-a continuous view of the lake without requiring point-by-point interpretation. Given the limited
-sampling density, these surfaces should be understood as exploratory approximations rather than
-definitive maps, but they are still useful for guiding future campaigns and validating hypotheses
-about spatial dynamics.
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=0.98\textwidth]{./figuras/idw_combined.png}
-\caption{IDW interpolated surfaces for pH, dissolved oxygen, and turbidity from sampled points.}\label{fig:idw}
-\end{figure}
-
-
-In Figure~\ref{fig:multi_pred}(a) and (b), the point clouds for pH and OD align more closely to the
-identity line, reflecting better fit for these targets. In Figure~\ref{fig:multi_pred}(c), higher
-dispersion for turbidity indicates additional modeling difficulty, consistent with the intrinsic
-variability of this parameter and possible local effects not fully captured by the inputs.
-Even so, the global trend remains increasing, indicating that the model preserves predictable
-structure for turbidity as well.
-
-The observed behavior suggests that pH and OD are more directly explained by the available inputs,
-while turbidity may depend on unmeasured local factors such as rainfall events, resuspension, or
-point-source inputs. Even with higher error, the model maintains a monotonic relationship with
-true turbidity, indicating potential improvement with new variables and denser data.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.32\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_pH_multi.png}
-		\caption*{(a) pH}
-	\end{minipage}\hfill
-	\begin{minipage}{0.32\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_OD_multi.png}
-		\caption*{(b) OD}
-	\end{minipage}\hfill
-	\begin{minipage}{0.32\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/pred_vs_real_TURB_multi.png}
-		\caption*{(c) Turbidity}
-	\end{minipage}
-\caption{Predicted vs. true values for the multimodal model (pH, dissolved oxygen, turbidity).}\label{fig:multi_pred}
-\end{figure}
-
-In Figure~\ref{fig:multi_res}(a) and (b), residuals for pH and OD oscillate around zero with no
-strong directional pattern, suggesting the absence of dominant systematic bias. In
-Figure~\ref{fig:multi_res}(c), residual amplitude for turbidity is larger and less homogeneous,
-indicating higher uncertainty for this component. This evidence motivated the loss-weight tuning
-stage, prioritizing turbidity to reduce specific error without substantial loss in overall
-performance.
-
-The residual distribution also indicates that extreme errors are more common for turbidity, which
-corroborates the interpretation of the predicted-vs-true plots. By prioritizing turbidity in the
-loss function, we sought to reduce the impact of these larger errors without compromising pH and
-OD. This trade-off is expected in multi-output models and should be explicit for transparency in
-practical applications.
-
-\begin{figure}[ht!]
-	\centering
-	\begin{minipage}{0.32\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/residuals_pH_multi.png}
-		\caption*{(a) pH}
-	\end{minipage}\hfill
-	\begin{minipage}{0.32\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/residuals_OD_multi.png}
-		\caption*{(b) OD}
-	\end{minipage}\hfill
-	\begin{minipage}{0.32\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/residuals_TURB_multi.png}
-		\caption*{(c) Turbidez}
-	\end{minipage}
-\caption{Residuals (predicted - true) of the multimodal model for each variable.}\label{fig:multi_res}
-\end{figure}
-
-
-
-In Figure~\ref{fig:pollution}(a), the composite index spatially orders points by relative degradation
-intensity, integrating pH, OD, and turbidity into a single scale. In this work, the index is
-normalized to the $[0,1]$ range, where higher values indicate worse relative condition in the
-analyzed set. In Figure~\ref{fig:pollution}(b), the IDW surface extends this reading by delineating
-the estimated pollution patch, useful for prioritizing field inspections. This representation does
-not replace laboratory analysis, but functions as an operational screening tool for continuous
-monitoring and decision support.
-
-The composite index synthesizes multiple signals into a single operational indicator, facilitating
-communication with non-specialist users and prioritization of critical areas. The IDW surface
-shows that the estimated patch is not uniform, suggesting spatial patterns that can guide new
-sampling or interventions. This type of visualization is particularly useful in edge contexts,
-where fast and interpretable decisions are essential.
-
-
-\begin{figure}[H]
-	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/pollution_scatter.png}
-		\caption*{(a) Pollution index at sample points}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/pollution_idw.png}
-		\caption*{(b) IDW surface of the index}
-	\end{minipage}
-\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$).}\label{fig:pollution}
-\end{figure}

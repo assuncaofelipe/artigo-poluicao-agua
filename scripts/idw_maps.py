@@ -4,6 +4,27 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
+try:
+    import contextily as ctx
+except Exception:  # pragma: no cover - optional basemap
+    ctx = None
+
+CRS_UTM21S = "EPSG:32721"
+
+
+def _add_osm_basemap(ax):
+    if ctx is None:
+        return
+    try:
+        ctx.add_basemap(
+            ax,
+            crs=CRS_UTM21S,
+            source=ctx.providers.OpenStreetMap.Mapnik,
+            alpha=0.6,
+        )
+    except Exception:
+        pass
+
 
 def idw(x, y, z, X, Y, power=2):
     dist2 = (X[..., None] - x[None, None, :]) ** 2 + (Y[..., None] - y[None, None, :]) ** 2
@@ -49,14 +70,19 @@ def main():
 
     def save_map(Z, title, fname):
         plt.figure(figsize=(5, 4))
+        ax = plt.gca()
+        ax.set_xlim(xs.min(), xs.max())
+        ax.set_ylim(ys.min(), ys.max())
+        _add_osm_basemap(ax)
         im = plt.imshow(
             Z,
             origin="lower",
             extent=[xs.min(), xs.max(), ys.min(), ys.max()],
             cmap="viridis",
             aspect="auto",
+            alpha=0.75,
         )
-        plt.scatter(xs, ys, s=10, c="k", alpha=0.5)
+        plt.scatter(xs, ys, s=10, c="k", alpha=0.6, zorder=3)
         plt.xlabel("x")
         plt.ylabel("y")
         plt.title(title)
@@ -73,14 +99,18 @@ def main():
     for ax, Z, title in zip(
         axes, [Z_ph, Z_od, Z_turb], ["pH (IDW)", "OD (IDW)", "Turbidez (IDW)"]
     ):
+        ax.set_xlim(xs.min(), xs.max())
+        ax.set_ylim(ys.min(), ys.max())
+        _add_osm_basemap(ax)
         im = ax.imshow(
             Z,
             origin="lower",
             extent=[xs.min(), xs.max(), ys.min(), ys.max()],
             cmap="viridis",
             aspect="auto",
+            alpha=0.75,
         )
-        ax.scatter(xs, ys, s=8, c="k", alpha=0.5)
+        ax.scatter(xs, ys, s=8, c="k", alpha=0.6, zorder=3)
         ax.set_title(title)
         ax.set_xlabel("x")
         ax.set_ylabel("y")

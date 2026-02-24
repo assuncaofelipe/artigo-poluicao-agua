@@ -67,7 +67,7 @@
 \makeatother
 
 \title{
-	Neuromorphic Computing for Water Quality Monitoring in Lago do Serpa: Multimodal Modeling and Offline Deployment
+	Water Quality Monitoring in Lago do Serpa: Offline Multimodal Neuromorphic Edge Inference and Energy Evaluation
 }
 
 \author{%
@@ -100,14 +100,19 @@
 
 \begin{abstract}
 \noindent
-Water quality monitoring in the Amazon basin is a logistical challenge due to vast distances and
-limited infrastructure. This paper evaluates the feasibility of deploying Spiking Neural Networks
-(SNNs) at the edge to predict water-quality parameters with offline inference. Using data collected
-in Lago do Serpa (Itacoatiara, AM), we model pH, turbidity, and dissolved oxygen and assess a
-multimodal SNN pipeline that includes preprocessing, hyperparameter search, spatial mapping, and
-deployment on mobile and embedded devices. Results show competitive predictive performance and
-practical feasibility for offline operation. The main contribution is not only the SNN model itself,
-but the end-to-end pipeline with empirical latency and energy measurements on edge hardware.
+This work investigates neuromorphic edge inference for water-quality monitoring in Lago do Serpa
+(Itacoatiara, AM) using a spiking neural network (SNN) deployed on low-cost devices. The proposed
+pipeline operates directly on field measurements (coordinates and physicochemical inputs) to jointly
+predict pH, dissolved oxygen, and turbidity without relying on cloud connectivity. A small,
+georeferenced dataset was expanded via light Gaussian augmentation to stabilize training, and the
+SNN was optimized through a systematic grid search over time steps, learning rate, threshold, decay,
+and hidden-layer size. The final model adopts a leaky integrate-and-fire (LIF) hidden layer and
+achieves competitive accuracy in the multimodal setting, while enabling fully offline inference. The
+study further reports latency and energy benchmarks on Raspberry Pi, Android devices, and ESP32,
+including INA219-based power telemetry and incremental energy estimates under idle/load conditions in
+MicroPython. Results demonstrate that neuromorphic inference is feasible on constrained hardware,
+with practical throughput for field use and measurable energy trade-offs across platforms, supporting
+autonomous monitoring where connectivity and power are limited.
 \end{abstract}
 
 \noindent\textbf{Index Terms—} Spiking Neural Networks, edge AI, water quality, offline inference, neuromorphic computing, environmental monitoring.

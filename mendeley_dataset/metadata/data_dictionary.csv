@@ -1,0 +1,10 @@
+column,description,unit,type,notes
+Pontos,Sample identifier,-,string,Original ID; augmented rows use *_augN suffix
+x,UTM coordinate (Easting),m,float,WGS84 / UTM Zone 21S
+y,UTM coordinate (Northing),m,float,WGS84 / UTM Zone 21S
+pH,Potential of hydrogen,-,float,Unitless
+OD,Dissolved oxygen,mg/L,float,Measured in situ
+TEMP,Water temperature,°C,float,Measured in situ
+COR_A,Apparent color,a.u.,float,Field measurement; unit not specified
+TURB,Turbidity,NTU,float,Nephelometric Turbidity Units
+COR_V,True color,a.u.,float,Field measurement; unit not specified
