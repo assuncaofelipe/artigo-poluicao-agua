@@ -31,25 +31,28 @@ samples.
 	\label{fig:exploratoria}
 \end{figure}
 
-In Figure~\ref{fig:hist_loss}(a), the relatively narrow pH range indicates that small absolute
+In Figure~\ref{fig:hist_target}, the relatively narrow pH range indicates that small absolute
 changes are environmentally meaningful; therefore, modest average errors can still be relevant in
-practice. Figure~\ref{fig:hist_loss}(b) shows a rapid drop in training/validation loss followed by
-stabilization with low divergence, suggesting effective learning and justifying the use of
-\textit{early stopping}.
+practice.
 
 \begin{figure}[ht!]
 	\centering
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/hist_pH.png}
-		\caption*{(a) pH histogram}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{./figuras/loss_curve.png}
-		\caption*{(b) Loss curve (MSE)}
-	\end{minipage}
-	\caption{Target distribution and training/validation dynamics.}\label{fig:hist_loss}
+	\includegraphics[width=0.70\textwidth]{./figuras/hist_pH.png}
+	\caption{Distribution of the pH target in the field dataset.}\label{fig:hist_target}
+\end{figure}
+
+\subsection{Training dynamics}
+Figure~\ref{fig:loss_dynamics} reports the optimization trajectory for the selected multimodal SNN.
+The curve shows a rapid initial loss decrease followed by a stable plateau with low train/validation
+divergence, which supports convergence under the adopted regularization strategy and justifies
+\textit{early stopping}. This result is presented as evidence of training stability, while the effect
+of synthetic data augmentation is assessed separately in the dedicated augmentation analyses and
+ablation subsection.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{./figuras/loss_curve_multi.png}
+	\caption{Training and validation loss (MSE) across epochs for the selected multimodal SNN.}\label{fig:loss_dynamics}
 \end{figure}
 
 \subsection{Data augmentation}
@@ -382,7 +385,7 @@ where fast and interpretable decisions are essential.
 		\includegraphics[width=\linewidth]{./figuras/pollution_idw.png}
 		\caption*{(b) IDW surface of the index}
 	\end{minipage}
-\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$).}\label{fig:pollution}
+\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$) over an OpenStreetMap basemap (UTM 21S).}\label{fig:pollution}
 \end{figure}
 
 \subsection{Latency and energy}
@@ -545,6 +548,21 @@ without visually compressing the lower-consumption platforms into an indistingui
 	\includegraphics[width=0.92\textwidth]{./figuras/energy_platforms_bar.png}
 	\caption{Comparative energy per inference across platforms (log scale).}
 	\label{fig:energy_platforms}
+\end{figure}
+
+Figure~\ref{fig:speed_energy_tradeoff} adds the joint processing-speed/energy perspective and makes
+the platform trade-off explicit: moving to the right means faster inference and moving downward means
+lower incremental energy per inference. In this view, Device B is the fastest platform but does not
+have the minimum mJ/inf, while Device C combines high throughput with the lowest measured energy per
+inference; ESP32 remains in the opposite corner, with much lower throughput and higher mJ/inf, which
+is consistent with its microcontroller constraints and with its intended use in low-rate autonomous
+sampling rather than high-volume inference workloads.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.90\textwidth]{./figuras/speed_energy_tradeoff.png}
+	\caption{Speed-energy trade-off across deployment platforms (throughput vs. energy per inference, log scales).}
+	\label{fig:speed_energy_tradeoff}
 \end{figure}
 
 

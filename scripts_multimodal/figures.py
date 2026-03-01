@@ -2,6 +2,8 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 import torch
+from pathlib import Path
+import numpy as np
 
 try:
     import contextily as ctx
@@ -11,18 +13,64 @@ except Exception:  # pragma: no cover - optional basemap
 CRS_UTM21S = "EPSG:32721"
 
 
-def _add_osm_basemap(ax):
-    if ctx is None:
-        return
-    try:
-        ctx.add_basemap(
-            ax,
-            crs=CRS_UTM21S,
-            source=ctx.providers.OpenStreetMap.Mapnik,
-            alpha=0.6,
-        )
-    except Exception:
-        pass
+def _add_osm_basemap(ax, xmin, xmax, ymin, ymax):
+    # Prefer offline local basemap first, so figures are deterministic without internet.
+    candidates = [
+        Path(__file__).resolve().parents[1] / "artigo" / "figuras" / "map_basemap_osm_21S_clean.png",
+        Path(__file__).resolve().parents[1] / "figuras" / "map_basemap_osm_21S_clean.png",
+        Path(__file__).resolve().parents[1] / "figuras" / "map_points_osm_21S.png",
+        Path(__file__).resolve().parents[1] / "artigo" / "figuras" / "map_points_osm_21S.png",
+    ]
+    for path in candidates:
+        if path.exists():
+            try:
+                img = plt.imread(path)
+                # Trim white margins from exported map figures before reuse as basemap.
+                if img.ndim == 3 and img.shape[2] >= 3:
+                    rgb = img[..., :3]
+                    # Keep pixels that are not almost white.
+                    non_white = (rgb < 0.98).any(axis=2)
+                    if non_white.any():
+                        ys, xs = non_white.nonzero()
+                        img = img[ys.min() : ys.max() + 1, xs.min() : xs.max() + 1]
+                    # Soften previously overlaid point markers from static map.
+                    try:
+                        from scipy.ndimage import gaussian_filter
+
+                        rgb = np.stack(
+                            [gaussian_filter(img[..., c], sigma=4.0) for c in range(3)], axis=-1
+                        )
+                        # Strong desaturation to suppress any old marker colors.
+                        gray = (
+                            0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]
+                        )[..., None]
+                        img[..., :3] = 0.10 * rgb + 0.90 * gray
+                    except Exception:
+                        pass
+                ax.imshow(
+                    img,
+                    extent=[xmin, xmax, ymin, ymax],
+                    origin="upper",
+                    aspect="auto",
+                    alpha=0.40,
+                    zorder=0,
+                )
+                return
+            except Exception:
+                continue
+
+    # Online fallback when local static basemap is unavailable.
+    if ctx is not None:
+        try:
+            ctx.add_basemap(
+                ax,
+                crs=CRS_UTM21S,
+                source=ctx.providers.OpenStreetMap.Mapnik,
+                alpha=0.6,
+            )
+            return
+        except Exception:
+            pass
 
 
 def _ensure_dir(path: str):
@@ -115,7 +163,7 @@ def save_pollution_scatter(x, y, score, out_dir: str, dpi: int):
     ax = plt.gca()
     ax.set_xlim(min(x), max(x))
     ax.set_ylim(min(y), max(y))
-    _add_osm_basemap(ax)
+    _add_osm_basemap(ax, min(x), max(x), min(y), max(y))
     sc = plt.scatter(x, y, c=score, s=24, cmap="inferno", zorder=3)
     plt.colorbar(sc, fraction=0.046, pad=0.04, label="Pollution index (0–1)")
     _format_utm_axes_km(plt.gca())
@@ -145,7 +193,7 @@ def save_pollution_idw(x, y, score, out_dir: str, dpi: int, power: int = 2):
     ax = plt.gca()
     ax.set_xlim(x.min(), x.max())
     ax.set_ylim(y.min(), y.max())
-    _add_osm_basemap(ax)
+    _add_osm_basemap(ax, x.min(), x.max(), y.min(), y.max())
     im = plt.imshow(
         Z,
         origin="lower",
@@ -183,7 +231,7 @@ def save_idw_map(x, y, z, title, fname, out_dir: str, dpi: int, power: int = 2):
     ax = plt.gca()
     ax.set_xlim(x.min(), x.max())
     ax.set_ylim(y.min(), y.max())
-    _add_osm_basemap(ax)
+    _add_osm_basemap(ax, x.min(), x.max(), y.min(), y.max())
     im = plt.imshow(
         Z,
         origin="lower",
@@ -223,7 +271,7 @@ def save_idw_combined(x, y, zs, titles, fname, out_dir: str, dpi: int, power: in
         label = _label_with_unit(title)
         ax.set_xlim(x.min(), x.max())
         ax.set_ylim(y.min(), y.max())
-        _add_osm_basemap(ax)
+        _add_osm_basemap(ax, x.min(), x.max(), y.min(), y.max())
         im = ax.imshow(
             Z,
             origin="lower",

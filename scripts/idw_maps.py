@@ -36,9 +36,9 @@ def idw(x, y, z, X, Y, power=2):
 
 
 def main():
-    data_path = Path("data/dados_serpa.csv")
-    if not data_path.exists():
-        data_path = Path("../scripts/data/dados_serpa.csv")
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parent
+    data_path = script_dir / "data" / "dados_serpa.csv"
 
     xs, ys, phs, ods, turbs = [], [], [], [], []
     with data_path.open(encoding="utf-8") as f:
@@ -65,7 +65,7 @@ def main():
     Z_od = idw(xs, ys, ods, X, Y, power=2)
     Z_turb = idw(xs, ys, turbs, X, Y, power=2)
 
-    out_dir = Path("../figuras")
+    out_dir = repo_root / "figuras"
     out_dir.mkdir(exist_ok=True)
 
     def save_map(Z, title, fname):
