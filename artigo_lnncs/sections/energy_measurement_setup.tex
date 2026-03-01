@@ -1,7 +1,5 @@
 \section{Energy Measurement Setup}
 
-Energy benchmarking was performed as incremental consumption between idle and inference-load states. Measurements were collected with INA219 telemetry for embedded platforms and OS-level battery telemetry for Android devices.
-
 \subsection{Instrumentation and Procedure}
 \textbf{ESP32 and Raspberry Pi:} current and voltage were sampled every 500 ms using INA219. Two windows were captured: idle ($N_{idle}$ samples) and load ($N_{load}$ samples) during benchmark execution.\newline
 \textbf{Android devices:} current and voltage were read from system APIs under controlled idle/load phases.

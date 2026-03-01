@@ -3,7 +3,7 @@
 \subsection{Prediction Performance}
 Table~\ref{tab:pred_perf} summarizes macro performance across compared models in the multimodal task. Random Forest achieved the lowest average error, while the SNN remained competitive and more stable than a simple MLP baseline.
 
-\begin{table}[!htbp]
+\begin{table}[!h]
 \caption{Multimodal prediction performance (macro metrics).}
 \label{tab:pred_perf}
 \centering
@@ -42,8 +42,6 @@ Device C (Android) & 16121.71 & 0.046 & 0.00285 \\
 \end{table}
 
 Figure~\ref{fig:energy_bar_lnncs} compares the incremental energy per inference across deployment platforms using a logarithmic scale to preserve visual readability despite large magnitude differences. The plot shows that ESP32 has the highest energy cost per prediction, mainly due to its low throughput, while Raspberry Pi and Android devices operate in a much lower mJ/inf range. Among mobile platforms, the figure also highlights that higher throughput does not always imply lower energy per inference, reinforcing that platform selection should be based on the joint analysis of processing speed and incremental power behavior under real deployment conditions.
-
-
 
 \begin{figure}[!htbp]
 \centering
