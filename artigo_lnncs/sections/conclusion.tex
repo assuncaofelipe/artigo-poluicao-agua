@@ -1,0 +1,9 @@
+\section{Conclusion}
+
+This paper presented an energy-aware offline multimodal SNN pipeline for water-quality prediction in an Amazonian edge-monitoring context. The proposed approach demonstrated practical feasibility from training to deployment, including geospatial interpretation and cross-platform latency/energy benchmarking.
+
+The results indicate that neuromorphic inference is deployable under real hardware constraints, with measurable platform-specific trade-offs between throughput and energy per inference. While not always the best in absolute MAE, the SNN remains a robust option when temporal event-driven processing and edge compatibility are first-class requirements.
+
+Threats to validity should be explicitly considered when interpreting these findings. The main internal-validity risk is the limited size of the original field dataset, which can increase split sensitivity and make small metric gaps unstable across partitions; this was mitigated through repeated-seed evaluation, conservative augmentation, and per-target reporting, but not fully eliminated. External validity is also bounded by hydrological diversity across Amazonian subregions, so broader regional claims require multi-site, multi-season campaigns with harmonized acquisition protocols.
+
+Future work includes broader field acquisition across seasonal regimes, external validation in additional freshwater systems, and deeper co-optimization of encoding parameters and hardware execution modes for improved energy-performance balance.

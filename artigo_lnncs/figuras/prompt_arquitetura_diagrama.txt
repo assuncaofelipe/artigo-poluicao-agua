@@ -1,0 +1,113 @@
+Crie um diagrama horizontal (16:9), estilo científico moderno, limpo, em português, com ícones vetoriais e setas claras entre blocos. Fundo branco, caixas arredondadas, sombra leve, paleta azul/verde/laranja.
+
+Título:
+"Arquitetura SNN Multimodal para Predição da Qualidade da Água (Lago do Serpa)"
+
+Estrutura principal em 3 macroblocos:
+[ENTRADA] -> [PROCESSAMENTO] -> [SAÍDA]
+
+========================
+BLOCO 1 — ENTRADA (azul)
+========================
+Ícones obrigatórios:
+- ícone de banco de dados/CSV
+- ícone de sensores ambientais
+- ícone de mapa/localização (pin)
+
+Texto interno:
+- Dados CSV (x, y, TEMP, COR_A, TURB, COR_V, OD)
+- Alvos: pH, OD, TURB
+- Coleta georreferenciada (Lago do Serpa)
+
+Seta para próximo bloco com rótulo:
+"Pré-processamento"
+
+Subbloco de entrada (ainda azul):
+Ícones:
+- funil (limpeza)
+- gráfico de distribuição (normalização)
+- tesoura/divisão (split)
+
+Texto:
+- Limpeza e conversão numérica
+- Normalização z-score
+- Split treino/val/teste (seed fixa)
+
+===============================
+BLOCO 2 — PROCESSAMENTO (verde)
+===============================
+2.1 Subbloco "Codificação Temporal (Rate Coding)"
+Ícones:
+- onda/pulso
+- relógio (tempo discreto)
+
+Texto:
+- p(spike) = sigmoid(x)
+- Geração de spikes em T passos (T=25)
+- Tensor [time_steps, batch, features]
+
+Seta para núcleo com rótulo:
+"Spike Trains"
+
+2.2 Subbloco central (destaque forte):
+"Núcleo SNN Event-Driven"
+Ícones:
+- cérebro/chip neuromórfico
+- neurônio com pulso
+- raio (eficiência energética)
+
+Texto técnico curto:
+- Linear (7 -> hidden)
+- LIF (beta, threshold, reset)
+- Linear (hidden -> 3)
+- Acúmulo temporal + média
+
+2.3 Subbloco "Treinamento e Otimização"
+Ícones:
+- engrenagem (otimização)
+- lupa (grid search)
+- sinal de stop (early stopping)
+
+Texto:
+- Loss MSE ponderada (pH, OD, TURB)
+- Adam + Grid Search
+- Early stopping (patience=20)
+- Artefatos: best_multi.pt, norm_multi.json
+
+Seta para direita com rótulo:
+"Modelo exportado"
+
+2.4 Subbloco "Exportação"
+Ícones:
+- setas de conversão/formato
+- arquivo .tflite
+
+Texto:
+PyTorch -> ONNX -> TFLite
+
+=========================
+BLOCO 3 — SAÍDA (laranja)
+=========================
+Ícones obrigatórios:
+- smartphone (app offline)
+- velocímetro/indicador (índice)
+- mapa com heatmap
+- documento/exportar
+
+Texto:
+- Inferência local no celular (offline)
+- Predições: pH, OD, TURB
+- Índice composto de poluição
+- Visualização em mapa offline (MBTiles)
+- Exportação de resultados
+
+Rodapé (barra fina):
+"Fluxo completo: Entrada de dados -> Processamento neuromórfico -> Saída multimodal com suporte à decisão em campo"
+
+Requisitos visuais:
+- Setas grossas e contínuas entre os 3 macroblocos
+- Setas internas menores entre subblocos
+- Cada subbloco com seu ícone no canto superior esquerdo
+- Não poluir com texto longo; frases curtas
+- Aparência de figura pronta para artigo científico
+- Gerar em alta resolução (mínimo 3000 px de largura)

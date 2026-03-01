@@ -1,0 +1,41 @@
+\documentclass[runningheads]{llncs}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{siunitx}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{placeins}
+\graphicspath{{./figuras/}}
+
+\title{Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
+\titlerunning{Energy-Aware Offline Neuromorphic Edge Inference}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This work investigates energy-aware neuromorphic edge inference for multimodal water quality prediction in a remote Amazonian region of northern Brazil. A spiking neural network (SNN) is deployed on low-cost embedded platforms to jointly predict pH, dissolved oxygen, and turbidity directly from georeferenced physicochemical measurements, without reliance on cloud connectivity. To mitigate the limited size of the field dataset, light Gaussian augmentation is employed to improve training stability. The SNN architecture, based on a leaky integrate-and-fire hidden layer, is optimized through systematic grid search over temporal steps, learning rate, threshold, decay factor, and hidden-layer size. The final model achieves competitive predictive performance while enabling fully offline inference on constrained hardware. Latency and energy benchmarks are reported across Raspberry Pi, Android devices, and ESP32 platforms, including INA219-based power telemetry and incremental energy-per-inference estimates derived from idle and load measurements. Results demonstrate the feasibility of neuromorphic inference for autonomous environmental monitoring, revealing measurable energy-latency trade-offs and supporting deployment in connectivity- and power-limited scenarios.
+
+\keywords{Spiking Neural Networks \and Edge AI \and Energy Benchmarking \and Water Quality Prediction \and Multimodal Modeling \and Offline Inference}
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/dataset_description}
+\input{sections/methodology}
+\input{sections/energy_measurement_setup}
+\input{sections/experimental_results}
+\input{sections/discussion}
+\input{sections/conclusion}
+
+\bibliographystyle{splncs04}
+\bibliography{references}
+
+\end{document}

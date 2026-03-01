@@ -1,0 +1,38 @@
+\section{Methodology}
+
+\subsection{Multimodal Input Representation}
+Each sample is represented by a feature vector
+\begin{equation}
+\mathbf{x} = [x, y, TEMP, COR\_A, COR\_V] \in \mathbb{R}^{5},
+\end{equation}
+with target vector
+\begin{equation}
+\mathbf{y} = [pH, OD, TURB] \in \mathbb{R}^{3}.
+\end{equation}
+Features are normalized before spike encoding. Rate coding transforms each scalar into a spike train over $T$ steps, where firing probability is proportional to normalized magnitude.
+
+\subsection{SNN Architecture}
+The model follows a feed-forward SNN with topology $5 \rightarrow 64 \rightarrow 3$, with a hidden leaky integrate-and-fire (LIF) layer, as illustrated in Fig.~\ref{fig:proposed_arch}. The membrane update is
+\begin{equation}
+\mathbf{u}_{t+1} = \beta\,\mathbf{u}_{t} + \mathbf{W}\mathbf{s}_{t} - \theta\,\mathbf{z}_{t},
+\end{equation}
+where $\beta$ is membrane decay, $\theta$ is firing threshold, and $\mathbf{z}_t$ are emitted spikes. Output prediction is computed by temporal aggregation across steps.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.86\textwidth]{Arquitetura.png}
+\caption{Proposed multimodal SNN architecture for offline edge inference.}
+\label{fig:proposed_arch}
+\end{figure}
+
+\subsection{Training Protocol}
+Training used Adam optimizer and weighted MSE loss with early stopping. Hyperparameters were selected by grid search over hidden size, learning rate, temporal steps $T$, threshold, and decay factor. Evaluation used repeated random seeds and macro metrics (MAE, RMSE, and $R^2$) over the three targets. The optimization dynamics for the selected configuration are shown in Fig.~\ref{fig:loss_curve_method}.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.74\textwidth]{loss_curve_multi.png}
+\caption{Training and validation loss (MSE) of the selected multimodal SNN.}
+\label{fig:loss_curve_method}
+\end{figure}
+
+\FloatBarrier
