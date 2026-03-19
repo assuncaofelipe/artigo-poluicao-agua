@@ -1,0 +1,66 @@
+\documentclass[a4paper]{ifacconf}
+
+\usepackage{graphicx,amsmath,amssymb,booktabs,siunitx,multirow,url,xcolor,placeins}
+\usepackage[round]{natbib}
+
+\def\portugues{0}
+\ifx\portugues\undefined
+\def\portugues{0}
+\fi
+
+\if\portugues0
+  \usepackage[english]{babel}
+\else
+  \usepackage[spanish,brazil,english]{babel}
+\fi
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{ae}
+
+\graphicspath{{./figuras/}}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
+
+\author[UFAM,ELD,PPGCTS]{Felipe de Vasconcelos Assun\c{c}\~ao}
+\author[UFAM,PPGCTS]{Alfredo Paulo Oliveira Barros}
+\author[UFAM]{Reyner Carlos Silva Alegria}
+\author[IND]{Elton dos Santos Ara\'ujo}
+\author[ELD]{D\'ebora Romano Raimundo}
+\author[UFAM]{Alex Martins Ramos}
+\author[UFAM]{Vicente Ferreira de Lucena Junior}
+\author[UFAM,PPGCTS]{Vandermi Jo\~ao da Silva}
+
+\address[UFAM]{Federal University of Amazonas (UFAM), Institute of Exact and Technological Sciences (ICET), Itacoatiara, Brazil (e-mail: \{felipe.assuncao, alfredo.barros, reyner.alegria, alexmartins, vicente, vandermi\}@ufam.edu.br).}
+\address[IND]{Independent Researcher, Brazil (e-mail: elton\_araujo\_@hotmail.com).}
+\address[ELD]{Eldorado Research Institute, Brazil (e-mail: debora.raimundo@eldorado.org.br).}
+\address[PPGCTS]{Postgraduate Program in Science, Technology and Health (PPGCTS), Brazil.}
+
+\renewcommand{\abstractname}{{\bf Abstract:~}}
+\begin{abstract}
+This work investigates energy-aware neuromorphic edge inference for multimodal water quality prediction in a remote Amazonian region of northern Brazil. A spiking neural network (SNN) is deployed on low-cost embedded platforms to jointly predict pH, dissolved oxygen, and turbidity directly from georeferenced physicochemical measurements, without reliance on cloud connectivity. To mitigate the limited size of the field dataset, light Gaussian augmentation is employed to improve training stability. The SNN architecture, based on a leaky integrate-and-fire hidden layer, is optimized through systematic grid search over temporal steps, learning rate, threshold, decay factor, and hidden-layer size. The final model achieves competitive predictive performance while enabling fully offline inference on constrained hardware. Latency and energy benchmarks are reported across Raspberry Pi, Android devices, and ESP32 platforms, including INA219-based power telemetry and incremental energy-per-inference estimates derived from idle and load measurements. Results demonstrate the feasibility of neuromorphic inference for autonomous environmental monitoring, revealing measurable energy-latency trade-offs and supporting deployment in connectivity- and power-limited scenarios.
+\end{abstract}
+
+\begin{keyword}
+Spiking Neural Networks; Edge AI; Energy Benchmarking; Water Quality Prediction; Multimodal Modeling; Offline Inference.
+\end{keyword}
+
+\end{frontmatter}
+
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/dataset_description}
+\input{sections/methodology}
+\input{sections/energy_measurement_setup}
+\input{sections/experimental_results}
+\input{sections/discussion}
+\input{sections/conclusion}
+\input{sections/acknowledgments}
+
+\bibliography{references}
+
+\end{document}
