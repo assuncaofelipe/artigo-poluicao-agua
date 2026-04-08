@@ -1,0 +1,148 @@
+\documentclass[
+  12pt,
+  openright,
+  oneside,
+  a4paper,
+  brazilian
+]{abntex2}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{chngcntr}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage[alf]{abntex2cite}
+\graphicspath{{./figs/}{./sections/figs/}}
+
+\geometry{
+  a4paper,
+  top=3cm,
+  left=3cm,
+  bottom=2cm,
+  right=2cm
+}
+
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\OnehalfSpacing
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+\DeclareCaptionFont{eventten}{\fontsize{10}{12}\selectfont}
+\DeclareCaptionLabelFormat{eventhyphen}{#1~#2 -}
+
+\captionsetup{
+  justification=centering,
+  font=eventten
+}
+
+\captionsetup[figure]{
+  name=Figura,
+  labelformat=eventhyphen,
+  labelsep=none,
+  labelfont=normalfont,
+  textfont=normalfont,
+  font=eventten,
+  position=above
+}
+
+\captionsetup[table]{
+  name=Tabela,
+  labelformat=eventhyphen,
+  labelsep=none,
+  labelfont=normalfont,
+  textfont=normalfont,
+  font=eventten
+}
+
+\counterwithout{section}{chapter}
+\setcounter{section}{0}
+\setcounter{subsection}{0}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+
+\newcommand{\eventsection}[1]{%
+  \refstepcounter{section}%
+  \setcounter{subsection}{0}%
+  \par\addvspace{1.2\baselineskip}%
+  \noindent\textbf{\thesection.\ \MakeUppercase{#1}}\par
+  \nobreak\vspace{0.7\baselineskip}%
+}
+
+\newcommand{\eventsubsection}[1]{%
+  \refstepcounter{subsection}%
+  \par\addvspace{\baselineskip}%
+  \noindent\textbf{\thesubsection\ #1}\par
+  \nobreak\vspace{0.5\baselineskip}%
+}
+
+\newcommand{\artigofonte}[1]{
+  \vspace{0.2cm}
+  \begin{center}
+    \fontsize{10}{12}\selectfont Fonte: #1
+  \end{center}
+}
+
+\newcommand{\tabelafonte}{\fontsize{10}{12}\selectfont}
+\renewcommand{\bibname}{REFER\^ENCIAS}
+\renewcommand{\bibsection}{%
+  \par\addvspace{1.2\baselineskip}%
+  \noindent\textbf{\MakeUppercase{\bibname}}\par
+  \nobreak\vspace{0.7\baselineskip}%
+}
+
+\titulo{SISTEMA INTELIGENTE EMBARCADO PARA MONITORAMENTO DA QUALIDADE DA \'AGUA EM REGI\~OES REMOTAS DA AMAZ\^ONIA}
+\autor{Submiss\~ao sem identifica\c{c}\~ao de autoria}
+\data{2026}
+
+\begin{document}
+
+\begin{center}
+{\bfseries\MakeUppercase{\thetitle}}
+\end{center}
+
+\begin{center}
+\textit{Submiss\~ao sem identifica\c{c}\~ao de autoria}
+\end{center}
+
+\begin{center}
+\textit{Os dados de autoria, institui\c{c}\~ao e e-mail ser\~ao informados ap\'os a avalia\c{c}\~ao.}
+\end{center}
+
+\begin{center}
+\textbf{Eixo tem\'atico:} Ci\^encias, Tecnologias e Sa\'ude na Amaz\^onia
+\end{center}
+
+\noindent\textbf{Resumo}
+
+\vspace{0.3cm}
+\noindent
+O monitoramento da qualidade da \'agua em regi\~oes remotas da Amaz\^onia ainda enfrenta limita\c{c}\~oes de acesso, conectividade e custo operacional. Nesse contexto, este trabalho apresenta um sistema inteligente embarcado para apoio ao monitoramento offline da qualidade da \'agua no Lago do Serpa, em Itacoatiara, Amazonas. A proposta utiliza medi\c{c}\~oes georreferenciadas de campo e um modelo de intelig\^encia artificial otimizado para execu\c{c}\~ao local, com predi\c{c}\~ao dos par\^ametros pH, oxig\^enio dissolvido e turbidez. O sistema foi validado em diferentes plataformas de borda, incluindo ESP32, Raspberry Pi e dispositivos Android, sem depend\^encia de nuvem. Os resultados indicaram erro absoluto m\'edio de 0,107 para pH, 0,222 para oxig\^enio dissolvido e 0,971 para turbidez no melhor modelo multimodal, al\'em de infer\^encia com baixa lat\^encia em Raspberry Pi e smartphones e opera\c{c}\~ao vi\'avel em microcontrolador. Conclui-se que a solu\c{c}\~ao apresenta potencial para aplica\c{c}\~ao em comunidades ribeirinhas e em a\c{c}\~oes de vigil\^ancia ambiental, contribuindo para a sa\'ude p\'ublica e para a preserva\c{c}\~ao de ecossistemas amaz\^onicos.
+
+\vspace{0.5cm}
+\noindent\textbf{Palavras-Chaves:} qualidade da \'agua; Amaz\^onia; intelig\^encia artificial embarcada; monitoramento ambiental; intelig\^encia artificial de borda.
+
+\vspace{0.8cm}
+
+\input{sections/introducao}
+\input{sections/fundamentacao}
+\input{sections/metodologia}
+\input{sections/resultados_discussao}
+\input{sections/consideracoes_finais}
+
+\postextual
+\bibliography{referencias}
+
+\end{document}

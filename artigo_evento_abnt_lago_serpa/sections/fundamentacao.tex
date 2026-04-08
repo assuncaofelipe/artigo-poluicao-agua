@@ -1,0 +1,34 @@
+\eventsection{FUNDAMENTA\c{C}\~AO TE\'ORICA}
+
+O monitoramento da qualidade da \'agua normalmente considera vari\'aveis como pH, oxig\^enio dissolvido e turbidez, pois esses indicadores ajudam a identificar altera\c{c}\~oes ambientais e condi\c{c}\~oes que podem afetar a vida aqu\'atica e o uso humano da \'agua. No contexto brasileiro, esses par\^ametros tamb\'em s\~ao amplamente empregados como refer\^encia em processos de avalia\c{c}\~ao e gest\~ao de recursos h\'idricos \cite{conama3572005}.
+
+Nos \'ultimos anos, a aplica\c{c}\~ao de intelig\^encia artificial ao monitoramento ambiental cresceu de forma significativa. Estudos t\^em mostrado que modelos computacionais podem auxiliar na predi\c{c}\~ao de vari\'aveis de qualidade da \'agua, especialmente quando h\'a rela\c{c}\~oes n\~ao lineares entre os atributos medidos em campo \cite{ahmed2019,aladhaileh2021,yan2024}. Trabalhos com redes neurais artificiais j\'a haviam demonstrado esse potencial em diferentes cen\'arios \cite{palani2008}, e modelos recorrentes baseados em LSTM refor\c{c}aram a capacidade de capturar padr\~oes mais complexos em s\'eries ambientais \cite{liu2019}. 
+
+Em paralelo, revis\~oes recentes destacam o avan\c{c}o de arquiteturas integradas com sensoriamento, comunica\c{c}\~ao e an\'alise local de dados \cite{zulkifli2022}. Estudos com Internet das Coisas e monitoramento em tempo real mostram ganhos de observa\c{c}\~ao e decis\~ao local, como no caso de sistemas com redes de sensores e apoio de aprendizado de m\'aquina aplicados a rios \cite{rosero2020}. Ainda assim, boa parte dessas solu\c{c}\~oes permanece associada a servidores externos, transmiss\~ao de dados e condi\c{c}\~oes de infraestrutura mais est\'aveis do que as encontradas em regi\~oes remotas. Nesse cen\'ario, a intelig\^encia artificial de borda se destaca por realizar o processamento diretamente no dispositivo, favorecendo aplica\c{c}\~oes em contextos de baixa conectividade \cite{aral2024}.
+
+Outro ponto importante \'e que, em cen\'arios ambientais reais, a utilidade de um sistema n\~ao depende apenas de atingir bom desempenho matem\'atico, mas tamb\'em de conseguir funcionar em condi\c{c}\~oes de uso. Em regi\~oes distantes dos grandes centros, o monitoramento da qualidade da \'agua precisa considerar simplicidade de implanta\c{c}\~ao, manuten\c{c}\~ao reduzida e possibilidade de uso por equipes de campo com restri\c{c}\~oes operacionais. Por isso, uma abordagem embarcada pode ser especialmente adequada quando o objetivo n\~ao \'e apenas produzir previs\~oes, mas apoiar decis\~oes locais. Em vez de depender exclusivamente de conectividade cont\'inua, a solu\c{c}\~ao pode entregar respostas diretamente no dispositivo, tornando o monitoramento mais resiliente e mais compat\'ivel com rotinas de uso em lagos, comunidades ribeirinhas e campanhas ambientais.
+
+No caso espec\'ifico da Amaz\^onia, esse enquadramento \'e decisivo. O Lago do Serpa, por exemplo, insere-se em um contexto territorial no qual a rela\c{c}\~ao entre comunidade, ambiente e uso do espa\c{c}o \'e socialmente relevante \cite{nogueira2022}. O ganho principal de uma solu\c{c}\~ao embarcada, nesse caso, n\~ao est\'a necessariamente em superar todos os modelos tradicionais em desempenho absoluto, mas em conseguir transformar intelig\^encia computacional em uma ferramenta de uso pr\'atico em territ\'orios marcados por grandes dist\^ancias, restri\c{c}\~oes de infraestrutura e alta import\^ancia socioambiental dos corpos h\'idricos.
+
+Assim, a base conceitual deste trabalho articula tr\^es pontos principais: a import\^ancia dos indicadores de qualidade da \'agua, o potencial da intelig\^encia artificial para apoiar diagn\'osticos ambientais e a relev\^ancia de solu\c{c}\~oes embarcadas e offline para regi\~oes remotas. Em vez de competir por maior sofistica\c{c}\~ao algor\'itmica, o estudo prioriza a aplica\c{c}\~ao pr\'atica e a viabilidade de uso em um cen\'ario amaz\^onico real.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{Lacunas da literatura e posicionamento do presente trabalho.}
+\label{tab:gaps_literatura}
+\tabelafonte
+\begin{tabular}{p{2.8cm}p{4.7cm}p{4.7cm}}
+\toprule
+Estudo & Foco principal & Lacuna em rela\c{c}\~ao a este trabalho \\
+\midrule
+Palani et al. \cite{palani2008} & Previs\~ao de vari\'aveis de qualidade da \'agua com ANN em ambiente costeiro & O foco recai sobre modelagem preditiva em ambiente costeiro, sem explorar aplica\c{c}\~ao embarcada em contexto amaz\^onico \\
+Liu et al. \cite{liu2019} & Predi\c{c}\~ao de qualidade da \'agua pot\'avel com LSTM em ambiente IoT & O foco est\'a em s\'eries temporais e dados de esta\c{c}\~ao autom\'atica, n\~ao em execu\c{c}\~ao offline em dispositivos acess\'iveis \\
+Rosero-Montalvo et al. \cite{rosero2020} & Rede WSN com an\'alise local e apoio de servidor para monitoramento de rio & Aproxima-se do uso em campo, mas em rede dedicada e com apoio externo, diferindo da valida\c{c}\~ao multiplataforma adotada aqui \\
+Zulkifli et al. \cite{zulkifli2022} & Revis\~ao sistem\'atica sobre monitoramento h\'idrico baseado em IoT & Identifica desafios e tend\^encias gerais, sem se dedicar a um estudo territorial aplicado na Amaz\^onia \\
+Aral \cite{aral2024} & Artigo de posicionamento sobre IA de borda para monitoramento rural & Refor\c{c}a a pertin\^encia conceitual da infer\^encia local, sem apresentar valida\c{c}\~ao experimental aplicada como a desenvolvida neste estudo \\
+\bottomrule
+\end{tabular}
+\artigofonte{elabora\c{c}\~ao pr\'opria com base na literatura utilizada na fundamenta\c{c}\~ao te\'orica.}
+\end{table}
