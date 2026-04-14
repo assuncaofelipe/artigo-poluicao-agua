@@ -375,17 +375,20 @@ where fast and interpretable decisions are essential.
 
 \begin{figure}[H]
 	\centering
-	\begin{minipage}{0.48\textwidth}
+	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/pollution_scatter.png}
-		\caption*{(a) Pollution index at sample points}
-	\end{minipage}\hfill
-	\begin{minipage}{0.48\textwidth}
+		\caption{Pollution index at sample points.}
+		\label{fig:pollution_scatter}
+	\end{subfigure}\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{./figuras/pollution_idw.png}
-		\caption*{(b) IDW surface of the index}
-	\end{minipage}
-\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$) over an OpenStreetMap basemap (UTM 21S).}\label{fig:pollution}
+		\caption{IDW surface of the index.}
+		\label{fig:pollution_idw}
+	\end{subfigure}
+\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0,1]$) over an OpenStreetMap basemap (UTM 21S).}
+\label{fig:pollution}
 \end{figure}
 
 \subsection{Latency and energy}
@@ -569,9 +572,17 @@ sampling rather than high-volume inference workloads.
 
 Figure~\ref{fig:snn_platform_radar} summarizes the deployment trade-offs for the SNN across
 platforms using normalized metrics (accuracy reference, inverse latency, throughput, and inverse
-energy), which helps communicate that no single platform dominates all criteria simultaneously:
-smartphones and Raspberry Pi concentrate strong throughput/latency efficiency, whereas ESP32 remains
-operationally relevant for low-rate offline scenarios despite its weaker efficiency envelope.
+energy). The main contribution of this view is to show that deployment choice cannot be reduced to
+only one indicator. A platform may be attractive in latency and throughput, yet lose advantage once
+energy is incorporated; likewise, a platform with weaker raw speed may still be preferable when
+offline autonomy, low-rate sensing, or simplified infrastructure are primary requirements.
+
+The radar geometry makes these complementarities easier to read. Smartphones and Raspberry Pi
+occupy a broader envelope in throughput and latency-related axes, indicating stronger real-time
+response for high-volume inference. ESP32, in contrast, contracts on those axes but preserves
+practical relevance because it offers a much simpler always-on execution context, with full local
+operation and lower platform complexity. Thus, the figure should be interpreted not as a ranking
+plot, but as a deployment map: each platform is better aligned with a distinct operating regime.
 
 Device C showed higher energy per inference despite high throughput, suggesting
 larger incremental system power during the benchmark. This highlights that, on mobile devices,

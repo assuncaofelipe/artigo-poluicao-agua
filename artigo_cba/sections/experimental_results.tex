@@ -72,17 +72,17 @@ Figure~\ref{fig:pred_true_multi_sba} complements aggregate metrics by showing po
 \begin{minipage}{0.32\linewidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_pH_multi.png}
-\caption*{(a) pH}
+\par\vspace{1mm}{\footnotesize (a) pH\par}
 \end{minipage}\hfill
 \begin{minipage}{0.32\linewidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_OD_multi.png}
-\caption*{(b) OD}
+\par\vspace{1mm}{\footnotesize (b) OD\par}
 \end{minipage}\hfill
 \begin{minipage}{0.32\linewidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_TURB_multi.png}
-\caption*{(c) TURB}
+\par\vspace{1mm}{\footnotesize (c) TURB\par}
 \end{minipage}
 \caption{Predicted vs. true values in the multimodal SNN for pH, dissolved oxygen, and turbidity.}
 \label{fig:pred_true_multi_sba}
@@ -102,15 +102,15 @@ To support operational screening, a composite pollution index was computed from 
 
 \begin{figure}[!htbp]
 \centering
-\begin{minipage}{0.48\linewidth}
+\begin{minipage}[t]{0.48\linewidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_scatter.png}
-\caption*{(a) Pollution index at sample points}
+\par\vspace{1mm}{\footnotesize (a) Pollution index at sample points.\par}
 \end{minipage}\hfill
-\begin{minipage}{0.48\linewidth}
+\begin{minipage}[t]{0.48\linewidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_idw.png}
-\caption*{(b) IDW surface of the index}
+\par\vspace{1mm}{\footnotesize (b) IDW surface of the index.\par}
 \end{minipage}
 \caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0, 1]$) over an OpenStreetMap basemap (UTM 21S).}
 \label{fig:pollution_sba}
@@ -149,7 +149,9 @@ Figure~\ref{fig:energy_bar_lnncs} compares the incremental energy per inference 
 
 Figure~\ref{fig:energy_bar_lnncs} complements Table~\ref{tab:energy_latency} by making the large energy gap between ESP32 and higher-throughput platforms visually explicit on a logarithmic axis. Without log scaling, low-mJ/inf differences among Raspberry Pi and Android devices would be visually compressed; with this scale, relative efficiency differences remain readable and directly comparable.
 
-Figure~\ref{fig:snn_platform_radar_sba} summarizes the multi-criteria deployment envelope and reinforces that there is no single platform dominating all objectives simultaneously.
+Figure~\ref{fig:snn_platform_radar_sba} summarizes the multi-criteria deployment envelope and reinforces that there is no single platform dominating all objectives simultaneously. This is important because deployment choice in edge monitoring cannot be reduced to only one number such as throughput or energy per inference. A platform can be very fast and still lose part of its advantage when incremental energy is considered, while a slower platform may remain attractive when hardware simplicity, full offline execution, or lower integration overhead are operational priorities.
+
+The radar view makes this balance easier to interpret by placing throughput, inverse latency, inverse energy, and predictive reference in the same frame. In this representation, Android devices and the Raspberry Pi occupy a broader envelope on response-related axes, which favors denser temporal sampling and more interactive field workflows. ESP32, in contrast, contracts on those axes but remains relevant for sparse and autonomous operation, where low-rate local screening is sufficient and the system must avoid dependence on cloud connectivity or heavier computing stacks. Therefore, the figure should be read as a deployment map rather than as a universal ranking.
 
 \begin{figure}[!t]
 \centering

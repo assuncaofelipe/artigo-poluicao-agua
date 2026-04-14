@@ -41,12 +41,19 @@ def save_mae_bar(rows, out_path: Path, dpi: int = 600):
     maes = [float(r["mae_macro_mean"]) for r in rows]
     stds = [float(r["mae_macro_std"]) for r in rows]
 
-    colors = ["#1f77b4" if l == "SNN" else "#9aa0a6" for l in labels]
+    palette = {
+        "RF": "#F4A261",   # warm sand
+        "LSTM": "#2A9D8F", # teal
+        "SNN": "#E76F51",  # coral highlight
+        "MLP": "#577590",  # muted blue
+    }
+    colors = [palette.get(l, "#7A7A7A") for l in labels]
     plt.figure(figsize=(6.5, 4.2))
     bars = plt.bar(labels, maes, yerr=stds, capsize=4, color=colors, edgecolor="#333")
     plt.ylabel("MAE macro")
     plt.xlabel("Model")
-    plt.grid(axis="y", alpha=0.25, linestyle="--")
+    plt.grid(axis="y", alpha=0.22, linestyle="--", color="#777777")
+    plt.gca().set_axisbelow(True)
     for b, v in zip(bars, maes):
         plt.text(b.get_x() + b.get_width() / 2, v + 0.01, f"{v:.3f}", ha="center", va="bottom", fontsize=8)
     plt.tight_layout()

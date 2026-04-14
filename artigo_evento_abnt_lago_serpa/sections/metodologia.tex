@@ -22,7 +22,7 @@ O estudo foi desenvolvido a partir de medi\c{c}\~oes realizadas no Lago do Serpa
 \artigofonte{acervo do estudo de campo e elabora\c{c}\~ao pr\'opria com base em OpenStreetMap.}
 \end{figure}
 
-Os dados passaram por etapas de organiza\c{c}\~ao, confer\^encia e padroniza\c{c}\~ao para permitir uso consistente no sistema. Em seguida, o conjunto foi distribu\'ido em etapas de desenvolvimento e verifica\c{c}\~ao da solu\c{c}\~ao, conforme o protocolo adotado no estudo de base. Embora se trate de uma base local, seu valor est\'a no fato de representar um ambiente amaz\^onico real e de permitir a verifica\c{c}\~ao da proposta em condi\c{c}\~oes pr\'oximas do uso em campo.
+Os dados passaram por etapas de organiza\c{c}\~ao, confer\^encia e padroniza\c{c}\~ao para permitir uso consistente no sistema. Em seguida, foram divididos em conjuntos de treino (70\%), valida\c{c}\~ao (10\%) e teste (20\%), mantendo a consist\^encia das distribui\c{c}\~oes amostrais ao longo das etapas de modelagem e avalia\c{c}\~ao. Embora se trate de uma base local, seu valor est\'a no fato de representar um ambiente amaz\^onico real e de permitir a verifica\c{c}\~ao da proposta em condi\c{c}\~oes pr\'oximas do uso em campo.
 
 \eventsubsection{Sistema embarcado proposto}
 
@@ -32,6 +32,22 @@ Para verificar a viabilidade da proposta, o sistema foi preparado para execu\c{c
 
 Essa variedade de plataformas permite observar a solu\c{c}\~ao em condi\c{c}\~oes pr\'aticas distintas. Em um cen\'ario, a prioridade pode ser a visualiza\c{c}\~ao local e a facilidade de uso; em outro, pode ser a implanta\c{c}\~ao em dispositivos pequenos e simples. Assim, a metodologia foi estruturada para avaliar a capacidade de adapta\c{c}\~ao do sistema a diferentes rotinas de monitoramento ambiental, sem concentrar a discuss\~ao em detalhes internos do modelo.
 
+Para evitar que o processamento embarcado seja percebido como uma ``caixa preta'', \'e importante explicitar a estrutura adotada. O modelo principal \'e uma rede neural espiculada multimodal, com codifica\c{c}\~ao temporal por \textit{rate coding}, camada oculta com neur\^onios do tipo \textit{Leaky Integrate-and-Fire} e sa\'ida linear para predi\c{c}\~ao conjunta de pH, oxig\^enio dissolvido e turbidez. Os hiperpar\^ametros foram ajustados por busca em grade, considerando n\'umero de neur\^onios, passos temporais, taxa de aprendizado, limiar de disparo, fator de decaimento e intensidade de aumento sint\'etico dos dados. A escolha dessa arquitetura n\~ao decorre apenas do erro preditivo, mas sobretudo de sua compatibilidade com infer\^encia local, processamento temporal esparso e exporta\c{c}\~ao para execu\c{c}\~ao offline em Android, Raspberry Pi e ESP32.
+
+\begin{figure}[H]
+\centering
+\caption{Arquitetura proposta para o sistema embarcado de monitoramento da qualidade da \'agua.}
+\label{fig:proposed_architecture}
+\includegraphics[width=0.92\textwidth]{Proposed Architecture.jpg}
+\artigofonte{elabora\c{c}\~ao pr\'opria.}
+\end{figure}
+
+A Figura \ref{fig:proposed_architecture} apresenta a arquitetura completa do sistema, destacando o fluxo de dados desde a aquisi\c{c}\~ao e pr\'e-processamento at\'e a infer\^encia local e a gera\c{c}\~ao de informa\c{c}\~oes \'uteis para uso em campo.
+
 \eventsubsection{Procedimentos de avalia\c{c}\~ao}
 
-A avalia\c{c}\~ao foi conduzida em duas frentes complementares. A primeira considerou a capacidade do sistema de estimar os par\^ametros de interesse a partir dos dados dispon\'iveis. A segunda observou sua execu\c{c}\~ao em plataformas embarcadas, levando em conta medidas de lat\^encia e vaz\~ao de infer\^encia. O objetivo n\~ao foi apenas verificar se o sistema produz bons resultados num\'ericos, mas se esses resultados podem ser efetivamente aproveitados em uma rotina de monitoramento ambiental. Dessa forma, a metodologia privilegia uma leitura aplicada: al\'em de prever vari\'aveis, o sistema precisa ser vi\'avel em dispositivos reais e \'util para apoiar acompanhamento cont\'inuo, triagem ambiental, apoio \`a sa\'ude p\'ublica e identifica\c{c}\~ao de \'areas de maior aten\c{c}\~ao em regi\~oes de dif\'icil acesso.
+A avalia\c{c}\~ao foi conduzida em duas frentes complementares. A primeira considerou a capacidade do sistema de estimar os par\^ametros de interesse a partir dos dados dispon\'iveis. A segunda observou sua execu\c{c}\~ao em plataformas embarcadas, levando em conta medidas de lat\^encia e vaz\~ao de infer\^encia. O objetivo n\~ao foi apenas verificar se o sistema produz bons resultados num\'ericos, mas se esses resultados podem ser efetivamente aproveitados em uma rotina de monitoramento ambiental.
+
+Para tornar a interpreta\c{c}\~ao do desempenho mais robusta, a avalia\c{c}\~ao num\'erica n\~ao foi limitada a um \'unico valor de erro. O estudo de base realizou compara\c{c}\~ao com modelos de refer\^encia amplamente utilizados em aprendizado de m\'aquina, incluindo Random Forest, MLP e LSTM, todos submetidos ao mesmo protocolo de divis\~ao dos dados. Al\'em disso, foi executado um benchmark multissemente com dez sementes independentes, permitindo calcular m\'edias e desvios-padr\~ao das m\'etricas.
+
+Cabe destacar que a valida\c{c}\~ao permanece restrita ao Lago do Serpa. O conjunto de dados empregado \'e local, com sessenta amostras distribu\'idas entre treino, valida\c{c}\~ao e teste, e n\~ao houve verifica\c{c}\~ao externa em outro lago amaz\^onico. Em termos metodol\'ogicos, isso significa que os resultados sustentam a viabilidade da aplica\c{c}\~ao no cen\'ario estudado, mas ainda n\~ao permitem generaliza\c{c}\~ao ampla para outros corpos h\'idricos sem novas campanhas de coleta e revalida\c{c}\~ao.
