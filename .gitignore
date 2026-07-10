@@ -34,3 +34,6 @@ Thumbs.db
 
 ## Local benchmarks
 energy_benchmark/venv/
+
+## ESP-IDF build output
+esp32_snn_water/build/
