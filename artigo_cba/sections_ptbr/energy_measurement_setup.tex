@@ -1,0 +1,54 @@
+\section{Configuração da Medição de Energia}
+
+\subsection{Instrumentação e Procedimento}
+\textbf{ESP32 e Raspberry Pi:} corrente e tensão foram amostradas a cada 500 ms usando o INA219. Duas janelas foram capturadas: repouso ($N_{idle}$ amostras) e carga ($N_{load}$ amostras) durante a execução do benchmark.\newline
+\textbf{Dispositivos Android:} corrente e tensão foram lidas das APIs do sistema sob fases controladas de repouso/carga.
+A instrumentação completa e as janelas de amostragem estão resumidas na Tabela~\ref{tab:energy_setup}.
+
+A potência incremental foi estimada como $\Delta P = P_{load} - P_{idle}$, e a energia por inferência como $E_{inf} = \Delta P / \text{vazão}$.
+
+\rev{A Tabela~\ref{tab:android_specs} detalha os três dispositivos Android (A--C) usados na campanha. Como a inferência executa na CPU por meio do interpretador TFLite (XNNPACK, sem delegate de GPU/NNAPI), a configuração dos clusters de CPU e a memória disponível são os recursos relevantes para a carga de IA; as GPUs são listadas apenas por completude.}
+
+\begin{table}[t]
+\caption{\rev{Especificações dos dispositivos Android (dados do fabricante; a RAM entre parênteses é o MemTotal reportado pelo sistema).}}
+\label{tab:android_specs}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccc}
+\toprule
+ & Android A & Android B & Android C \\
+\midrule
+Aparelho & Redmi Note 12 & Galaxy A56 5G & Redmi Note 11S \\
+Modelo & 23021RAAEG & SM-A566E & 2201117SG \\
+SoC & Snapdragon 685 & Exynos 1580 & Helio G96 \\
+Litografia & 6 nm & 4 nm & 12 nm \\
+CPU & 4$\times$A73 2,8 & 1$\times$A720 2,9 & 2$\times$A76 2,05 \\
+(GHz) & 4$\times$A53 1,9 & 3$\times$A720 2,6 & 6$\times$A55 2,0 \\
+ & & 4$\times$A520 1,95 & \\
+GPU & Adreno 610 & Xclipse 540 & Mali-G57 MC2 \\
+RAM & 6 GB (5,77) & 8 GB (7,60) & 6 GB (5,86) \\
+Android & 15 & 16 & 13 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Configuração medida e janelas de amostragem por plataforma.}
+\label{tab:energy_setup}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
+\toprule
+Plataforma & Fonte & $N_{idle}$ & $N_{load}$ \\
+\midrule
+ESP32 (MicroPy) & INA219 & 50 & 50 \\
+Raspberry Pi 4B & INA219 & 97 & 440 \\
+Android (A-C) & Telem. sistema & 200 & 200 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+O envelope de implantação resultante combina vazão e energia incremental por inferência: cenários de alta taxa favorecem a execução em smartphones e SBCs, enquanto o sensoriamento autônomo de baixa taxa ainda pode ser suportado em hardware da classe microcontrolador.

@@ -1,0 +1,74 @@
+\documentclass[a4paper]{ifacconf}
+
+\usepackage{graphicx,amsmath,amssymb,booktabs,siunitx,multirow,url,placeins}
+\usepackage[table]{xcolor}
+\usepackage{soul}
+\usepackage[round]{natbib}
+
+% Destaque de revisão: todo o texto alterado nesta revisão é marcado em amarelo.
+\sethlcolor{yellow}
+\soulregister\cite7
+\soulregister\citep7
+\soulregister\citet7
+\soulregister\ref7
+\newcommand{\rev}[1]{\hl{#1}}
+
+\usepackage[english,brazil]{babel}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{ae}
+\usepackage{icomma}
+
+\graphicspath{{./figuras/}}
+
+\makeatletter
+\def\@keywordheading{{\itshape Palavras-chave: }}
+\makeatother
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Predição da Qualidade da Água: Inferência Neuromórfica Multimodal Offline com Consciência Energética na Borda\thanksref{footnoteinfo}}
+
+\thanks[footnoteinfo]{Os autores agradecem o apoio financeiro do Instituto de Pesquisas Eldorado, da Motorola Mobility Com\'ercio de Produtos Eletr\^onicos Ltda, da Flextronics da Amaz\^onia Ltda e do projeto de PD\&I ``Mob4Ai -- Advanced Artificial Intelligence for Neuromorphic Mobile Systems'' (Conv\^enio n\textordmasculine~008/2024, nos termos do Decreto n\textordmasculine~10.521/2020 e da Lei Federal n\textordmasculine~8.387/1991).}
+
+\author[UFAM,ELD,PPGCTS]{Felipe de Vasconcelos Assun\c{c}\~ao}
+\author[UFAM,PPGCTS]{Alfredo Paulo Oliveira Barros}
+\author[UFAM]{Reyner Carlos Silva Alegria}
+\author[IND]{Elton dos Santos Ara\'ujo}
+\author[ELD]{D\'ebora Romano Raimundo}
+\author[UFAM]{Alex Martins Ramos}
+\author[UFAM]{Vicente Ferreira de Lucena Junior}
+\author[UFAM,PPGCTS]{Vandermi Jo\~ao da Silva}
+
+\address[UFAM]{Universidade Federal do Amazonas (UFAM), Instituto de Ci\^encias Exatas e Tecnologia (ICET), Itacoatiara, Brasil (e-mail: \{felipe.assuncao, alfredo.barros, reyner.alegria, alexmartins, vicente, vandermi\}@ufam.edu.br).}
+\address[IND]{Pesquisador Independente, Brasil (e-mail: elton\_araujo\_@hotmail.com).}
+\address[ELD]{Instituto de Pesquisas Eldorado, Brasil (e-mail: debora.raimundo@eldorado.org.br, felipe.assuncao@eldorado.org.br).}
+\address[PPGCTS]{Programa de P\'os-Gradua\c{c}\~ao em Ci\^encia, Tecnologia e Sa\'ude (PPGCTS), Brasil.}
+
+\renewcommand{\abstractname}{{\bf Resumo:~}}
+\begin{abstract}
+Este trabalho apresenta um pipeline neuromórfico centrado em Edge AI para a predição multimodal da qualidade da água em um cenário remoto da Amazônia. O objetivo central é a implantação totalmente offline em hardware restrito, evitando a dependência de nuvem sob conectividade limitada e orçamentos de energia reduzidos. Uma rede neural pulsada (SNN) é utilizada para predizer conjuntamente pH, oxigênio dissolvido e turbidez a partir de entradas físico-químicas georreferenciadas \rev{coletadas em uma campanha de campo com 60 amostras georreferenciadas}. Para melhorar a estabilidade em condições de poucos dados, aplicamos aumento de dados gaussiano controlado \rev{(expandindo o suporte de treinamento em dez vezes, para 600 amostras)} e otimizamos o modelo por meio de busca em grade sistemática sobre passos temporais, taxa de aprendizado, limiar, decaimento e tamanho da camada oculta. A SNN multimodal resultante é avaliada com protocolos de múltiplas sementes \rev{reportados com intervalos de confiança de 95\% e testes de significância não paramétricos (Wilcoxon pareado exato e Friedman)} e, em seguida, implantada em plataformas de borda heterogêneas (ESP32, Raspberry Pi e dispositivos Android). Reportamos vazão, latência e energia incremental por inferência usando medições em repouso/carga, incluindo telemetria baseada em INA219 quando aplicável. Os resultados mostram que, embora Random Forest e LSTM possam alcançar menor erro macro médio, a SNN permanece competitiva e operacionalmente robusta para cenários de borda, viabilizando inferência offline prática em hardware das classes microcontrolador, SBC e smartphone. De forma geral, o estudo demonstra que a Edge AI neuromórfica é uma estratégia viável para o monitoramento ambiental autônomo em regiões com restrições de conectividade e energia.
+\end{abstract}
+
+\begin{keyword}
+Redes Neurais Pulsadas; Edge AI; Avaliação Energética; Predição da Qualidade da Água; Modelagem Multimodal; Inferência Offline.
+\end{keyword}
+
+\end{frontmatter}
+
+\input{sections_ptbr/introduction}
+\input{sections_ptbr/related_work}
+\input{sections_ptbr/dataset_description}
+\input{sections_ptbr/methodology}
+\input{sections_ptbr/energy_measurement_setup}
+\input{sections_ptbr/experimental_results}
+\input{sections_ptbr/discussion}
+\input{sections_ptbr/conclusion}
+\input{sections_ptbr/acknowledgments}
+
+\bibliography{references_compact}
+
+\end{document}

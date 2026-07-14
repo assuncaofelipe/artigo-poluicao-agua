@@ -21,27 +21,36 @@ MLP & $0.781 \pm 0.193$ & $0.983 \pm 0.178$ & $-5.460 \pm 5.220$ \\
 \end{tabular}
 \end{table}
 
-Although Random Forest achieved the lowest MAE, the SNN demonstrated competitive predictive performance while enabling deployment on low-power edge devices, which is essential for remote environmental monitoring scenarios. The ranking indicates that the SNN is not the lowest-error model in absolute terms, but it remains in a competitive range with materially better robustness than MLP in this small-data regime. In paired sign tests (SNN vs Random Forest), p-values were 0.3438 (MAE), 1.0000 (RMSE), and 1.0000 ($R^2$), indicating no statistically significant global superiority at $\alpha=0.05$.
+Although Random Forest achieved the lowest MAE, the SNN demonstrated competitive predictive performance while enabling deployment on low-power edge devices, which is essential for remote environmental monitoring scenarios. The ranking indicates that the SNN is not the lowest-error model in absolute terms, but it remains in a competitive range with materially better robustness than MLP in this small-data regime.
 
-\subsection{Model Ranking Visualization}
-Figure~\ref{fig:mae_models_sba} provides a compact visual ranking of macro MAE across models, with variability bars from the multi-seed protocol. The plot confirms that Random Forest and LSTM form the lowest-error group, SNN remains in the same practical range for edge deployment, and MLP presents substantially higher variance and error in this dataset regime.
+{\sloppy\rev{To quantify uncertainty, 95\% confidence intervals (t-distribution, $n=10$ seeds) were computed for all macro metrics. For MAE macro: SNN $[0.399, 0.495]$, Random Forest $[0.362, 0.456]$, LSTM $[0.384, 0.472]$, and MLP $[0.636, 0.926]$; for $R^2$ macro: SNN $[0.181, 0.401]$, Random Forest $[0.237, 0.434]$, LSTM $[0.209, 0.418]$, and MLP $[-9.396, -1.524]$. The intervals of SNN, Random Forest, and LSTM overlap substantially, whereas MLP is clearly separated.}\par}
 
-\begin{figure}[!htbp]
+\rev{Complementing the sign test reported in the original submission, exact Wilcoxon signed-rank tests over the ten paired seeds show no significant difference between SNN and Random Forest (MAE $p=0.064$; RMSE $p=0.846$; $R^2$ $p=0.922$) or between SNN and LSTM (MAE $p=0.105$; RMSE $p=0.131$; $R^2$ $p=0.232$), while SNN significantly outperforms MLP on all metrics ($p=0.002$). A Friedman test across the four models is significant (MAE: $\chi^2(3)=19.56$, $p<0.001$), with mean ranks of 1.7 (Random Forest), 1.9 (LSTM), 2.4 (SNN), and 4.0 (MLP), confirming that the global difference is driven by MLP rather than by separation among the three leading models.}
+
+\subsection{Per-Target Performance}
+\rev{Table~\ref{tab:per_target} details per-target behavior. All three leading models achieve good pH prediction ($R^2 \approx 0.67$--$0.72$) and comparable turbidity error, while OD exhibits negative mean $R^2$ for every model, including Random Forest. This is consistent with the correlation analysis of Table~\ref{tab:corr_analysis}: OD is weakly correlated with all available input features, so the difficulty is attributable to the feature set rather than to the choice of model.}
+
+\begin{table}[!htbp]
+\caption{\rev{Per-target MAE and $R^2$ (mean over 10 seeds); cells show MAE~/~$R^2$.}}
+\label{tab:per_target}
 \centering
-\includegraphics[width=0.98\linewidth]{mae_vs_model_bar.png}
-\caption{Comparative macro MAE across multimodal models (mean with standard deviation bars).}
-\label{fig:mae_models_sba}
-\end{figure}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\rowcolors{2}{yellow!30}{yellow!30}
+\begin{tabular}{lccc}
+\toprule
+Model & pH & OD & TURB \\
+\midrule
+SNN (proposed) & 0.125 / 0.670 & 0.204 / $-0.162$ & 1.012 / 0.364 \\
+Random Forest & 0.097 / 0.715 & 0.203 / $-0.063$ & 0.926 / 0.354 \\
+LSTM & 0.112 / 0.673 & 0.203 / $-0.154$ & 0.968 / 0.422 \\
+MLP & 0.777 / $-13.39$ & 0.352 / $-3.021$ & 1.214 / 0.032 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Augmentation Ablation}
 To quantify augmentation impact, we compared SNN training with no augmentation (factor 1) and augmentation $\times 10$ (Gaussian noise, $\sigma=0.01$) under the same protocol across five seeds (7, 13, 21, 42, 84). Augmentation reduced macro MAE from $0.496 \pm 0.060$ to $0.483 \pm 0.075$ (2.53\% reduction), with slight macro $R^2$ improvement ($0.254 \rightarrow 0.256$) and nearly unchanged macro RMSE ($0.615 \rightarrow 0.617$). The most relevant per-target gain was for turbidity MAE ($1.139 \rightarrow 1.102$), supporting augmentation as a practical stabilization strategy for this dataset size.
-
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=0.95\linewidth]{augmentation_ablation_bar.png}
-\caption{Augmentation ablation (5 seeds): no augmentation vs augmentation $\times 10$ for macro metrics.}
-\label{fig:aug_ablation_sba}
-\end{figure}
 
 \subsection{Target-Weight Sensitivity}
 Because turbidity is the most difficult target, we also evaluated a small loss-weight sweep in the SNN to quantify the trade-off between global fit and TURB-focused optimization. Table~\ref{tab:snn_weight_sweep_sba} shows that increasing TURB weight can reduce $MAE_{TURB}$, but with a slight decrease in global $R^2$.
@@ -65,56 +74,56 @@ $(0.05,\,0.15,\,0.80)$ & $0.448$ & $\mathbf{1.006}$ & $0.280$ \\
 \end{table}
 
 \subsection{Predicted-vs-True Behavior}
-Figure~\ref{fig:pred_true_multi_sba} complements aggregate metrics by showing point-wise agreement between predicted and observed values for each target. pH and OD concentrate closer to the identity line, while turbidity presents larger spread, consistent with its higher error contribution in previous tables.
+Figure~\ref{fig:pred_true_multi_sba} complements aggregate metrics by showing point-wise agreement between predicted and observed values for each target. pH and OD concentrate closer to the identity line, while turbidity presents larger spread, consistent with its higher error contribution in previous tables. \rev{For OD in particular, the visual agreement should be read together with Table~\ref{tab:per_target}: the low variance of OD in the dataset (Table~\ref{tab:dataset_stats}) keeps absolute errors small, but the weak input--target correlation limits explained variance for all evaluated models, not only the SNN.}
 
-\begin{figure}[!htbp]
+\begin{figure*}[!t]
 \centering
-\begin{minipage}{0.32\linewidth}
+\begin{minipage}{0.25\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_pH_multi.png}
 \par\vspace{1mm}{\footnotesize (a) pH\par}
 \end{minipage}\hfill
-\begin{minipage}{0.32\linewidth}
+\begin{minipage}{0.25\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_OD_multi.png}
 \par\vspace{1mm}{\footnotesize (b) OD\par}
 \end{minipage}\hfill
-\begin{minipage}{0.32\linewidth}
+\begin{minipage}{0.25\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_TURB_multi.png}
 \par\vspace{1mm}{\footnotesize (c) TURB\par}
 \end{minipage}
-\caption{Predicted vs. true values in the multimodal SNN for pH, dissolved oxygen, and turbidity.}
+\caption{Predicted vs. true values in the multimodal SNN for pH, dissolved oxygen, and turbidity. \rev{(Figure enlarged to full page width in this revision for axis readability.)}}
 \label{fig:pred_true_multi_sba}
-\end{figure}
+\end{figure*}
 
 \subsection{Spatial Results and Pollution Index}
 IDW interpolation was used to convert point predictions into continuous spatial surfaces, improving environmental interpretation beyond point-wise metrics. As shown in Figure~\ref{fig:idw_combined_sba}, the resulting maps highlight nonuniform spatial behavior across pH, dissolved oxygen, and turbidity, and indicate candidate micro-zones for prioritized field inspection.
 
-\begin{figure}[!htbp]
+\begin{figure*}[!t]
 \centering
-\includegraphics[width=0.98\linewidth]{idw_combined.png}
-\caption{IDW interpolated surfaces for pH, dissolved oxygen, and turbidity from sampled points.}
+\includegraphics[width=0.70\textwidth]{idw_combined.png}
+\caption{IDW interpolated surfaces for pH, dissolved oxygen, and turbidity from sampled points. \rev{(Figure enlarged to full page width in this revision for axis readability.)}}
 \label{fig:idw_combined_sba}
-\end{figure}
+\end{figure*}
 
 To support operational screening, a composite pollution index was computed from multimodal predictions and normalized to $[0,1]$, where higher values indicate worse relative condition within the analyzed set. As illustrated in Figure~\ref{fig:pollution_sba}, the point-level representation and its IDW spatial estimate over the OSM basemap provide a direct visual tool for identifying critical areas.
 
-\begin{figure}[!htbp]
+\begin{figure*}[!t]
 \centering
-\begin{minipage}[t]{0.48\linewidth}
+\begin{minipage}[t]{0.35\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_scatter.png}
 \par\vspace{1mm}{\footnotesize (a) Pollution index at sample points.\par}
 \end{minipage}\hfill
-\begin{minipage}[t]{0.48\linewidth}
+\begin{minipage}[t]{0.35\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_idw.png}
 \par\vspace{1mm}{\footnotesize (b) IDW surface of the index.\par}
 \end{minipage}
-\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0, 1]$) over an OpenStreetMap basemap (UTM 21S).}
+\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0, 1]$) over an OpenStreetMap basemap (UTM 21S). \rev{(Figure enlarged to full page width in this revision for axis readability.)}}
 \label{fig:pollution_sba}
-\end{figure}
+\end{figure*}
 
 \subsection{Energy Consumption and Latency}
 Table~\ref{tab:energy_latency} reports incremental energy-per-inference and throughput across deployment platforms. ESP32 is feasible for low-rate autonomous scenarios but has higher energy per inference due to limited throughput. Raspberry Pi and Android devices provide much lower mJ/inf in high-throughput settings.
@@ -138,24 +147,20 @@ Android C & 16121.71 & 0.046 & 0.00285 \\
 \end{tabular}
 \end{table}
 
-Figure~\ref{fig:energy_bar_lnncs} compares the incremental energy per inference across deployment platforms using a logarithmic scale to preserve visual readability despite large magnitude differences. The plot shows that ESP32 has the highest energy cost per prediction, mainly due to its low throughput, while Raspberry Pi and Android devices operate in a much lower mJ/inf range. Among mobile platforms, the figure also highlights that higher throughput does not always imply lower energy per inference, reinforcing that platform selection should be based on the joint analysis of processing speed and incremental power behavior under real deployment conditions.
+Figure~\ref{fig:energy_bar_lnncs} compares the incremental energy per inference across platforms on a logarithmic scale: ESP32 has the highest energy cost per prediction, mainly due to its low throughput, while Raspberry Pi and Android devices operate in a much lower mJ/inf range. Among mobile platforms, higher throughput does not always imply lower energy per inference, reinforcing that platform selection should jointly consider processing speed and incremental power behavior.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.98\linewidth]{energy_platforms_bar.png}
-\caption{Comparative energy per inference (log scale).}
+\includegraphics[width=0.68\linewidth]{energy_platforms_bar.png}
+\caption{Comparative energy per inference (log scale). \rev{(Figure enlarged in this revision for axis readability.)}}
 \label{fig:energy_bar_lnncs}
 \end{figure}
 
-Figure~\ref{fig:energy_bar_lnncs} complements Table~\ref{tab:energy_latency} by making the large energy gap between ESP32 and higher-throughput platforms visually explicit on a logarithmic axis. Without log scaling, low-mJ/inf differences among Raspberry Pi and Android devices would be visually compressed; with this scale, relative efficiency differences remain readable and directly comparable.
-
-Figure~\ref{fig:snn_platform_radar_sba} summarizes the multi-criteria deployment envelope and reinforces that there is no single platform dominating all objectives simultaneously. This is important because deployment choice in edge monitoring cannot be reduced to only one number such as throughput or energy per inference. A platform can be very fast and still lose part of its advantage when incremental energy is considered, while a slower platform may remain attractive when hardware simplicity, full offline execution, or lower integration overhead are operational priorities.
-
-The radar view makes this balance easier to interpret by placing throughput, inverse latency, inverse energy, and predictive reference in the same frame. In this representation, Android devices and the Raspberry Pi occupy a broader envelope on response-related axes, which favors denser temporal sampling and more interactive field workflows. ESP32, in contrast, contracts on those axes but remains relevant for sparse and autonomous operation, where low-rate local screening is sufficient and the system must avoid dependence on cloud connectivity or heavier computing stacks. Therefore, the figure should be read as a deployment map rather than as a universal ranking.
+Figure~\ref{fig:snn_platform_radar_sba} summarizes the multi-criteria deployment envelope by placing throughput, inverse latency, inverse energy, and predictive reference in the same frame, and reinforces that no single platform dominates all objectives simultaneously. Android devices and the Raspberry Pi occupy a broader envelope on response-related axes, favoring denser temporal sampling and interactive field workflows; ESP32 contracts on those axes but remains relevant for sparse, autonomous, fully offline operation. The figure should therefore be read as a deployment map rather than as a universal ranking.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=0.90\linewidth]{snn_platform_radar.png}
-\caption{SNN deployment comparison across platforms using normalized criteria (throughput, inverse latency, inverse energy, and predictive reference).}
+\includegraphics[width=0.52\linewidth]{snn_platform_radar.png}
+\caption{SNN deployment comparison across platforms using normalized criteria (throughput, inverse latency, inverse energy, and predictive reference). \rev{(Figure enlarged in this revision for axis readability.)}}
 \label{fig:snn_platform_radar_sba}
 \end{figure}

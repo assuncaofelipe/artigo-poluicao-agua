@@ -1,0 +1,229 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{parskip}
+
+\definecolor{revblue}{RGB}{0,60,130}
+\newcommand{\comment}[1]{\textbf{Comentário do revisor:} \textit{#1}}
+\newcommand{\change}[1]{\textbf{O que foi alterado:} #1}
+\newcommand{\where}[1]{\textbf{Onde no artigo:} #1}
+\newcommand{\resp}[1]{\textbf{Resposta ao revisor:} \textcolor{revblue}{#1}}
+\newcommand{\pt}[1]{\subsection*{#1}}
+
+\title{Resposta aos Revisores\\[2mm]
+\large Submissão 5077 --- Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações construtivas e pela avaliação geral positiva (aceite). Todas as alterações feitas no manuscrito revisado estão \colorbox{yellow}{destacadas em amarelo}. Devido ao volume de adições solicitadas, o manuscrito revisado passou a ter nove páginas, com a última página contendo apenas a lista de referências; ajustaremos com prazer à política de páginas indicada pelo comitê. A seguir, tratamos de cada ponto, indicando o que foi alterado, onde, e nossa resposta.
+
+\section*{Revisor 1}
+
+\pt{1.1 Reportar claramente o tamanho do conjunto de dados original antes do aumento}
+\comment{Reportar claramente o tamanho do conjunto de dados original antes do aumento, para melhorar a transparência e a reprodutibilidade.}
+
+\change{O tamanho do conjunto de dados original ($n=60$ amostras de campo georreferenciadas) e o tamanho aumentado (600 amostras de suporte ao treinamento, fator $\times 10$) agora são declarados explicitamente.}
+
+\where{Resumo; Seção~3.1 (Variáveis e Aquisição); Seção~3.2 (Aumento de Dados).}
+
+\resp{Agradecemos a observação. O conjunto de dados original compreende 60 amostras georreferenciadas, expandidas dez vezes (600 amostras) exclusivamente como suporte ao treinamento. Isso agora está declarado no resumo e nas Seções 3.1 e 3.2. O conjunto de dados também está publicamente disponível no Mendeley Data para plena reprodutibilidade.}
+
+\pt{1.2 Incluir validação cruzada k-fold}
+\comment{Incluir validação cruzada k-fold para fornecer uma avaliação mais robusta da generalização do modelo.}
+
+\change{Esclarecemos que o protocolo de avaliação implementa validação por subamostragem aleatória repetida (10 partições treino/teste independentes com sementes distintas), que aproxima o comportamento da validação cruzada neste regime de poucos dados, e adicionamos a validação cruzada k-fold completa às extensões metodológicas planejadas.}
+
+\where{Seção~4.3 (Protocolo de Treinamento); Seção~8 (Conclusão, trabalhos futuros).}
+
+\resp{Concordamos que a validação cruzada k-fold é o protocolo canônico. No presente estudo, o esquema de subamostragem aleatória repetida com 10 sementes desempenha papel semelhante (cada semente define uma partição independente, e todas as métricas são reportadas como distribuições sobre as partições, agora com intervalos de confiança). Um protocolo k-fold completo sobre o conjunto de dados ampliado e multiestação está explicitamente planejado como trabalho futuro; reexecutar os quatro modelos sob k-fold dentro da janela de revisão e do limite de 8 páginas não foi viável, mas o protocolo atual já quantifica a sensibilidade à partição.}
+
+\pt{1.3 Validar o modelo com dados de lagos adicionais}
+\comment{Validar o modelo proposto usando dados de lagos ou ambientes de água doce adicionais.}
+
+\change{Expandimos a discussão de transferibilidade, esclarecendo o que se espera transferir (o pipeline e a metodologia, não os pesos ajustados) e adicionamos a validação externa em lagos adicionais aos trabalhos futuros.}
+
+\where{Seção~7.2 (Interpretação de Erros e Validade); Seção~8 (Conclusão).}
+
+\resp{Concordamos plenamente. A validação em lagos adicionais requer novas campanhas de campo, que estão além do escopo desta revisão, mas já estão planejadas. A Seção 7.2 revisada agora enquadra a transferibilidade explicitamente: os gradientes espaciais aprendidos são específicos do sítio, enquanto a metodologia (projeto de atributos, política de aumento, protocolo estatístico e pilha de implantação) é portável e pode ser retreinada a partir de uma campanha comparavelmente pequena em um novo sítio.}
+
+\pt{1.4 Comparar o consumo de energia de SNN, Random Forest, LSTM e MLP em condições idênticas}
+\comment{Comparar o consumo de energia de SNN, Random Forest, LSTM e MLP em condições idênticas.}
+
+\change{Essa medição foi adicionada como item explícito de trabalhos futuros.}
+
+\where{Seção~8 (Conclusão, trabalhos futuros).}
+
+\resp{Esta é uma sugestão valiosa. A campanha energética deste artigo foi projetada em torno do pipeline SNN implantado; medir Random Forest, LSTM e MLP sob o mesmo protocolo de repouso/carga requer acesso aos mesmos dispositivos físicos e à mesma instrumentação usados na campanha original, o que não foi possível dentro do período de revisão. Comprometemo-nos com essa comparação como trabalho futuro na Conclusão, usando o protocolo idêntico de INA219/telemetria de sistema nas mesmas plataformas.}
+
+\pt{1.5 Fornecer intervalos de confiança para todas as métricas de desempenho reportadas}
+\comment{Fornecer intervalos de confiança para todas as métricas de desempenho reportadas.}
+
+\change{Intervalos de confiança de 95\% (distribuição t, $n=10$ sementes) foram calculados a partir dos resultados por semente e reportados para MAE, RMSE e $R^2$ (macro) para os quatro modelos.}
+
+\where{Seção~6.1 (Desempenho de Predição), novo parágrafo destacado após a Tabela~6.}
+
+\resp{Feito. A Seção 6.1 revisada reporta intervalos de confiança de 95\% para todas as métricas macro e todos os modelos. Os intervalos de SNN, Random Forest e LSTM se sobrepõem substancialmente (p.~ex., MAE macro: SNN [0,399; 0,495], Random Forest [0,362; 0,456], LSTM [0,384; 0,472]), enquanto o MLP fica claramente separado, apoiando a interpretação do artigo.}
+
+\pt{1.6 Substituir ou complementar o Teste de Sinais por testes de Wilcoxon ou Friedman}
+\comment{Substituir ou complementar o Teste de Sinais por análises estatísticas mais robustas, como os testes de Wilcoxon ou Friedman.}
+
+\change{Calculamos testes de Wilcoxon pareados exatos (SNN vs.\ cada linha de base, pareados por semente) e um teste de Friedman sobre os quatro modelos, que agora substituem a discussão do teste de sinais como evidência estatística principal.}
+
+\where{Seção~6.1 (Desempenho de Predição), novo parágrafo destacado; Seção~7 (Discussão, primeiro parágrafo).}
+
+\resp{Feito. Testes de Wilcoxon pareados exatos sobre as dez sementes pareadas não mostram diferença significativa entre SNN e Random Forest (MAE $p=0{,}064$; RMSE $p=0{,}846$; $R^2$ $p=0{,}922$) nem entre SNN e LSTM, enquanto a SNN supera significativamente o MLP em todas as métricas ($p=0{,}002$). O teste de Friedman sobre os quatro modelos é significativo ($\chi^2(3)=19{,}56$, $p<0{,}001$), com postos médios confirmando que a diferença global é causada pelo MLP. Esses resultados são consistentes com --- e mais fortes do que --- a análise original do teste de sinais.}
+
+\pt{1.7 Fortalecer a justificativa para a escolha de uma SNN}
+\comment{Fortalecer a justificativa para a escolha de uma SNN quando o Random Forest alcançou menores erros de predição.}
+
+\change{Um parágrafo destacado dedicado agora justifica a escolha da SNN em três bases: equivalência estatística ao Random Forest, propriedades de implantação (computação orientada a eventos, exportação compacta ONNX/TFLite, compatibilidade futura com aceleradores neuromórficos) e o controle ajustável de acurácia--energia fornecido pelo parâmetro temporal $T$.}
+
+\where{Seção~7.1 (Diretrizes Práticas de Implantação).}
+
+\resp{Agradecemos por nos incentivar a tornar isso explícito. A discussão revisada argumenta que a SNN é selecionada não como o modelo de menor erro, mas como o modelo estatisticamente equivalente (pelos testes de Wilcoxon e intervalos de confiança sobrepostos) com o melhor envelope de implantação para operação offline na borda.}
+
+\pt{1.8 Estratégia de otimização de hiperparâmetros e espaço de busca mais detalhados}
+\comment{Apresentar uma estratégia de otimização de hiperparâmetros e um espaço de busca mais detalhados.}
+
+\change{A grade completa agora é especificada: camada oculta $\{32, 64, 96\}$, $T \in \{10, 15, 25\}$, taxa de aprendizado $\{0{,}0005;\ 0{,}001;\ 0{,}002\}$, decaimento $\beta \in \{0{,}90;\ 0{,}95\}$, limiar $\theta \in \{0{,}8;\ 1{,}0\}$, ruído de aumento $\sigma \in \{0{,}01;\ 0{,}02;\ 0{,}03\}$ --- 324 configurações selecionadas pela perda de validação --- junto com a configuração selecionada.}
+
+\where{Seção~4.3 (Protocolo de Treinamento).}
+
+\resp{Feito. O espaço de busca completo (324 configurações) e a configuração vencedora (camada oculta 64, $T=15$, taxa de aprendizado 0,002, $\beta=0{,}95$, $\theta=0{,}8$, $\sigma=0{,}01$) agora são reportados explicitamente.}
+
+\pt{1.9 Análise de sensibilidade dos parâmetros do neurônio LIF}
+\comment{Incluir uma análise de sensibilidade dos parâmetros do neurônio LIF, como limiar e fator de decaimento.}
+
+\change{Uma nova subseção reporta a sensibilidade marginal derivada das 324 configurações da grade: o limiar $\theta=0{,}8$ é consistentemente preferido a $\theta=1{,}0$ (perda de validação média 0,747 vs.\ 0,769), o fator de decaimento tem influência menor (0,754 vs.\ 0,762) e a taxa de aprendizado é o fator dominante.}
+
+\where{Nova Seção~4.4 (Sensibilidade aos Hiperparâmetros).}
+
+\resp{Feito. A análise de sensibilidade foi extraída dos resultados completos da busca em grade e agora é apresentada na Seção 4.4, cobrindo limiar, decaimento, taxa de aprendizado, tamanho da camada oculta e o parâmetro temporal.}
+
+\pt{1.10 Influência do parâmetro de codificação temporal (T)}
+\comment{Avaliar a influência do parâmetro de codificação temporal (T) na acurácia e no consumo de energia.}
+
+\change{A Seção~4.4 agora quantifica o efeito de $T$ na acurácia de validação (fraco: perda média 0,766; 0,760; 0,748 para $T=10,15,25$) e explica que o custo de inferência e a energia crescem aproximadamente de forma linear com $T$, tornando $T$ primariamente um controle de energia--latência.}
+
+\where{Nova Seção~4.4 (Sensibilidade aos Hiperparâmetros); reforçado na Seção~7.1.}
+
+\resp{Feito. Nesta tarefa, $T$ tem pouco efeito na acurácia dentro da faixa explorada, enquanto o custo computacional escala aproximadamente de forma linear com $T$; $T=15$ foi, portanto, mantido como ponto de operação equilibrado. Esse compromisso agora está explícito no texto.}
+
+\pt{1.11 Análise de correlação entre atributos de entrada e variáveis-alvo}
+\comment{Adicionar uma análise de correlação entre os atributos de entrada e as variáveis-alvo.}
+
+\change{Uma nova tabela destacada (Tabela~1) reporta as correlações de Pearson entre os cinco atributos de entrada e os três alvos no conjunto original de 60 amostras, com um parágrafo de análise correspondente.}
+
+\where{Seção~3.1 (Variáveis e Aquisição), Tabela~1.}
+
+\resp{Feito. A análise revela fortes gradientes espaciais/ópticos para o pH ($r=-0{,}85$ com $y$) e a turbidez ($r\approx 0{,}68$--$0{,}69$), e fraca correlação do oxigênio dissolvido com todas as entradas ($|r| \leq 0{,}24$). Esse achado também explica o menor desempenho preditivo de OD observado pelo Revisor 2 e motiva o plano de enriquecimento de sensores na Discussão.}
+
+\pt{1.12 Expandir a discussão sobre generalização e transferibilidade}
+\comment{Expandir a discussão sobre a generalização do modelo e a transferibilidade para outras regiões.}
+
+\change{A discussão de validade foi expandida com um enquadramento explícito de transferibilidade (pipeline vs.\ pesos treinados) e estudos planejados de ajuste fino entre sítios e adaptação de domínio.}
+
+\where{Seção~7.2 (Interpretação de Erros e Validade).}
+
+\resp{Feito. Ver também nossa resposta ao ponto 1.3.}
+
+\pt{1.13 Especificações completas de hardware de todos os dispositivos Android}
+\comment{Fornecer as especificações completas de hardware de todos os dispositivos Android usados nos experimentos.}
+
+\change{Uma nova tabela destacada (Tabela~3) reporta as especificações completas dos três dispositivos Android: aparelho comercial e código do modelo, SoC e litografia, configuração dos clusters de CPU com frequências, GPU, RAM (nominal e MemTotal reportado pelo sistema) e versão do Android. Uma nota complementar esclarece que a inferência executa na CPU via interpretador TFLite (XNNPACK, sem delegate de GPU/NNAPI), de modo que CPU e memória são os recursos relevantes para a IA.}
+
+\where{Seção~5.1 (Instrumentação e Procedimento), Tabela~3.}
+
+\resp{Feito. Os três dispositivos são: Android A --- Xiaomi Redmi Note 12 (23021RAAEG, Snapdragon 685, 4$\times$A73 2,8 GHz + 4$\times$A53 1,9 GHz, Adreno 610, 6 GB, Android 15); Android B --- Samsung Galaxy A56 5G (SM-A566E, Exynos 1580, 1$\times$A720 2,9 GHz + 3$\times$A720 2,6 GHz + 4$\times$A520 1,95 GHz, Xclipse 540, 8 GB, Android 16); e Android C --- Xiaomi Redmi Note 11S (2201117SG, Helio G96, 2$\times$A76 2,05 GHz + 6$\times$A55 2,0 GHz, Mali-G57 MC2, 6 GB, Android 13).}
+
+\pt{1.14 Discutir melhor as limitações impostas pelo pequeno tamanho do conjunto de dados}
+\comment{Discutir melhor as limitações impostas pelo pequeno tamanho do conjunto de dados.}
+
+\change{Um trecho destacado agora enumera os limites metodológicos concretos de $n=60$ (ampla incerteza nas métricas, instabilidade de pequenas diferenças entre modelos, ausência de cobertura sazonal) e os vincula ao protocolo estatístico conservador e ao escopo delimitado das afirmações.}
+
+\where{Seção~3.2 (Aumento de Dados, parágrafo final); também Seção~8 (Conclusão, ameaças à validade).}
+
+\resp{Feito. As limitações agora são declaradas explicitamente e conectadas às medidas de mitigação (sementes repetidas, intervalos de confiança, testes não paramétricos) e à natureza comparativa --- e não absoluta --- das conclusões.}
+
+\pt{1.15 Comparar com estudos recentes de monitoramento ambiental neuromórfico}
+\comment{Comparar a abordagem proposta com estudos recentes de monitoramento ambiental neuromórfico.}
+
+\change{Um novo parágrafo destacado posiciona este trabalho frente a estudos neuromórficos e de borda recentes (Aral 2024; Azadi et al.\ 2025; Huijbregts et al.\ 2024; Al-Shareeda et al.\ 2025), identificando a lacuna específica abordada.}
+
+\where{Seção~2.2 (Edge AI e Avaliação Energética).}
+
+\resp{Feito. Até onde sabemos, nenhum estudo anterior combina regressão SNN multimodal de alvos físico-químicos, dados de campo amazônicos e energia por inferência medida em três classes de hardware de borda em um único pipeline offline; esse posicionamento agora está explícito nos Trabalhos Relacionados.}
+
+\pt{1.16 Reportar métricas de desempenho por alvo com mais detalhe}
+\comment{Reportar métricas de desempenho por alvo com mais detalhe para pH, oxigênio dissolvido e turbidez.}
+
+\change{Uma nova subseção e uma tabela destacada reportam MAE e $R^2$ por alvo para os quatro modelos, com análise conectando o comportamento de OD ao estudo de correlação.}
+
+\where{Nova Seção~6.2 (Desempenho por Alvo), Tabela~6.}
+
+\resp{Feito. A visão por alvo mostra boa predição de pH para todos os modelos líderes ($R^2 \approx 0{,}67$--$0{,}72$), erros de turbidez comparáveis e $R^2$ médio negativo para OD em todos os modelos --- evidência de que a dificuldade de OD decorre do conjunto de atributos, e não da escolha do modelo.}
+
+\pt{1.17 Técnicas alternativas de aumento de dados}
+\comment{Investigar técnicas alternativas de aumento de dados além da perturbação gaussiana.}
+
+\change{A seção de aumento de dados agora motiva a escolha da perturbação gaussiana e nomeia alternativas concretas (interpolação no estilo SMOTE para regressão, mixup, síntese baseada em cópulas/GANs) como candidatas a uma comparação sistemática, também adicionada aos trabalhos futuros.}
+
+\where{Seção~3.2 (Aumento de Dados); Seção~8 (Conclusão).}
+
+\resp{Concordamos que esta é uma direção promissora. Uma comparação rigorosa de famílias de aumento de dados requer uma campanha experimental dedicada para evitar seleção enviesada; portanto, documentamos as alternativas e nos comprometemos com a comparação sistemática como trabalho futuro, mantendo o presente artigo focado no esquema gaussiano validado (cuja ablação já é reportada na Seção 6.3).}
+
+\pt{1.18 Compromissos entre Edge AI e Cloud AI}
+\comment{Incluir uma discussão mais abrangente dos compromissos de implantação entre Edge AI e Cloud AI.}
+
+\change{Um novo parágrafo destacado discute o compromisso em termos de energia (rádio vs.\ computação), latência/disponibilidade sob enlaces intermitentes, custos recorrentes de conectividade, exposição de dados e o padrão híbrido de triagem local com consolidação em nuvem.}
+
+\where{Seção~7.1 (Diretrizes Práticas de Implantação).}
+
+\resp{Feito. A discussão agora vai além da computação bruta e torna explícito por que a inferência de borda totalmente offline é o ponto de operação apropriado para implantações remotas na Amazônia, reconhecendo as arquiteturas híbridas como evolução natural.}
+
+\pt{1.19 Reduzir afirmações repetitivas na Discussão}
+\comment{Reduzir afirmações repetitivas ao longo da seção de Discussão para melhorar a legibilidade.}
+
+\change{A Discussão foi reestruturada: reafirmações repetidas do ranqueamento do benchmark foram removidas, dois parágrafos que duplicavam comentários de figuras foram mesclados ou excluídos, e duas figuras cujo conteúdo duplicava tabelas já presentes no artigo (gráfico de barras de MAE macro e gráfico de barras da ablação de aumento) foram removidas. Exclusões não podem ser destacadas, mas estão itemizadas aqui.}
+
+\where{Seção~7 (Discussão) como um todo; Seção~6 (remoção de figuras redundantes).}
+
+\resp{Feito. A Discussão está agora mais concisa, o que também permitiu que o artigo revisado --- com todas as novas análises solicitadas --- permanecesse dentro do limite de 8 páginas.}
+
+\pt{1.20 Enfatizar a contribuição científica além do benchmarking energético}
+\comment{Enfatizar a contribuição científica do trabalho além do benchmarking energético, destacando a novidade do monitoramento ambiental neuromórfico multimodal.}
+
+\change{A declaração de contribuições foi reescrita (agora quádrupla, adicionando o protocolo de avaliação estatisticamente fundamentado para poucos dados) com uma afirmação explícita de novidade para o monitoramento neuromórfico multimodal de ponta a ponta; o parágrafo de posicionamento nos Trabalhos Relacionados reforça isso.}
+
+\where{Seção~1 (Introdução, parágrafo de contribuições); Seção~2.2 (Trabalhos Relacionados).}
+
+\resp{Feito. A introdução revisada torna explícito que a contribuição central é demonstrar, de ponta a ponta, que a regressão neuromórfica multimodal de alvos de qualidade da água é viável desde a aquisição em campo até a inferência totalmente offline em três classes de hardware de borda --- uma combinação ainda não reportada para o monitoramento de água doce amazônica --- com o benchmarking energético como um componente dessa demonstração.}
+
+\section*{Revisor 2}
+
+\pt{2.1 Análise predito-vs-real para LSTM, Random Forest e MLP; a predição de OD precisa melhorar}
+\comment{Quanto à predição de oxigênio dissolvido, o modelo precisa de melhorias. Para melhor compreensão, seria interessante ter a mesma análise de predito vs.\ real para LSTM, Random Forest e MLP.}
+
+\change{Duas adições tratam da questão subjacente de se a dificuldade de OD é específica da SNN: (i) uma nova tabela por alvo (Tabela~6) quantifica o comportamento de pH/OD/TURB para os quatro modelos, mostrando que OD tem $R^2$ médio negativo em todos os modelos, incluindo Random Forest; e (ii) uma nova análise de correlação (Tabela~1) mostra que OD é fracamente correlacionado com todas as entradas disponíveis ($|r| \leq 0{,}24$), identificando o conjunto de atributos --- e não o modelo --- como o gargalo. Um trecho destacado na Discussão descreve o plano de enriquecimento de sensores (condutividade, ORP, clorofila, temperatura diária) para melhorar a predição de OD.}
+
+\where{Tabela~1 (Seção~3.1); Tabela~6 e Seção~6.2; Seção~6.5 (Comportamento Predito vs.\ Real); Seção~7.2 (Discussão).}
+
+\resp{Agradecemos por este ponto. Concordamos que o OD precisa de melhorias e investigamos sua causa. A nova análise por alvo mostra que a limitação é compartilhada por todos os modelos avaliados (Random Forest: $R^2=-0{,}06$; LSTM: $-0{,}15$; SNN: $-0{,}16$), e a nova análise de correlação explica o porquê: as entradas atuais carregam pouca informação relacionada ao OD. Dado o limite estrito de 8 páginas, incluímos essa comparação quantitativa por modelo (Tabela~6), que transmite a mesma conclusão que três grades adicionais de dispersão, em vez dos painéis predito-vs-real para cada linha de base; teremos prazer em fornecer esses gráficos como material suplementar, se o comitê permitir.}
+
+\pt{2.2 Nomes dos eixos da Figura 7 muito pequenos}
+\comment{Na Figura 7, os nomes dos eixos precisam aumentar; é quase impossível ler sem muito zoom.}
+
+\change{A figura de predito vs.\ real (Figura~7 na submissão original, agora Figura~4) foi ampliada de uma coluna para a largura total de duas colunas, triplicando a área dos painéis e tornando os rótulos dos eixos legíveis sem zoom.}
+
+\where{Figura~4 (Seção~6.5).}
+
+\resp{Feito. A figura agora ocupa a largura total da página e os nomes dos eixos são legíveis em zoom de 100\%. Agradecemos ao revisor por apontar isso.}
+
+\end{document}

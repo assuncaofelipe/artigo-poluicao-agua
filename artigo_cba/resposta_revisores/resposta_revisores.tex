@@ -1,0 +1,228 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{parskip}
+
+\definecolor{revblue}{RGB}{0,60,130}
+\newcommand{\comment}[1]{\textbf{Reviewer comment:} \textit{#1}}
+\newcommand{\change}[1]{\textbf{What was changed:} #1}
+\newcommand{\where}[1]{\textbf{Where in the paper:} #1}
+\newcommand{\resp}[1]{\textbf{Response to the reviewer:} \textcolor{revblue}{#1}}
+\newcommand{\pt}[1]{\subsection*{#1}}
+
+\title{Response to Reviewers\\[2mm]
+\large Submission 5077 --- Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+We thank both reviewers for the careful reading and the constructive recommendations, and for the positive overall evaluation (accept). All changes made in the revised manuscript are \colorbox{yellow}{highlighted in yellow}. Owing to the volume of requested additions, the revised manuscript spans nine pages, with the final page containing only the reference list; we will gladly adjust to the page policy indicated by the committee. Below we address each point, indicating what was changed, where, and our response.
+
+\section*{Reviewer 1}
+
+\pt{1.1 Clearly report the original dataset size before augmentation}
+\comment{Clearly report the original dataset size before augmentation to improve transparency and reproducibility.}
+
+\change{The original dataset size ($n=60$ georeferenced field samples) and the augmented size (600 training-support samples, factor $\times 10$) are now stated explicitly.}
+
+\where{Abstract; Section~3.1 (Variables and Acquisition); Section~3.2 (Data Augmentation).}
+
+\resp{Thank you for this observation. The original dataset comprises 60 georeferenced samples, expanded tenfold (600 samples) exclusively as training support. This is now stated in the abstract and in Sections 3.1 and 3.2. The dataset is also publicly available in Mendeley Data for full reproducibility.}
+
+\pt{1.2 Include k-fold cross-validation}
+\comment{Include k-fold cross-validation to provide a more robust evaluation of model generalization.}
+
+\change{We clarified that the evaluation protocol implements repeated random subsampling validation (10 independent seeded train/test splits), which approximates cross-validation behavior in this small-data regime, and we added full k-fold cross-validation to the planned methodological extensions.}
+
+\where{Section~4.3 (Training Protocol); Section~8 (Conclusion, future work).}
+
+\resp{We agree that k-fold cross-validation is the canonical protocol. In the present study, the 10-seed repeated random subsampling scheme plays a similar role (each seed defines an independent split, and all metrics are reported as distributions over splits, now with confidence intervals). A full k-fold protocol on the enlarged multi-season dataset is explicitly planned as future work; re-running all four models under k-fold within the revision window and the 8-page limit was not feasible, but the current protocol already quantifies split sensitivity.}
+
+\pt{1.3 Validate the model using data from additional lakes}
+\comment{Validate the proposed model using data from additional lakes or freshwater environments.}
+
+\change{We expanded the transferability discussion, clarifying what is expected to transfer (the pipeline and methodology, not the fitted weights) and added external validation in additional lakes to future work.}
+
+\where{Section~7.2 (Error Interpretation and Validity); Section~8 (Conclusion).}
+
+\resp{We fully agree. Validation on additional lakes requires new field campaigns, which are beyond the scope of this revision but are already planned. The revised Section 7.2 now frames transferability explicitly: the learned spatial gradients are site-specific, whereas the methodology (feature design, augmentation policy, statistical protocol, and deployment stack) is portable and can be retrained from a comparably small campaign at a new site.}
+
+\pt{1.4 Compare the energy consumption of SNN, Random Forest, LSTM, and MLP under identical conditions}
+\comment{Compare the energy consumption of SNN, Random Forest, LSTM, and MLP under identical conditions.}
+
+\change{This measurement was added as an explicit item of future work.}
+
+\where{Section~8 (Conclusion, future work).}
+
+\resp{This is a valuable suggestion. The energy campaign in this paper was designed around the deployed SNN pipeline; measuring Random Forest, LSTM, and MLP under the same idle/load protocol requires access to the same physical devices and instrumentation used in the original campaign, which was not possible within the revision period. We have committed to this comparison as future work in the Conclusion, using the identical INA219/system-telemetry protocol on the same platforms.}
+
+\pt{1.5 Provide confidence intervals for all reported performance metrics}
+\comment{Provide confidence intervals for all reported performance metrics.}
+
+\change{95\% confidence intervals (t-distribution, $n=10$ seeds) were computed from the per-seed results and reported for MAE, RMSE, and $R^2$ (macro) for all four models.}
+
+\where{Section~6.1 (Prediction Performance), new highlighted paragraph after Table~6.}
+
+\resp{Done. The revised Section 6.1 reports 95\% confidence intervals for all macro metrics and all models. The intervals of SNN, Random Forest, and LSTM overlap substantially (e.g., MAE macro: SNN [0.399, 0.495], Random Forest [0.362, 0.456], LSTM [0.384, 0.472]), while MLP is clearly separated, supporting the paper's interpretation.}
+
+\pt{1.6 Replace or complement the Sign Test with Wilcoxon or Friedman tests}
+\comment{Replace or complement the Sign Test with more robust statistical analyses such as Wilcoxon or Friedman tests.}
+
+\change{We computed exact Wilcoxon signed-rank tests (SNN vs.\ each baseline, paired by seed) and a Friedman test across the four models, and these now replace the sign-test discussion as the primary statistical evidence.}
+
+\where{Section~6.1 (Prediction Performance), new highlighted paragraph; Section~7 (Discussion, first paragraph).}
+
+\resp{Done. Exact Wilcoxon signed-rank tests over the ten paired seeds show no significant difference between SNN and Random Forest (MAE $p=0.064$; RMSE $p=0.846$; $R^2$ $p=0.922$) nor between SNN and LSTM, while SNN significantly outperforms MLP on all metrics ($p=0.002$). The Friedman test across the four models is significant ($\chi^2(3)=19.56$, $p<0.001$), with mean ranks confirming that the global difference is driven by MLP. These results are consistent with, and stronger than, the original sign-test analysis.}
+
+\pt{1.7 Strengthen the justification for selecting an SNN}
+\comment{Strengthen the justification for selecting an SNN when Random Forest achieved lower prediction errors.}
+
+\change{A dedicated highlighted paragraph now justifies the SNN choice on three grounds: statistical equivalence to Random Forest, deployment properties (event-driven computation, compact ONNX/TFLite export, forward compatibility with neuromorphic accelerators), and the tunable accuracy--energy knob provided by the temporal parameter $T$.}
+
+\where{Section~7.1 (Practical Deployment Guidance).}
+
+\resp{Thank you for pushing us to make this explicit. The revised discussion argues that the SNN is selected not as the lowest-error model but as the statistically equivalent model (per Wilcoxon tests and overlapping confidence intervals) with the best deployment envelope for offline edge operation.}
+
+\pt{1.8 More detailed hyperparameter optimization strategy and search space}
+\comment{Present a more detailed hyperparameter optimization strategy and search space.}
+
+\change{The complete grid is now specified: hidden size $\{32, 64, 96\}$, $T \in \{10, 15, 25\}$, learning rate $\{0.0005, 0.001, 0.002\}$, decay $\beta \in \{0.90, 0.95\}$, threshold $\theta \in \{0.8, 1.0\}$, augmentation noise $\sigma \in \{0.01, 0.02, 0.03\}$ --- 324 configurations selected by validation loss --- together with the selected configuration.}
+
+\where{Section~4.3 (Training Protocol).}
+
+\resp{Done. The full search space (324 configurations) and the winning configuration (hidden size 64, $T=15$, learning rate 0.002, $\beta=0.95$, $\theta=0.8$, $\sigma=0.01$) are now reported explicitly.}
+
+\pt{1.9 Sensitivity analysis of LIF neuron parameters}
+\comment{Include a sensitivity analysis of LIF neuron parameters such as threshold and decay factor.}
+
+\change{A new subsection reports marginal sensitivity derived from the 324 grid configurations: threshold $\theta=0.8$ is consistently preferred over $\theta=1.0$ (mean validation loss 0.747 vs.\ 0.769), the decay factor has minor influence (0.754 vs.\ 0.762), and learning rate is the dominant factor.}
+
+\where{New Section~4.4 (Hyperparameter Sensitivity).}
+
+\resp{Done. The sensitivity analysis was extracted from the full grid-search results and is now presented in Section 4.4, covering threshold, decay, learning rate, hidden size, and the temporal parameter.}
+
+\pt{1.10 Influence of the temporal encoding parameter (T)}
+\comment{Evaluate the influence of the temporal encoding parameter (T) on accuracy and energy consumption.}
+
+\change{Section~4.4 now quantifies the effect of $T$ on validation accuracy (weak: mean loss 0.766, 0.760, 0.748 for $T=10,15,25$) and explains that inference cost and energy grow approximately linearly with $T$, making $T$ primarily an energy--latency knob.}
+
+\where{New Section~4.4 (Hyperparameter Sensitivity); reinforced in Section~7.1.}
+
+\resp{Done. In this task, $T$ has little effect on accuracy within the explored range, while computational cost scales approximately linearly with $T$; $T=15$ was therefore retained as a balanced operating point. This trade-off is now explicit in the text.}
+
+\pt{1.11 Correlation analysis among input features and target variables}
+\comment{Add a correlation analysis among input features and target variables.}
+
+\change{A new highlighted table (Table~1) reports Pearson correlations between all five input features and the three targets on the original 60-sample dataset, with an accompanying analysis paragraph.}
+
+\where{Section~3.1 (Variables and Acquisition), Table~1.}
+
+\resp{Done. The analysis reveals strong spatial/optical gradients for pH ($r=-0.85$ with $y$) and turbidity ($r\approx 0.68$--$0.69$), and weak correlation of dissolved oxygen with all inputs ($|r| \leq 0.24$). This finding also explains the lower OD predictive performance observed by Reviewer 2 and motivates the sensor-enrichment plan in the Discussion.}
+
+\pt{1.12 Expand discussion on generalization and transferability}
+\comment{Expand the discussion regarding model generalization and transferability to other regions.}
+
+\change{The validity discussion was expanded with an explicit transferability framing (pipeline vs.\ trained weights) and planned cross-site fine-tuning/domain-adaptation studies.}
+
+\where{Section~7.2 (Error Interpretation and Validity).}
+
+\resp{Done. See also our response to point 1.3.}
+
+\pt{1.13 Complete hardware specifications for all Android devices}
+\comment{Provide complete hardware specifications for all Android devices used in the experiments.}
+
+\change{A new highlighted table (Table~3) now reports the full specifications of the three Android devices: commercial device and model code, SoC and lithography, CPU cluster configuration with clock speeds, GPU, RAM (nominal and OS-reported MemTotal), and Android version. An accompanying note clarifies that inference runs on the CPU via the TFLite interpreter (XNNPACK, no GPU/NNAPI delegate), so CPU and memory are the AI-relevant resources.}
+
+\where{Section~5.1 (Instrumentation and Procedure), Table~3.}
+
+\resp{Done. The three devices are: Android A --- Xiaomi Redmi Note 12 (23021RAAEG, Snapdragon 685, 4$\times$A73 2.8 GHz + 4$\times$A53 1.9 GHz, Adreno 610, 6 GB, Android 15); Android B --- Samsung Galaxy A56 5G (SM-A566E, Exynos 1580, 1$\times$A720 2.9 GHz + 3$\times$A720 2.6 GHz + 4$\times$A520 1.95 GHz, Xclipse 540, 8 GB, Android 16); and Android C --- Xiaomi Redmi Note 11S (2201117SG, Helio G96, 2$\times$A76 2.05 GHz + 6$\times$A55 2.0 GHz, Mali-G57 MC2, 6 GB, Android 13).}
+
+\pt{1.14 Better discuss the limitations imposed by the small dataset size}
+\comment{Better discuss the limitations imposed by the small dataset size.}
+
+\change{A highlighted passage now enumerates the concrete methodological limits of $n=60$ (wide metric uncertainty, instability of small model differences, no seasonal coverage) and links them to the conservative statistical protocol and to the bounded scope of the claims.}
+
+\where{Section~3.2 (Data Augmentation, final paragraph); also Section~8 (Conclusion, threats to validity).}
+
+\resp{Done. The limitations are now stated explicitly and connected to the mitigation measures (repeated seeds, confidence intervals, nonparametric tests) and to the comparative --- rather than absolute --- nature of the conclusions.}
+
+\pt{1.15 Compare with recent neuromorphic environmental monitoring studies}
+\comment{Compare the proposed approach with recent neuromorphic environmental monitoring studies.}
+
+\change{A new highlighted paragraph positions this work against recent neuromorphic and edge studies (Aral 2024; Azadi et al.\ 2025; Huijbregts et al.\ 2024; Al-Shareeda et al.\ 2025), identifying the specific gap addressed.}
+
+\where{Section~2.2 (Edge AI and Energy Evaluation).}
+
+\resp{Done. To our knowledge, no prior study combines multimodal SNN regression of physicochemical targets, Amazonian field data, and measured energy-per-inference across three classes of edge hardware in one offline pipeline; this positioning is now explicit in Related Work.}
+
+\pt{1.16 Report per-target performance metrics in greater detail}
+\comment{Report per-target performance metrics in greater detail for pH, dissolved oxygen, and turbidity.}
+
+\change{A new subsection and highlighted table report per-target MAE and $R^2$ for all four models, with analysis connecting OD behavior to the correlation study.}
+
+\where{New Section~6.2 (Per-Target Performance), Table~6.}
+
+\resp{Done. The per-target view shows good pH prediction for all leading models ($R^2 \approx 0.67$--$0.72$), comparable turbidity errors, and negative mean $R^2$ for OD in every model --- evidence that OD difficulty stems from the feature set, not the model choice.}
+
+\pt{1.17 Alternative data augmentation techniques}
+\comment{Investigate alternative data augmentation techniques beyond Gaussian perturbation.}
+
+\change{The augmentation section now motivates the choice of Gaussian perturbation and names concrete alternatives (SMOTE-style interpolation for regression, mixup, copula/GAN-based synthesis) as candidates for a systematic comparison, which was also added to future work.}
+
+\where{Section~3.2 (Data Augmentation); Section~8 (Conclusion).}
+
+\resp{We agree this is a promising direction. A rigorous comparison of augmentation families requires a dedicated experimental campaign to avoid cherry-picking; we therefore documented the alternatives and committed to the systematic comparison as future work, keeping the current paper focused on the validated Gaussian scheme (whose ablation is already reported in Section 6.3).}
+
+\pt{1.18 Edge AI versus Cloud AI trade-offs}
+\comment{Include a more comprehensive discussion of Edge AI versus Cloud AI deployment trade-offs.}
+
+\change{A new highlighted paragraph discusses the trade-off across energy (radio vs.\ compute), latency/availability under intermittent links, recurring connectivity costs, data exposure, and the hybrid local-screening/cloud-consolidation pattern.}
+
+\where{Section~7.1 (Practical Deployment Guidance).}
+
+\resp{Done. The discussion now goes beyond raw compute and makes explicit why fully offline edge inference is the appropriate operating point for remote Amazonian deployments, while acknowledging hybrid architectures as a natural evolution.}
+
+\pt{1.19 Reduce repetitive statements in the Discussion}
+\comment{Reduce repetitive statements throughout the Discussion section to improve readability.}
+
+\change{The Discussion was restructured: repeated restatements of the benchmark ranking were removed, two paragraphs duplicating figure commentary were merged or deleted, and two figures whose content duplicated tables already in the paper (macro-MAE bar chart and augmentation-ablation bar chart) were removed. Deletions cannot be highlighted, but they are itemized here.}
+
+\where{Section~7 (Discussion) throughout; Section~6 (removal of redundant figures).}
+
+\resp{Done. The Discussion is now more concise, which also allowed the revised paper --- with all the new analyses requested --- to remain within the 8-page limit.}
+
+\pt{1.20 Emphasize the scientific contribution beyond energy benchmarking}
+\comment{Emphasize the scientific contribution of the work beyond energy benchmarking, highlighting the novelty of multimodal neuromorphic environmental monitoring.}
+
+\change{The contribution statement was rewritten (now fourfold, adding the statistically grounded small-data evaluation protocol) with an explicit novelty claim for end-to-end multimodal neuromorphic monitoring; the Related Work positioning paragraph reinforces this.}
+
+\where{Section~1 (Introduction, contributions paragraph); Section~2.2 (Related Work).}
+
+\resp{Done. The revised introduction makes explicit that the central contribution is demonstrating, end to end, that multimodal neuromorphic regression of water-quality targets is feasible from field acquisition to fully offline inference on three classes of edge hardware --- a combination not yet reported for Amazonian freshwater monitoring --- with energy benchmarking as one component of that demonstration.}
+
+\section*{Reviewer 2}
+
+\pt{2.1 Predicted-vs-true analysis for LSTM, Random Forest, and MLP; OD prediction needs improvement}
+\comment{Concerning dissolved oxygen prediction, the model needs improvement. To better understand, it would be nice to have the same predicted vs true analysis for LSTM, Random Forest and MLP.}
+
+\change{Two additions address the underlying question of whether OD difficulty is specific to the SNN: (i) a new per-target table (Table~6) quantifies pH/OD/TURB behavior for all four models, showing that OD has negative mean $R^2$ for every model, including Random Forest; and (ii) a new correlation analysis (Table~1) shows that OD is weakly correlated with all available inputs ($|r| \leq 0.24$), identifying the feature set --- not the model --- as the bottleneck. A highlighted passage in the Discussion outlines the sensor-enrichment plan (conductivity, ORP, chlorophyll, diel temperature) to improve OD prediction.}
+
+\where{Table~1 (Section~3.1); Table~6 and Section~6.2; Section~6.5 (Predicted-vs-True Behavior); Section~7.2 (Discussion).}
+
+\resp{Thank you for this point. We agree OD needs improvement and investigated its cause. The new per-target analysis shows the limitation is shared by all evaluated models (Random Forest: $R^2=-0.06$; LSTM: $-0.15$; SNN: $-0.16$), and the new correlation analysis explains why: the current inputs carry little OD-related information. Given the strict 8-page limit, we included this quantitative per-model comparison (Table~6), which conveys the same conclusion as three additional scatter grids, instead of the predicted-vs-true panels for every baseline; we would be glad to provide those plots as supplementary material if the committee allows.}
+
+\pt{2.2 Figure 7 axis names too small}
+\comment{In the Figure 7, the axis names need to grow, is almost impossible to read without a big zoom.}
+
+\change{The predicted-vs-true figure (Figure~7 in the original submission, now Figure~4) was enlarged from one-column to full two-column width, tripling the panel area and making axis labels legible without zoom.}
+
+\where{Figure~4 (Section~6.5).}
+
+\resp{Done. The figure now spans the full page width and the axis names are readable at 100\% zoom. We thank the reviewer for catching this.}
+
+\end{document}

@@ -1,7 +1,18 @@
 \documentclass[a4paper]{ifacconf}
 
+% Somente para o destaque amarelo da revisao; nao altera margens, fontes ou espacamentos do template.
+\PassOptionsToPackage{table}{xcolor}
+
 \usepackage{graphicx,amsmath,amssymb,booktabs,siunitx,multirow,url,xcolor,placeins}
 \usepackage[round]{natbib}
+
+\usepackage{soul}
+\sethlcolor{yellow}
+\soulregister\cite7
+\soulregister\citep7
+\soulregister\citet7
+\soulregister\ref7
+\newcommand{\rev}[1]{\hl{#1}}
 
 \def\portugues{0}
 \ifx\portugues\undefined
@@ -44,7 +55,7 @@
 
 \renewcommand{\abstractname}{{\bf Abstract:~}}
 \begin{abstract}
-This work presents an Edge-AI-centered neuromorphic pipeline for multimodal water-quality prediction in a remote Amazonian setting. The central objective is fully offline deployment on constrained hardware, avoiding cloud dependence under limited connectivity and power budgets. A spiking neural network (SNN) is used to jointly predict pH, dissolved oxygen, and turbidity from georeferenced physicochemical inputs. To improve stability under small-data conditions, we apply controlled Gaussian augmentation and optimize the model through systematic grid search over temporal steps, learning rate, threshold, decay, and hidden-layer size. The resulting multimodal SNN is evaluated with multi-seed protocols and then deployed on heterogeneous edge platforms (ESP32, Raspberry Pi, and Android devices). We report throughput, latency, and incremental energy-per-inference using idle/load measurements, including INA219-based telemetry where applicable. Results show that although Random Forest and LSTM can achieve lower average macro error, the SNN remains competitive and operationally robust for edge scenarios, while enabling practical offline inference across microcontroller-, SBC-, and smartphone-class hardware. Overall, the study demonstrates that neuromorphic Edge AI is a viable strategy for autonomous environmental monitoring in connectivity- and energy-constrained regions.
+This work presents an Edge-AI-centered neuromorphic pipeline for multimodal water-quality prediction in a remote Amazonian setting. The central objective is fully offline deployment on constrained hardware, avoiding cloud dependence under limited connectivity and power budgets. A spiking neural network (SNN) is used to jointly predict pH, dissolved oxygen, and turbidity from georeferenced physicochemical inputs \rev{collected in a field campaign of 60 georeferenced samples}. To improve stability under small-data conditions, we apply controlled Gaussian augmentation \rev{(expanding the training support tenfold, to 600 samples)} and optimize the model through systematic grid search over temporal steps, learning rate, threshold, decay, and hidden-layer size. The resulting multimodal SNN is evaluated with multi-seed protocols \rev{reported with 95\% confidence intervals and nonparametric significance tests (exact Wilcoxon signed-rank and Friedman)} and then deployed on heterogeneous edge platforms (ESP32, Raspberry Pi, and Android devices). We report throughput, latency, and incremental energy-per-inference using idle/load measurements, including INA219-based telemetry where applicable. Results show that although Random Forest and LSTM can achieve lower average macro error, the SNN remains competitive and operationally robust for edge scenarios, while enabling practical offline inference across microcontroller-, SBC-, and smartphone-class hardware. Overall, the study demonstrates that neuromorphic Edge AI is a viable strategy for autonomous environmental monitoring in connectivity- and energy-constrained regions.
 \end{abstract}
 
 \begin{keyword}
@@ -63,6 +74,6 @@ Spiking Neural Networks; Edge AI; Energy Benchmarking; Water Quality Prediction;
 \input{sections/conclusion}
 \input{sections/acknowledgments}
 
-\bibliography{references}
+\bibliography{references_compact}
 
 \end{document}
