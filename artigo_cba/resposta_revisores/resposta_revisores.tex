@@ -14,7 +14,8 @@
 \newcommand{\pt}[1]{\subsection*{#1}}
 
 \title{Response to Reviewers\\[2mm]
-\large Submission 5077 --- Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
+\large Submission 5077\\[1mm]
+Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
 \author{}
 \date{}
 
@@ -91,7 +92,7 @@ We thank both reviewers for the careful reading and the constructive recommendat
 \pt{1.8 More detailed hyperparameter optimization strategy and search space}
 \comment{Present a more detailed hyperparameter optimization strategy and search space.}
 
-\change{The complete grid is now specified: hidden size $\{32, 64, 96\}$, $T \in \{10, 15, 25\}$, learning rate $\{0.0005, 0.001, 0.002\}$, decay $\beta \in \{0.90, 0.95\}$, threshold $\theta \in \{0.8, 1.0\}$, augmentation noise $\sigma \in \{0.01, 0.02, 0.03\}$ --- 324 configurations selected by validation loss --- together with the selected configuration.}
+\change{The complete grid is now specified: hidden size $\{32, 64, 96\}$, $T \in \{10, 15, 25\}$, learning rate $\{0.0005, 0.001, 0.002\}$, decay $\beta \in \{0.90, 0.95\}$, threshold $\theta \in \{0.8, 1.0\}$, augmentation noise $\sigma \in \{0.01, 0.02, 0.03\}$ (324 configurations, selected by validation loss), together with the selected configuration.}
 
 \where{Section~4.3 (Training Protocol).}
 
@@ -140,7 +141,7 @@ We thank both reviewers for the careful reading and the constructive recommendat
 
 \where{Section~5.1 (Instrumentation and Procedure), Table~3.}
 
-\resp{Done. The three devices are: Android A --- Xiaomi Redmi Note 12 (23021RAAEG, Snapdragon 685, 4$\times$A73 2.8 GHz + 4$\times$A53 1.9 GHz, Adreno 610, 6 GB, Android 15); Android B --- Samsung Galaxy A56 5G (SM-A566E, Exynos 1580, 1$\times$A720 2.9 GHz + 3$\times$A720 2.6 GHz + 4$\times$A520 1.95 GHz, Xclipse 540, 8 GB, Android 16); and Android C --- Xiaomi Redmi Note 11S (2201117SG, Helio G96, 2$\times$A76 2.05 GHz + 6$\times$A55 2.0 GHz, Mali-G57 MC2, 6 GB, Android 13).}
+\resp{Done. The three devices are: Android A, a Xiaomi Redmi Note 12 (23021RAAEG, Snapdragon 685, 4$\times$A73 2.8 GHz + 4$\times$A53 1.9 GHz, Adreno 610, 6 GB, Android 15); Android B, a Samsung Galaxy A56 5G (SM-A566E, Exynos 1580, 1$\times$A720 2.9 GHz + 3$\times$A720 2.6 GHz + 4$\times$A520 1.95 GHz, Xclipse 540, 8 GB, Android 16); and Android C, a Xiaomi Redmi Note 11S (2201117SG, Helio G96, 2$\times$A76 2.05 GHz + 6$\times$A55 2.0 GHz, Mali-G57 MC2, 6 GB, Android 13).}
 
 \pt{1.14 Better discuss the limitations imposed by the small dataset size}
 \comment{Better discuss the limitations imposed by the small dataset size.}
@@ -149,7 +150,7 @@ We thank both reviewers for the careful reading and the constructive recommendat
 
 \where{Section~3.2 (Data Augmentation, final paragraph); also Section~8 (Conclusion, threats to validity).}
 
-\resp{Done. The limitations are now stated explicitly and connected to the mitigation measures (repeated seeds, confidence intervals, nonparametric tests) and to the comparative --- rather than absolute --- nature of the conclusions.}
+\resp{Done. The limitations are now stated explicitly and connected to the mitigation measures (repeated seeds, confidence intervals, nonparametric tests) and to the comparative, rather than absolute, nature of the conclusions.}
 
 \pt{1.15 Compare with recent neuromorphic environmental monitoring studies}
 \comment{Compare the proposed approach with recent neuromorphic environmental monitoring studies.}
@@ -167,7 +168,7 @@ We thank both reviewers for the careful reading and the constructive recommendat
 
 \where{New Section~6.2 (Per-Target Performance), Table~6.}
 
-\resp{Done. The per-target view shows good pH prediction for all leading models ($R^2 \approx 0.67$--$0.72$), comparable turbidity errors, and negative mean $R^2$ for OD in every model --- evidence that OD difficulty stems from the feature set, not the model choice.}
+\resp{Done. The per-target view shows good pH prediction for all leading models ($R^2 \approx 0.67$--$0.72$), comparable turbidity errors, and negative mean $R^2$ for OD in every model, which is evidence that OD difficulty stems from the feature set, not the model choice.}
 
 \pt{1.17 Alternative data augmentation techniques}
 \comment{Investigate alternative data augmentation techniques beyond Gaussian perturbation.}
@@ -194,7 +195,7 @@ We thank both reviewers for the careful reading and the constructive recommendat
 
 \where{Section~7 (Discussion) throughout; Section~6 (removal of redundant figures).}
 
-\resp{Done. The Discussion is now more concise, which also allowed the revised paper --- with all the new analyses requested --- to remain within the 8-page limit.}
+\resp{Done. The Discussion is now more concise, which also allowed the revised paper, with all the new analyses requested, to remain within the 8-page limit.}
 
 \pt{1.20 Emphasize the scientific contribution beyond energy benchmarking}
 \comment{Emphasize the scientific contribution of the work beyond energy benchmarking, highlighting the novelty of multimodal neuromorphic environmental monitoring.}
@@ -203,14 +204,14 @@ We thank both reviewers for the careful reading and the constructive recommendat
 
 \where{Section~1 (Introduction, contributions paragraph); Section~2.2 (Related Work).}
 
-\resp{Done. The revised introduction makes explicit that the central contribution is demonstrating, end to end, that multimodal neuromorphic regression of water-quality targets is feasible from field acquisition to fully offline inference on three classes of edge hardware --- a combination not yet reported for Amazonian freshwater monitoring --- with energy benchmarking as one component of that demonstration.}
+\resp{Done. The revised introduction makes explicit that the central contribution is demonstrating, end to end, that multimodal neuromorphic regression of water-quality targets is feasible from field acquisition to fully offline inference on three classes of edge hardware, a combination not yet reported for Amazonian freshwater monitoring, with energy benchmarking as one component of that demonstration.}
 
 \section*{Reviewer 2}
 
 \pt{2.1 Predicted-vs-true analysis for LSTM, Random Forest, and MLP; OD prediction needs improvement}
 \comment{Concerning dissolved oxygen prediction, the model needs improvement. To better understand, it would be nice to have the same predicted vs true analysis for LSTM, Random Forest and MLP.}
 
-\change{Two additions address the underlying question of whether OD difficulty is specific to the SNN: (i) a new per-target table (Table~6) quantifies pH/OD/TURB behavior for all four models, showing that OD has negative mean $R^2$ for every model, including Random Forest; and (ii) a new correlation analysis (Table~1) shows that OD is weakly correlated with all available inputs ($|r| \leq 0.24$), identifying the feature set --- not the model --- as the bottleneck. A highlighted passage in the Discussion outlines the sensor-enrichment plan (conductivity, ORP, chlorophyll, diel temperature) to improve OD prediction.}
+\change{Two additions address the underlying question of whether OD difficulty is specific to the SNN: (i) a new per-target table (Table~6) quantifies pH/OD/TURB behavior for all four models, showing that OD has negative mean $R^2$ for every model, including Random Forest; and (ii) a new correlation analysis (Table~1) shows that OD is weakly correlated with all available inputs ($|r| \leq 0.24$), identifying the feature set, not the model, as the bottleneck. A highlighted passage in the Discussion outlines the sensor-enrichment plan (conductivity, ORP, chlorophyll, diel temperature) to improve OD prediction.}
 
 \where{Table~1 (Section~3.1); Table~6 and Section~6.2; Section~6.5 (Predicted-vs-True Behavior); Section~7.2 (Discussion).}
 

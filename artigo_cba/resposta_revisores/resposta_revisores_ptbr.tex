@@ -15,7 +15,8 @@
 \newcommand{\pt}[1]{\subsection*{#1}}
 
 \title{Resposta aos Revisores\\[2mm]
-\large Submissão 5077 --- Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
+\large Submissão 5077\\[1mm]
+Water Quality Prediction: Energy-Aware Offline Multimodal Neuromorphic Edge Inference}
 \author{}
 \date{}
 
@@ -78,7 +79,7 @@ Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações c
 
 \where{Seção~6.1 (Desempenho de Predição), novo parágrafo destacado; Seção~7 (Discussão, primeiro parágrafo).}
 
-\resp{Feito. Testes de Wilcoxon pareados exatos sobre as dez sementes pareadas não mostram diferença significativa entre SNN e Random Forest (MAE $p=0{,}064$; RMSE $p=0{,}846$; $R^2$ $p=0{,}922$) nem entre SNN e LSTM, enquanto a SNN supera significativamente o MLP em todas as métricas ($p=0{,}002$). O teste de Friedman sobre os quatro modelos é significativo ($\chi^2(3)=19{,}56$, $p<0{,}001$), com postos médios confirmando que a diferença global é causada pelo MLP. Esses resultados são consistentes com --- e mais fortes do que --- a análise original do teste de sinais.}
+\resp{Feito. Testes de Wilcoxon pareados exatos sobre as dez sementes pareadas não mostram diferença significativa entre SNN e Random Forest (MAE $p=0{,}064$; RMSE $p=0{,}846$; $R^2$ $p=0{,}922$) nem entre SNN e LSTM, enquanto a SNN supera significativamente o MLP em todas as métricas ($p=0{,}002$). O teste de Friedman sobre os quatro modelos é significativo ($\chi^2(3)=19{,}56$, $p<0{,}001$), com postos médios confirmando que a diferença global é causada pelo MLP. Esses resultados são consistentes com a análise original do teste de sinais, e mais fortes do que ela.}
 
 \pt{1.7 Fortalecer a justificativa para a escolha de uma SNN}
 \comment{Fortalecer a justificativa para a escolha de uma SNN quando o Random Forest alcançou menores erros de predição.}
@@ -92,7 +93,7 @@ Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações c
 \pt{1.8 Estratégia de otimização de hiperparâmetros e espaço de busca mais detalhados}
 \comment{Apresentar uma estratégia de otimização de hiperparâmetros e um espaço de busca mais detalhados.}
 
-\change{A grade completa agora é especificada: camada oculta $\{32, 64, 96\}$, $T \in \{10, 15, 25\}$, taxa de aprendizado $\{0{,}0005;\ 0{,}001;\ 0{,}002\}$, decaimento $\beta \in \{0{,}90;\ 0{,}95\}$, limiar $\theta \in \{0{,}8;\ 1{,}0\}$, ruído de aumento $\sigma \in \{0{,}01;\ 0{,}02;\ 0{,}03\}$ --- 324 configurações selecionadas pela perda de validação --- junto com a configuração selecionada.}
+\change{A grade completa agora é especificada: camada oculta $\{32, 64, 96\}$, $T \in \{10, 15, 25\}$, taxa de aprendizado $\{0{,}0005;\ 0{,}001;\ 0{,}002\}$, decaimento $\beta \in \{0{,}90;\ 0{,}95\}$, limiar $\theta \in \{0{,}8;\ 1{,}0\}$, ruído de aumento $\sigma \in \{0{,}01;\ 0{,}02;\ 0{,}03\}$ (324 configurações, selecionadas pela perda de validação), junto com a configuração selecionada.}
 
 \where{Seção~4.3 (Protocolo de Treinamento).}
 
@@ -141,7 +142,7 @@ Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações c
 
 \where{Seção~5.1 (Instrumentação e Procedimento), Tabela~3.}
 
-\resp{Feito. Os três dispositivos são: Android A --- Xiaomi Redmi Note 12 (23021RAAEG, Snapdragon 685, 4$\times$A73 2,8 GHz + 4$\times$A53 1,9 GHz, Adreno 610, 6 GB, Android 15); Android B --- Samsung Galaxy A56 5G (SM-A566E, Exynos 1580, 1$\times$A720 2,9 GHz + 3$\times$A720 2,6 GHz + 4$\times$A520 1,95 GHz, Xclipse 540, 8 GB, Android 16); e Android C --- Xiaomi Redmi Note 11S (2201117SG, Helio G96, 2$\times$A76 2,05 GHz + 6$\times$A55 2,0 GHz, Mali-G57 MC2, 6 GB, Android 13).}
+\resp{Feito. Os três dispositivos são: Android A, um Xiaomi Redmi Note 12 (23021RAAEG, Snapdragon 685, 4$\times$A73 2,8 GHz + 4$\times$A53 1,9 GHz, Adreno 610, 6 GB, Android 15); Android B, um Samsung Galaxy A56 5G (SM-A566E, Exynos 1580, 1$\times$A720 2,9 GHz + 3$\times$A720 2,6 GHz + 4$\times$A520 1,95 GHz, Xclipse 540, 8 GB, Android 16); e Android C, um Xiaomi Redmi Note 11S (2201117SG, Helio G96, 2$\times$A76 2,05 GHz + 6$\times$A55 2,0 GHz, Mali-G57 MC2, 6 GB, Android 13).}
 
 \pt{1.14 Discutir melhor as limitações impostas pelo pequeno tamanho do conjunto de dados}
 \comment{Discutir melhor as limitações impostas pelo pequeno tamanho do conjunto de dados.}
@@ -150,7 +151,7 @@ Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações c
 
 \where{Seção~3.2 (Aumento de Dados, parágrafo final); também Seção~8 (Conclusão, ameaças à validade).}
 
-\resp{Feito. As limitações agora são declaradas explicitamente e conectadas às medidas de mitigação (sementes repetidas, intervalos de confiança, testes não paramétricos) e à natureza comparativa --- e não absoluta --- das conclusões.}
+\resp{Feito. As limitações agora são declaradas explicitamente e conectadas às medidas de mitigação (sementes repetidas, intervalos de confiança, testes não paramétricos) e à natureza comparativa, e não absoluta, das conclusões.}
 
 \pt{1.15 Comparar com estudos recentes de monitoramento ambiental neuromórfico}
 \comment{Comparar a abordagem proposta com estudos recentes de monitoramento ambiental neuromórfico.}
@@ -168,7 +169,7 @@ Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações c
 
 \where{Nova Seção~6.2 (Desempenho por Alvo), Tabela~6.}
 
-\resp{Feito. A visão por alvo mostra boa predição de pH para todos os modelos líderes ($R^2 \approx 0{,}67$--$0{,}72$), erros de turbidez comparáveis e $R^2$ médio negativo para OD em todos os modelos --- evidência de que a dificuldade de OD decorre do conjunto de atributos, e não da escolha do modelo.}
+\resp{Feito. A visão por alvo mostra boa predição de pH para todos os modelos líderes ($R^2 \approx 0{,}67$--$0{,}72$), erros de turbidez comparáveis e $R^2$ médio negativo para OD em todos os modelos, o que evidencia que a dificuldade de OD decorre do conjunto de atributos, e não da escolha do modelo.}
 
 \pt{1.17 Técnicas alternativas de aumento de dados}
 \comment{Investigar técnicas alternativas de aumento de dados além da perturbação gaussiana.}
@@ -195,7 +196,7 @@ Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações c
 
 \where{Seção~7 (Discussão) como um todo; Seção~6 (remoção de figuras redundantes).}
 
-\resp{Feito. A Discussão está agora mais concisa, o que também permitiu que o artigo revisado --- com todas as novas análises solicitadas --- permanecesse dentro do limite de 8 páginas.}
+\resp{Feito. A Discussão está agora mais concisa, o que também permitiu que o artigo revisado, com todas as novas análises solicitadas, permanecesse dentro do limite de 8 páginas.}
 
 \pt{1.20 Enfatizar a contribuição científica além do benchmarking energético}
 \comment{Enfatizar a contribuição científica do trabalho além do benchmarking energético, destacando a novidade do monitoramento ambiental neuromórfico multimodal.}
@@ -204,14 +205,14 @@ Agradecemos a ambos os revisores pela leitura cuidadosa, pelas recomendações c
 
 \where{Seção~1 (Introdução, parágrafo de contribuições); Seção~2.2 (Trabalhos Relacionados).}
 
-\resp{Feito. A introdução revisada torna explícito que a contribuição central é demonstrar, de ponta a ponta, que a regressão neuromórfica multimodal de alvos de qualidade da água é viável desde a aquisição em campo até a inferência totalmente offline em três classes de hardware de borda --- uma combinação ainda não reportada para o monitoramento de água doce amazônica --- com o benchmarking energético como um componente dessa demonstração.}
+\resp{Feito. A introdução revisada torna explícito que a contribuição central é demonstrar, de ponta a ponta, que a regressão neuromórfica multimodal de alvos de qualidade da água é viável desde a aquisição em campo até a inferência totalmente offline em três classes de hardware de borda, uma combinação ainda não reportada para o monitoramento de água doce amazônica, com o benchmarking energético como um componente dessa demonstração.}
 
 \section*{Revisor 2}
 
 \pt{2.1 Análise predito-vs-real para LSTM, Random Forest e MLP; a predição de OD precisa melhorar}
 \comment{Quanto à predição de oxigênio dissolvido, o modelo precisa de melhorias. Para melhor compreensão, seria interessante ter a mesma análise de predito vs.\ real para LSTM, Random Forest e MLP.}
 
-\change{Duas adições tratam da questão subjacente de se a dificuldade de OD é específica da SNN: (i) uma nova tabela por alvo (Tabela~6) quantifica o comportamento de pH/OD/TURB para os quatro modelos, mostrando que OD tem $R^2$ médio negativo em todos os modelos, incluindo Random Forest; e (ii) uma nova análise de correlação (Tabela~1) mostra que OD é fracamente correlacionado com todas as entradas disponíveis ($|r| \leq 0{,}24$), identificando o conjunto de atributos --- e não o modelo --- como o gargalo. Um trecho destacado na Discussão descreve o plano de enriquecimento de sensores (condutividade, ORP, clorofila, temperatura diária) para melhorar a predição de OD.}
+\change{Duas adições tratam da questão subjacente de se a dificuldade de OD é específica da SNN: (i) uma nova tabela por alvo (Tabela~6) quantifica o comportamento de pH/OD/TURB para os quatro modelos, mostrando que OD tem $R^2$ médio negativo em todos os modelos, incluindo Random Forest; e (ii) uma nova análise de correlação (Tabela~1) mostra que OD é fracamente correlacionado com todas as entradas disponíveis ($|r| \leq 0{,}24$), identificando o conjunto de atributos, e não o modelo, como o gargalo. Um trecho destacado na Discussão descreve o plano de enriquecimento de sensores (condutividade, ORP, clorofila, temperatura diária) para melhorar a predição de OD.}
 
 \where{Tabela~1 (Seção~3.1); Tabela~6 e Seção~6.2; Seção~6.5 (Comportamento Predito vs.\ Real); Seção~7.2 (Discussão).}
 

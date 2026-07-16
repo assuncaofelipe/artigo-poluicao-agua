@@ -78,17 +78,17 @@ Figure~\ref{fig:pred_true_multi_sba} complements aggregate metrics by showing po
 
 \begin{figure*}[!t]
 \centering
-\begin{minipage}{0.25\textwidth}
+\begin{minipage}{0.21\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_pH_multi.png}
 \par\vspace{1mm}{\footnotesize (a) pH\par}
-\end{minipage}\hfill
-\begin{minipage}{0.25\textwidth}
+\end{minipage}\hspace{6mm}
+\begin{minipage}{0.21\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_OD_multi.png}
 \par\vspace{1mm}{\footnotesize (b) OD\par}
-\end{minipage}\hfill
-\begin{minipage}{0.25\textwidth}
+\end{minipage}\hspace{6mm}
+\begin{minipage}{0.21\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_TURB_multi.png}
 \par\vspace{1mm}{\footnotesize (c) TURB\par}
@@ -111,12 +111,12 @@ To support operational screening, a composite pollution index was computed from 
 
 \begin{figure*}[!t]
 \centering
-\begin{minipage}[t]{0.35\textwidth}
+\begin{minipage}[t]{0.28\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_scatter.png}
 \par\vspace{1mm}{\footnotesize (a) Pollution index at sample points.\par}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.35\textwidth}
+\end{minipage}\hspace{8mm}
+\begin{minipage}[t]{0.28\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_idw.png}
 \par\vspace{1mm}{\footnotesize (b) IDW surface of the index.\par}
@@ -147,16 +147,16 @@ Android C & 16121.71 & 0.046 & 0.00285 \\
 \end{tabular}
 \end{table}
 
-Figure~\ref{fig:energy_bar_lnncs} compares the incremental energy per inference across platforms on a logarithmic scale: ESP32 has the highest energy cost per prediction, mainly due to its low throughput, while Raspberry Pi and Android devices operate in a much lower mJ/inf range. Among mobile platforms, higher throughput does not always imply lower energy per inference, reinforcing that platform selection should jointly consider processing speed and incremental power behavior.
+Figure~\ref{fig:energy_bar_lnncs} compares the incremental energy per inference on a logarithmic scale: ESP32 has the highest cost per prediction, mainly due to its low throughput, while Raspberry Pi and Android devices operate in a much lower mJ/inf range; higher throughput does not always imply lower energy per inference, so platform selection should jointly consider speed and incremental power behavior.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.68\linewidth]{energy_platforms_bar.png}
+\includegraphics[width=\linewidth]{energy_platforms_bar.png}
 \caption{Comparative energy per inference (log scale). \rev{(Figure enlarged in this revision for axis readability.)}}
 \label{fig:energy_bar_lnncs}
 \end{figure}
 
-Figure~\ref{fig:snn_platform_radar_sba} summarizes the multi-criteria deployment envelope by placing throughput, inverse latency, inverse energy, and predictive reference in the same frame, and reinforces that no single platform dominates all objectives simultaneously. Android devices and the Raspberry Pi occupy a broader envelope on response-related axes, favoring denser temporal sampling and interactive field workflows; ESP32 contracts on those axes but remains relevant for sparse, autonomous, fully offline operation. The figure should therefore be read as a deployment map rather than as a universal ranking.
+Figure~\ref{fig:snn_platform_radar_sba} summarizes the multi-criteria deployment envelope (throughput, inverse latency, inverse energy, and predictive reference) and shows that no single platform dominates all objectives: Android devices and the Raspberry Pi favor denser sampling and interactive workflows, while ESP32 remains relevant for sparse, autonomous, fully offline operation. The figure should be read as a deployment map rather than a universal ranking.
 
 \begin{figure}[!t]
 \centering

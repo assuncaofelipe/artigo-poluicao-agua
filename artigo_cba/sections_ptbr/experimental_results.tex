@@ -78,17 +78,17 @@ A Figura~\ref{fig:pred_true_multi_sba} complementa as métricas agregadas mostra
 
 \begin{figure*}[!t]
 \centering
-\begin{minipage}{0.25\textwidth}
+\begin{minipage}{0.21\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_pH_multi.png}
 \par\vspace{1mm}{\footnotesize (a) pH\par}
-\end{minipage}\hfill
-\begin{minipage}{0.25\textwidth}
+\end{minipage}\hspace{6mm}
+\begin{minipage}{0.21\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_OD_multi.png}
 \par\vspace{1mm}{\footnotesize (b) OD\par}
-\end{minipage}\hfill
-\begin{minipage}{0.25\textwidth}
+\end{minipage}\hspace{6mm}
+\begin{minipage}{0.21\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pred_vs_real_TURB_multi.png}
 \par\vspace{1mm}{\footnotesize (c) TURB\par}
@@ -111,12 +111,12 @@ Para apoiar a triagem operacional, um índice composto de poluição foi calcula
 
 \begin{figure*}[!t]
 \centering
-\begin{minipage}[t]{0.35\textwidth}
+\begin{minipage}[t]{0.28\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_scatter.png}
 \par\vspace{1mm}{\footnotesize (a) Índice de poluição nos pontos amostrados.\par}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.35\textwidth}
+\end{minipage}\hspace{8mm}
+\begin{minipage}[t]{0.28\textwidth}
 \centering
 \includegraphics[width=\linewidth]{pollution_idw.png}
 \par\vspace{1mm}{\footnotesize (b) Superfície IDW do índice.\par}
@@ -147,16 +147,16 @@ Android C & 16121.71 & 0.046 & 0.00285 \\
 \end{tabular}
 \end{table}
 
-A Figura~\ref{fig:energy_bar_lnncs} compara a energia incremental por inferência entre plataformas em escala logarítmica: o ESP32 tem o maior custo energético por predição, principalmente devido à sua baixa vazão, enquanto Raspberry Pi e dispositivos Android operam em uma faixa de mJ/inf muito menor. Entre as plataformas móveis, maior vazão nem sempre implica menor energia por inferência, reforçando que a seleção de plataforma deve considerar conjuntamente a velocidade de processamento e o comportamento da potência incremental.
+A Figura~\ref{fig:energy_bar_lnncs} compara a energia incremental por inferência em escala logarítmica: o ESP32 tem o maior custo por predição, principalmente devido à baixa vazão, enquanto Raspberry Pi e dispositivos Android operam em uma faixa de mJ/inf muito menor; maior vazão nem sempre implica menor energia por inferência, de modo que a seleção de plataforma deve considerar conjuntamente velocidade e potência incremental.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.68\linewidth]{energy_platforms_bar.png}
+\includegraphics[width=\linewidth]{energy_platforms_bar.png}
 \caption{Comparação da energia por inferência (escala logarítmica). \rev{(Figura ampliada nesta revisão para legibilidade dos eixos.)}}
 \label{fig:energy_bar_lnncs}
 \end{figure}
 
-A Figura~\ref{fig:snn_platform_radar_sba} resume o envelope de implantação multicritério ao colocar vazão, latência inversa, energia inversa e referência preditiva no mesmo quadro, e reforça que nenhuma plataforma domina simultaneamente todos os objetivos. Os dispositivos Android e o Raspberry Pi ocupam um envelope mais amplo nos eixos relacionados à resposta, favorecendo amostragem temporal mais densa e fluxos de campo interativos; o ESP32 contrai-se nesses eixos, mas permanece relevante para operação esparsa, autônoma e totalmente offline. A figura deve, portanto, ser lida como um mapa de implantação, e não como um ranqueamento universal.
+A Figura~\ref{fig:snn_platform_radar_sba} resume o envelope de implantação multicritério (vazão, latência inversa, energia inversa e referência preditiva) e mostra que nenhuma plataforma domina todos os objetivos: dispositivos Android e Raspberry Pi favorecem amostragem mais densa e fluxos interativos, enquanto o ESP32 permanece relevante para operação esparsa, autônoma e totalmente offline. A figura deve ser lida como um mapa de implantação, e não como um ranqueamento universal.
 
 \begin{figure}[!t]
 \centering
