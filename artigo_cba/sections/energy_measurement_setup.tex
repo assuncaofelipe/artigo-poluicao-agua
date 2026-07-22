@@ -7,10 +7,10 @@ The complete instrumentation and sampling windows are summarized in Table~\ref{t
 
 Incremental power was estimated as $\Delta P = P_{load} - P_{idle}$, and energy per inference as $E_{inf} = \Delta P / \text{throughput}$.
 
-\rev{Table~\ref{tab:android_specs} details the three Android devices (A--C) used in the campaign. Since inference runs on the CPU through the TFLite interpreter (XNNPACK, no GPU/NNAPI delegate), the CPU cluster configuration and available memory are the resources relevant to the AI workload; GPUs are listed for completeness only.}
+Table~\ref{tab:android_specs} details the three Android devices (A--C) used in the campaign. Since inference runs on the CPU through the TFLite interpreter (XNNPACK, no GPU/NNAPI delegate), the CPU cluster configuration and available memory are the resources relevant to the AI workload; GPUs are listed for completeness only.
 
 \begin{table}[t]
-\caption{\rev{Android device specifications (manufacturer data; RAM in parentheses is the OS-reported MemTotal).}}
+\caption{Android device specifications (manufacturer data; RAM in parentheses is the OS-reported MemTotal).}
 \label{tab:android_specs}
 \centering
 \scriptsize
