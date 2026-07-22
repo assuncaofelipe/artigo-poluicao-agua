@@ -3,7 +3,7 @@
 \subsection{Prediction Performance}
 Table~\ref{tab:pred_perf} summarizes macro performance in a multi-seed benchmark ($n=10$), reporting mean and standard deviation. Random Forest and LSTM obtained the lowest average errors, while the proposed SNN remained competitive and substantially more stable than the MLP baseline.
 
-\begin{table}[!h]
+\begin{table}[!ht]
 \caption{Multi-seed multimodal prediction performance (macro metrics).}
 \label{tab:pred_perf}
 \centering
@@ -23,20 +23,19 @@ MLP & $0.781 \pm 0.193$ & $0.983 \pm 0.178$ & $-5.460 \pm 5.220$ \\
 
 Although Random Forest achieved the lowest MAE, the SNN demonstrated competitive predictive performance while enabling deployment on low-power edge devices, which is essential for remote environmental monitoring scenarios. The ranking indicates that the SNN is not the lowest-error model in absolute terms, but it remains in a competitive range with materially better robustness than MLP in this small-data regime.
 
-{\sloppy\rev{To quantify uncertainty, 95\% confidence intervals (t-distribution, $n=10$ seeds) were computed for all macro metrics. For MAE macro: SNN $[0.399, 0.495]$, Random Forest $[0.362, 0.456]$, LSTM $[0.384, 0.472]$, and MLP $[0.636, 0.926]$; for $R^2$ macro: SNN $[0.181, 0.401]$, Random Forest $[0.237, 0.434]$, LSTM $[0.209, 0.418]$, and MLP $[-9.396, -1.524]$. The intervals of SNN, Random Forest, and LSTM overlap substantially, whereas MLP is clearly separated.}\par}
+{\sloppy To quantify uncertainty, 95\% confidence intervals (t-distribution, $n=10$ seeds) were computed for all macro metrics. These intervals characterize variability across the ten seeded runs and should not be interpreted as full hydrological population-level uncertainty. For MAE macro: SNN $[0.399, 0.495]$, Random Forest $[0.362, 0.456]$, LSTM $[0.384, 0.472]$, and MLP $[0.636, 0.926]$; for $R^2$ macro: SNN $[0.181, 0.401]$, Random Forest $[0.237, 0.434]$, LSTM $[0.209, 0.418]$, and MLP $[-9.396, -1.524]$. The intervals of SNN, Random Forest, and LSTM overlap substantially, whereas MLP is clearly separated.\par}
 
-\rev{Complementing the sign test reported in the original submission, exact Wilcoxon signed-rank tests over the ten paired seeds show no significant difference between SNN and Random Forest (MAE $p=0.064$; RMSE $p=0.846$; $R^2$ $p=0.922$) or between SNN and LSTM (MAE $p=0.105$; RMSE $p=0.131$; $R^2$ $p=0.232$), while SNN significantly outperforms MLP on all metrics ($p=0.002$). A Friedman test across the four models is significant (MAE: $\chi^2(3)=19.56$, $p<0.001$), with mean ranks of 1.7 (Random Forest), 1.9 (LSTM), 2.4 (SNN), and 4.0 (MLP), confirming that the global difference is driven by MLP rather than by separation among the three leading models.}
+Complementing the sign test reported in the original submission, exact Wilcoxon signed-rank tests over the ten paired seeds show no significant difference between SNN and Random Forest (MAE $p=0.064$; RMSE $p=0.846$; $R^2$ $p=0.922$) or between SNN and LSTM (MAE $p=0.105$; RMSE $p=0.131$; $R^2$ $p=0.232$), while SNN significantly outperforms MLP on all metrics ($p=0.002$). A Friedman test across the four models is significant (MAE: $\chi^2(3)=19.56$, $p<0.001$), with mean ranks of 1.7 (Random Forest), 1.9 (LSTM), 2.4 (SNN), and 4.0 (MLP), confirming that the global difference is driven by MLP rather than by separation among the three leading models.
 
 \subsection{Per-Target Performance}
-\rev{Table~\ref{tab:per_target} details per-target behavior. All three leading models achieve good pH prediction ($R^2 \approx 0.67$--$0.72$) and comparable turbidity error, while OD exhibits negative mean $R^2$ for every model, including Random Forest. This is consistent with the correlation analysis of Table~\ref{tab:corr_analysis}: OD is weakly correlated with all available input features, so the difficulty is attributable to the feature set rather than to the choice of model.}
+Table~\ref{tab:per_target} details per-target behavior. All three leading models achieve good pH prediction ($R^2 \approx 0.67$--$0.72$). Turbidity presents the largest absolute MAE because of its wider numerical range, whereas dissolved oxygen is the most difficult target in terms of explained variance, with negative mean $R^2$ for all evaluated models. This is consistent with the correlation analysis of Table~\ref{tab:corr_analysis}: OD is weakly correlated with all available input features, so the difficulty is attributable to the feature set rather than to the choice of model.
 
 \begin{table}[!htbp]
-\caption{\rev{Per-target MAE and $R^2$ (mean over 10 seeds); cells show MAE~/~$R^2$.}}
+\caption{Per-target MAE and $R^2$ (mean over 10 seeds); cells show MAE~/~$R^2$.}
 \label{tab:per_target}
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\rowcolors{2}{yellow!30}{yellow!30}
 \begin{tabular}{lccc}
 \toprule
 Model & pH & OD & TURB \\
@@ -53,7 +52,7 @@ MLP & 0.777 / $-13.39$ & 0.352 / $-3.021$ & 1.214 / 0.032 \\
 To quantify augmentation impact, we compared SNN training with no augmentation (factor 1) and augmentation $\times 10$ (Gaussian noise, $\sigma=0.01$) under the same protocol across five seeds (7, 13, 21, 42, 84). Augmentation reduced macro MAE from $0.496 \pm 0.060$ to $0.483 \pm 0.075$ (2.53\% reduction), with slight macro $R^2$ improvement ($0.254 \rightarrow 0.256$) and nearly unchanged macro RMSE ($0.615 \rightarrow 0.617$). The most relevant per-target gain was for turbidity MAE ($1.139 \rightarrow 1.102$), supporting augmentation as a practical stabilization strategy for this dataset size.
 
 \subsection{Target-Weight Sensitivity}
-Because turbidity is the most difficult target, we also evaluated a small loss-weight sweep in the SNN to quantify the trade-off between global fit and TURB-focused optimization. Table~\ref{tab:snn_weight_sweep_sba} shows that increasing TURB weight can reduce $MAE_{TURB}$, but with a slight decrease in global $R^2$.
+Because turbidity has the largest absolute MAE, we also evaluated a small loss-weight sweep in the SNN to quantify the trade-off between global fit and TURB-focused optimization. This should be distinguished from OD, which is the most difficult target in terms of explained variance because its mean $R^2$ is negative for all evaluated models. Table~\ref{tab:snn_weight_sweep_sba} shows that increasing TURB weight can reduce $MAE_{TURB}$, but with a slight decrease in global $R^2$.
 
 \begin{table}[!htbp]
 \caption{SNN loss-weight sweep (10 seeds).}
@@ -74,7 +73,7 @@ $(0.05,\,0.15,\,0.80)$ & $0.448$ & $\mathbf{1.006}$ & $0.280$ \\
 \end{table}
 
 \subsection{Predicted-vs-True Behavior}
-Figure~\ref{fig:pred_true_multi_sba} complements aggregate metrics by showing point-wise agreement between predicted and observed values for each target. pH and OD concentrate closer to the identity line, while turbidity presents larger spread, consistent with its higher error contribution in previous tables. \rev{For OD in particular, the visual agreement should be read together with Table~\ref{tab:per_target}: the low variance of OD in the dataset (Table~\ref{tab:dataset_stats}) keeps absolute errors small, but the weak input--target correlation limits explained variance for all evaluated models, not only the SNN.}
+Figure~\ref{fig:pred_true_multi_sba} complements aggregate metrics by showing point-wise agreement between predicted and observed values for each target. pH follows the identity trend more closely. OD predictions remain concentrated around the central range, reflecting low absolute error but limited explained variance, while turbidity exhibits wider dispersion. For OD in particular, the visual agreement should be read together with Table~\ref{tab:per_target}: the low variance of OD in the dataset (Table~\ref{tab:dataset_stats}) keeps absolute errors small, but the weak input--target correlation limits explained variance for all evaluated models, not only the SNN.
 
 \begin{figure*}[!t]
 \centering
@@ -93,7 +92,7 @@ Figure~\ref{fig:pred_true_multi_sba} complements aggregate metrics by showing po
 \includegraphics[width=\linewidth]{pred_vs_real_TURB_multi.png}
 \par\vspace{1mm}{\footnotesize (c) TURB\par}
 \end{minipage}
-\caption{Predicted vs. true values in the multimodal SNN for pH, dissolved oxygen, and turbidity. \rev{(Figure enlarged to full page width in this revision for axis readability.)}}
+\caption{Predicted vs. true values in the multimodal SNN for pH, dissolved oxygen, and turbidity.}
 \label{fig:pred_true_multi_sba}
 \end{figure*}
 
@@ -103,7 +102,7 @@ IDW interpolation was used to convert point predictions into continuous spatial 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=0.70\textwidth]{idw_combined.png}
-\caption{IDW interpolated surfaces for pH, dissolved oxygen, and turbidity from sampled points. \rev{(Figure enlarged to full page width in this revision for axis readability.)}}
+\caption{IDW interpolated surfaces for pH, dissolved oxygen, and turbidity from sampled points.}
 \label{fig:idw_combined_sba}
 \end{figure*}
 
@@ -121,7 +120,7 @@ To support operational screening, a composite pollution index was computed from 
 \includegraphics[width=\linewidth]{pollution_idw.png}
 \par\vspace{1mm}{\footnotesize (b) IDW surface of the index.\par}
 \end{minipage}
-\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0, 1]$) over an OpenStreetMap basemap (UTM 21S). \rev{(Figure enlarged to full page width in this revision for axis readability.)}}
+\caption{Spatial estimate of the composite pollution index from multimodal predictions (normalized scale $[0, 1]$) over an OpenStreetMap basemap (UTM 21S).}
 \label{fig:pollution_sba}
 \end{figure*}
 
@@ -152,7 +151,7 @@ Figure~\ref{fig:energy_bar_lnncs} compares the incremental energy per inference 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{energy_platforms_bar.png}
-\caption{Comparative energy per inference (log scale). \rev{(Figure enlarged in this revision for axis readability.)}}
+\caption{Comparative energy per inference (log scale).}
 \label{fig:energy_bar_lnncs}
 \end{figure}
 
@@ -161,6 +160,6 @@ Figure~\ref{fig:snn_platform_radar_sba} summarizes the multi-criteria deployment
 \begin{figure}[!t]
 \centering
 \includegraphics[width=0.52\linewidth]{snn_platform_radar.png}
-\caption{SNN deployment comparison across platforms using normalized criteria (throughput, inverse latency, inverse energy, and predictive reference). \rev{(Figure enlarged in this revision for axis readability.)}}
+\caption{SNN deployment comparison across platforms using normalized criteria (throughput, inverse latency, inverse energy, and predictive reference).}
 \label{fig:snn_platform_radar_sba}
 \end{figure}
