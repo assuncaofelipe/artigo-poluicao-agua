@@ -1,0 +1,236 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cba2026}[2026/09/01 Estilo Beamer CBA 2026 Personalizado]
+
+% --- Pacotes Básicos ---
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[brazil]{babel}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\usetikzlibrary{positioning,shapes.geometric,arrows.meta,calc}
+\RequirePackage{booktabs}
+\RequirePackage{subcaption}
+\RequirePackage{mathtools,amssymb,amsthm}
+\RequirePackage{siunitx}
+
+% --- Gestão de Bibliografia (biblatex) ---
+\RequirePackage[backend=biber, style=numeric, sorting=none]{biblatex}
+
+% --- Definição dos Caminhos das Pastas de Imagens e Logos ---
+\graphicspath{{Logos/}{Figuras/}{Figuras/pessoas/}}
+
+% --- Configuração de Tema Base ---
+\usetheme{Madrid}
+\useinnertheme{rounded}
+
+\definecolor{CBAPurple}{HTML}{7040B8}
+\definecolor{CBAMagenta}{HTML}{D81B70}
+\definecolor{CBAOrange}{HTML}{F28C38}
+\definecolor{CBAPetrol}{HTML}{245B73}
+\definecolor{CBAGraphite}{HTML}{303030}
+\definecolor{CBALightPurple}{HTML}{F1ECF8}
+\definecolor{CBALightMagenta}{HTML}{FCECF3}
+\definecolor{CBALightOrange}{HTML}{FFF2E7}
+\definecolor{CBALightPetrol}{HTML}{EAF2F5}
+\definecolor{CBACardBg}{HTML}{F8FAFC}
+\definecolor{CBACardBorder}{HTML}{E2E8F0}
+
+% --------------------------------------------------------------------------
+% 2. ESQUEMAS DE CORES DOS AMBIENTES (BLOCKS) E ELEMENTOS
+% --------------------------------------------------------------------------
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+% Títulos
+\setbeamercolor{title}{bg=CBAPurple, fg=white} 
+\setbeamerfont{title}{series=\bfseries}
+
+\setbeamercolor{author}{fg=white} 
+\setbeamercolor{institute}{fg=white} 
+\setbeamerfont{author}{series=\bfseries}
+\setbeamercolor{frametitle}{bg=CBAPurple, fg=white}
+
+% Footline
+\setbeamercolor{author in head/foot}{bg=CBAPurple!80, fg=white}
+\setbeamerfont{author in head/foot}{series=\bfseries}
+
+\setbeamercolor{title in head/foot}{bg=CBAPurple!90, fg=white}
+\setbeamerfont{title in head/foot}{series=\bfseries}
+
+\setbeamercolor{date in head/foot}{bg=CBAPurple, fg=white}
+\setbeamerfont{date in head/foot}{series=\bfseries}
+
+% Bloco Normal / Padrão
+\setbeamercolor{block title}{bg=CBAPurple, fg=white}
+\setbeamercolor{block body}{bg=CBALightPurple, fg=black}
+
+% Bloco de Alerta (alertblock)
+\setbeamercolor{block title alerted}{bg=CBAMagenta, fg=white}
+\setbeamercolor{block body alerted}{bg=CBALightMagenta, fg=black}
+
+% Bloco de Exemplo (exampleblock)
+\setbeamercolor{block title example}{bg=CBAPetrol, fg=white}
+\setbeamercolor{block body example}{bg=CBALightPetrol, fg=black}
+
+% Bloco Laranja CBA customizado
+\newenvironment{cbaorangeblock}[1]{%
+  \setbeamercolor{block title}{bg=CBAOrange, fg=white}%
+  \setbeamercolor{block body}{bg=CBALightOrange, fg=black}%
+  \begin{block}{#1}%
+}{%
+  \end{block}%
+}
+
+% Numeração e Estilo dos Teoremas
+\setbeamertemplate{theorems}[numbered]
+\beamertemplatenavigationsymbolsempty
+
+% Itens
+\setbeamercolor{item}{fg=CBAPurple}
+\setbeamercolor{item projected}{fg=white, bg=CBAPurple}
+\setbeamercolor{alerted text}{fg=CBAMagenta}
+
+% --------------------------------------------------------------------------
+% COMPONENTES VISUAIS CUSTOMIZADOS CBA
+% --------------------------------------------------------------------------
+\newcommand{\brandchip}[2]{%
+  \tikz[baseline=(x.base)]\node[
+    inner xsep=5pt,inner ysep=2.2pt,
+    rounded corners=2pt,
+    draw=#1!75,fill=#1!8,
+    text=#1,font=\scriptsize\bfseries
+  ] (x) {#2};%
+}
+
+\newcommand{\metriccard}[3]{%
+  \begin{tikzpicture}
+    \node[
+      rounded corners=5pt,
+      draw=CBACardBorder,
+      fill=CBACardBg,
+      inner sep=6pt,
+      minimum width=0.22\linewidth,
+      minimum height=1.30cm,
+      align=center
+    ] {
+      {\color{CBAPurple}\Large\bfseries #1}\\[-1pt]
+      {\scriptsize\bfseries\color{CBAGraphite} #2}\\[-1pt]
+      {\tiny\color{gray} #3}
+    };
+  \end{tikzpicture}%
+}
+
+\newcommand{\metriccardaccent}[3]{%
+  \begin{tikzpicture}
+    \node[
+      rounded corners=5pt,
+      draw=CBAOrange!60,
+      fill=CBAOrange!12,
+      inner sep=6pt,
+      minimum width=0.22\linewidth,
+      minimum height=1.30cm,
+      align=center
+    ] {
+      {\color{CBAOrange!90!black}\Large\bfseries #1}\\[-1pt]
+      {\scriptsize\bfseries\color{CBAGraphite} #2}\\[-1pt]
+      {\tiny\color{gray} #3}
+    };
+  \end{tikzpicture}%
+}
+
+\newcommand{\metriccardpetrol}[3]{%
+  \begin{tikzpicture}
+    \node[
+      rounded corners=5pt,
+      draw=CBAPetrol!60,
+      fill=CBAPetrol!12,
+      inner sep=6pt,
+      minimum width=0.22\linewidth,
+      minimum height=1.30cm,
+      align=center
+    ] {
+      {\color{CBAPetrol}\Large\bfseries #1}\\[-1pt]
+      {\scriptsize\bfseries\color{CBAGraphite} #2}\\[-1pt]
+      {\tiny\color{gray} #3}
+    };
+  \end{tikzpicture}%
+}
+
+\newcommand{\metriccardwide}[3]{%
+  \begin{tikzpicture}
+    \node[
+      rounded corners=5pt,
+      draw=CBACardBorder,
+      fill=CBACardBg,
+      inner sep=6pt,
+      minimum width=0.30\linewidth,
+      minimum height=1.30cm,
+      align=center
+    ] {
+      {\color{CBAPurple}\Large\bfseries #1}\\[-1pt]
+      {\scriptsize\bfseries\color{CBAGraphite} #2}\\[-1pt]
+      {\tiny\color{gray} #3}
+    };
+  \end{tikzpicture}%
+}
+
+\newcommand{\authorcardrow}[3]{%
+  \begin{tikzpicture}
+    \node[
+      rounded corners=4pt,
+      draw=CBACardBorder,
+      fill=CBACardBg,
+      inner xsep=5pt,
+      inner ysep=3pt,
+      minimum width=0.98\linewidth,
+      minimum height=0.78cm,
+      anchor=center
+    ] {
+      \begin{minipage}{0.92\linewidth}
+        \begin{tabular}{@{}c@{\hspace{7pt}}l@{}}
+          \begin{tikzpicture}[baseline=-0.65ex]
+            \begin{scope}
+              \clip (0,0) circle (0.32cm);
+              \node at (0,0) {\includegraphics[width=0.68cm,height=0.68cm]{#1}};
+            \end{scope}
+            \draw[CBAPurple,line width=0.8pt] (0,0) circle (0.32cm);
+          \end{tikzpicture} &
+          \begin{tabular}{@{}l@{}}
+            \fontsize{7.5pt}{8.8pt}\selectfont\textbf{\color{CBAGraphite}#2}\\
+            \fontsize{5.8pt}{6.8pt}\selectfont\color{gray}#3
+          \end{tabular}
+        \end{tabular}
+      \end{minipage}
+    };
+  \end{tikzpicture}%
+}
+
+% --------------------------------------------------------------------------
+% 3. TEMPLATE DA CAPA (TITLE PAGE)
+% --------------------------------------------------------------------------
+\setbeamertemplate{title page}{
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north west, inner sep=0pt] at (current page.north west){%
+      \includegraphics[width=\paperwidth,height=\paperheight]{frontpage}
+    };
+  \end{tikzpicture}
+  
+  \vspace{0.2cm}
+  \begin{center}
+  \begin{beamercolorbox}[rounded=true, shadow=true, sep=7pt, center]{title}
+    \usebeamerfont{title}\inserttitle\par
+    \ifx\insertsubtitle\@empty\else
+      \vskip0.20em
+      {\usebeamerfont{subtitle}\small\insertsubtitle\par}
+    \fi
+  \end{beamercolorbox}
+  \vskip0.4em
+  \begin{beamercolorbox}[rounded=true, shadow=true, sep=4pt, center]{author}
+    \footnotesize\insertauthor
+  \end{beamercolorbox}
+  \vskip0.2em
+  \begin{beamercolorbox}[rounded=true, shadow=true, sep=3pt, center]{institute}
+    \scriptsize\insertinstitute
+  \end{beamercolorbox}
+  \end{center}
+}
+
+\endinput

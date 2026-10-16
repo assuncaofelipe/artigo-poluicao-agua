@@ -1,0 +1,780 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+
+% =========================================================================
+% PACOTES E CONFIGURAÇÕES DO CBA 2026
+% =========================================================================
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc,fit,backgrounds,shadows}
+\usepackage{cba2026}
+\usepackage{appendixnumberbeamer}
+
+% =========================================================================
+% DADOS OFICIAIS DO TRABALHO CBA 2026
+% =========================================================================
+\title[Previsão Multimodal da Qualidade da Água]{Previsão da Qualidade da Água: Inferência Neuromórfica Multimodal na Borda com Eficiência Energética e Operação Offline}
+
+\subtitle{Redes Neurais de Spikes (SNN) Aplicadas ao Monitoramento Ambiental na Amazônia}
+
+\author[F. Assunção et al. (UFAM / PPGCTS / ELDORADO)]{
+  \textbf{Felipe de Vasconcelos Assunção}\inst{1,2,3},
+  \textbf{Alfredo Paulo O. Barros}\inst{1,3},
+  Reyner C. S. Alegria\inst{1},
+  Elton S. Araújo\inst{4},\\
+  Débora R. Raimundo\inst{2},
+  Alex M. Ramos\inst{1},
+  Vicente F. Lucena Jr.\inst{1},
+  \textbf{Vandermi J. da Silva}\inst{1,3}
+}
+
+\institute[UFAM / ELDORADO / PPGCTS]{
+  \inst{1}Universidade Federal do Amazonas (UFAM) -- ICET, Itacoatiara, AM\\
+  \inst{2}Instituto de Pesquisas Eldorado, Manaus, AM\\
+  \inst{3}Programa de Pós-Graduação em Ciência, Tecnologia e Saúde (PPGCTS/UFAM)\\
+  \inst{4}Pesquisador Independente, Brasil
+}
+
+\date[XXVI CBA 2026]{XXVI Congresso Brasileiro de Automática -- CBA 2026}
+
+% =========================================================================
+% INÍCIO DA APRESENTAÇÃO
+% =========================================================================
+\begin{document}
+
+% -------------------------------------------------------------
+% SLIDE 1: Capa Oficial CBA 2026 (0:20)
+% -------------------------------------------------------------
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 2: Sumário Executivo (0:15)
+% -------------------------------------------------------------
+\begin{frame}{Sumário da Apresentação}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.98\linewidth}
+      \begin{block}{Estrutura em Três Blocos Objetivos}
+        \vspace{0.15cm}
+        \begin{enumerate}
+          \item \textbf{Motivação e Proposta:}\\
+          {\footnotesize Contexto amazônico, limitação de conectividade/energia, Edge AI neuromórfica.}
+          \vspace{0.20cm}
+          \item \textbf{Metodologia e Plataforma Experimental:}\\
+          {\footnotesize Coleta de dados (Lago Serpa), aumento gaussiano, arquitetura SNN multimodal e bancada de telemetria.}
+          \vspace{0.20cm}
+          \item \textbf{Resultados e Conclusões:}\\
+          {\footnotesize Comparativo multi-seed, interpolação espacial (IDW), índice de poluição, consumo em borda e conclusão.}
+        \end{enumerate}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =========================================================================
+% BLOCO 1: MOTIVAÇÃO E PROPOSTA
+% =========================================================================
+\section{Motivação e Proposta}
+
+% -------------------------------------------------------------
+% SLIDE 3: Contexto, Problema e Pergunta Central (0:50)
+% -------------------------------------------------------------
+\begin{frame}{Contexto, Problema e Pergunta Central}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\linewidth}
+      \begin{block}{Desafios na Região Amazônica}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Vastidão e Isolamento:}\\
+          Monitoramento de corpos hídricos remotos (ex: Lago Serpa, Itacoatiara-AM).
+          \vspace{0.08cm}
+          \item \textbf{Conectividade Nula/Instável:}\\
+          Inviabilidade operacional de depender de APIs ou nuvem.
+          \vspace{0.08cm}
+          \item \textbf{Restrição Severa de Energia:}\\
+          Operação com baterias compactas ou painéis solares.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.47\linewidth}
+      \begin{exampleblock}{Proposta Tecnológica}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Edge AI Neuromórfica:}\\
+          Redes Neurais de Spikes (SNN) para inferência 100\% offline.
+          \vspace{0.06cm}
+          \item \textbf{Multimodalidade Conjunta:}\\
+          Previsão simultânea de pH, OD e Turbidez.
+        \end{itemize}
+      \end{exampleblock}
+      \vspace{0.10cm}
+      \begin{alertblock}{Pergunta Central de Pesquisa}
+        \fontsize{7.0pt}{8.8pt}\selectfont\centering
+        \textbf{É possível realizar inferência preditiva da qualidade da água 100\% offline em borda heterogênea com estabilidade e baixo consumo?}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 4: Lacuna na Literatura e Desafios de Pesquisa (0:55)
+% -------------------------------------------------------------
+\begin{frame}{Lacuna na Literatura e Desafios de Pesquisa}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\linewidth}
+      \begin{alertblock}{Lacunas no Estado da Arte}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Modelos Centralizados em Nuvem:}\\
+          {\scriptsize Dependência de servidores e redes de alta vazão, inviáveis em corpos hídricos remotos.\\
+          \color{CBAPurple!90!black}\textbf{\tiny$\to$ Yan et al. (2024); Liu et al. (2019); Pan et al. (2025)}}
+          \vspace{0.08cm}
+          \item \textbf{TinyML Convencional \& Sensoriamento:}\\
+          {\scriptsize Foco em tarefas univariadas; MLPs sofrem instabilidade severa sob dados esparsos ($R^2 < 0$).\\
+          \color{CBAPurple!90!black}\textbf{\tiny$\to$ Rosero et al. (2020); Alshareeda et al. (2025); Lowe et al. (2022)}}
+          \vspace{0.08cm}
+          \item \textbf{SNNs \& Borda Neuromórfica:}\\
+          {\scriptsize Estudos anteriores são apenas conceituais ou focam em tarefas industriais sem dados de campo.\\
+          \color{CBAPurple!90!black}\textbf{\tiny$\to$ Aral et al. (2024); Azadi et al. (2025); Huijbregts et al. (2024)}}
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.48\linewidth}
+      \begin{block}{Desafios Centrais de Engenharia}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Multimodalidade Offline:} Regressão simultânea de pH, OD e Turbidez sem nuvem.
+          \item \textbf{Regime de Poucos Dados:} Estabilidade preditiva em dados de campo escassos ($N=60$).
+          \item \textbf{Eficiência Energética:} Validação física em microcontroladores, SBCs e smartphones.
+        \end{itemize}
+      \end{block}
+      \vspace{0.15cm}
+      \centering
+      \metriccardaccent{Desafio Aberto}{Inferência 100\% Offline}{SNN Multimodal + Hardware Heterogêneo}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =========================================================================
+% BLOCO 2: METODOLOGIA E PLATAFORMA EXPERIMENTAL
+% =========================================================================
+\section{Metodologia e Plataforma Experimental}
+
+% -------------------------------------------------------------
+% SLIDE 5: Coleta de Dados e Aumento Controlado (0:50)
+% -------------------------------------------------------------
+\begin{frame}{Coleta em Campo (Lago Serpa) e Aumento Controlado}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.50\linewidth}
+      \centering
+      \includegraphics[width=0.98\linewidth,height=4.5cm,keepaspectratio]{map_points_osm_21S.png}\\[2pt]
+      {\scriptsize\color{gray}60 pontos georreferenciados no Lago Serpa (UTM 21S, Itacoatiara-AM).}
+    \end{column}
+
+    \begin{column}{0.48\linewidth}
+      \textbf{Campanha Experimental:}
+      \begin{itemize}\small
+        \item \textbf{Amostras Reais:} 60 pontos coletados \textit{in situ} com sonda multiparâmetros.
+        \item \textbf{Entradas (Inputs):} Temperatura, Condutividade Elétrica, TDS, Salinidade, Latitude e Longitude.
+        \item \textbf{Alvos (Targets):} pH, Oxigênio Dissolvido (OD) e Turbidez (TURB).
+      \end{itemize}
+      \vspace{0.15cm}
+      \begin{block}{Aumento Gaussiano Controlado ($\times 10$)}
+        \footnotesize
+        $\bullet$ Expansão do suporte de treino de 60 para 600 amostras ($\sigma = 0{,}01$).\\
+        $\bullet$ Redução de 2,53\% no MAE macro e estabilização de gradientes em regime de \textit{small-data}.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 6: Arquitetura Multimodal SNN Ponta a Ponta (1:05)
+% -------------------------------------------------------------
+\begin{frame}{Arquitetura da Rede Neural de Spikes (SNN)}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.5cm,keepaspectratio]{Arquitetura.png}\\[2pt]
+      {\scriptsize\color{gray}Fluxo: Entradas $\to$ Codificação em Spikes $\to$ CUBA-LIF $\to$ Decodificação Multimodal.}
+    \end{column}
+
+    \begin{column}{0.46\linewidth}
+      \textbf{Parâmetros da Rede Neuromórfica:}
+      \begin{itemize}\small
+        \item \textbf{Camada de Entrada:} 6 variáveis normalizadas em $[0, 1]$.
+        \item \textbf{Codificação Temporal:} Passos de tempo $T = 16\text{--}32$ passos.
+        \item \textbf{Neurônios Ocultos:} Dinâmica Leaky Integrate-and-Fire (LIF) com gradiente substituto (\textit{surrogate gradient}).
+        \item \textbf{Saída Multimodal:} 3 saídas lineares integradas no tempo para regressão contínua.
+      \end{itemize}
+      \vspace{0.15cm}
+      \begin{exampleblock}{Otimização por Grid Search}
+        \scriptsize
+        Varredura sistemática de taxa de aprendizado, limiar ($\theta$), decaimento de membrana ($\beta$) e pesos balanceados da perda.
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 7: Dispositivos de Borda e Setup de Telemetria (1:00)
+% -------------------------------------------------------------
+\begin{frame}{Plataformas de Borda Heterogêneas e Telemetria Física}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\linewidth}
+      \begin{block}{Dispositivos de Borda Avaliados}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Microcontrolador (MCU):}\\
+          ESP32 (Xtensa Dual-Core 240 MHz, MicroPython / C++).
+          \vspace{0.06cm}
+          \item \textbf{Computador em Placa (SBC):}\\
+          Raspberry Pi 4B (Quad-Core Cortex-A72 @ 1.5 GHz).
+          \vspace{0.06cm}
+          \item \textbf{Smartphones Android:}\\
+          Três aparelhos heterogêneos (Entrada, Intermediário e Alta Eficiência).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.47\linewidth}
+      \begin{alertblock}{Setup de Medição Energética Física}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Sensor de Corrente INA219:}\\
+          Medição em shunt no trilho de alimentação do ESP32 e RPi 4B.
+          \vspace{0.06cm}
+          \item \textbf{Potência Incremental:}\\
+          $\Delta P = P_{\text{load}} - P_{\text{idle}}$ (repouso vs inferência).
+          \vspace{0.06cm}
+          \item \textbf{Energia por Inferência:}\\
+          $E = \frac{\Delta P}{\text{Throughput}}$ (em mJ/inf).
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =========================================================================
+% BLOCO 3: RESULTADOS E CONCLUSÕES
+% =========================================================================
+\section{Resultados e Conclusões}
+
+% -------------------------------------------------------------
+% SLIDE 8: Desempenho Preditivo e Significância Estatística (1:15)
+% -------------------------------------------------------------
+\begin{frame}{Desempenho Preditivo Multimodal ($n=10$ Seeds)}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.6cm,keepaspectratio]{mae_vs_model_bar.png}\\[2pt]
+      {\scriptsize\color{gray}Comparativo de MAE macro entre modelos (IC 95\%).}
+    \end{column}
+
+    \begin{column}{0.46\linewidth}
+      \textbf{Métricas Macro ($n=10$ seeds):}
+      \begin{itemize}\small
+        \item \textbf{Random Forest:} $\text{MAE} = 0{,}409 \pm 0{,}062$
+        \item \textbf{LSTM:} $\text{MAE} = 0{,}428 \pm 0{,}059$
+        \item \textbf{SNN (Proposta):} $\mathbf{\text{MAE} = 0{,}447 \pm 0{,}064}$
+        \item \textbf{MLP Clássica:} $\text{MAE} = 0{,}781 \pm 0{,}193$ (instável)
+      \end{itemize}
+      \vspace{0.15cm}
+      \begin{block}{Validação Estatística Não-Paramétrica}
+        \scriptsize
+        $\bullet$ \textbf{Wilcoxon Pareado:} Sem diferença significativa entre SNN e Random Forest ($p=0{,}064$) e SNN e LSTM ($p=0{,}105$).\\
+        $\bullet$ \textbf{SNN vs MLP:} SNN supera MLP com $p=0{,}002$.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 9: Desempenho por Variável (pH, OD, Turbidez) (1:10)
+% -------------------------------------------------------------
+\begin{frame}{Comportamento Predito vs Real por Variável Alvo}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.56\linewidth}
+      \centering
+      \includegraphics[width=0.32\linewidth,height=4.2cm,keepaspectratio]{pred_vs_real_pH_multi.png}
+      \includegraphics[width=0.32\linewidth,height=4.2cm,keepaspectratio]{pred_vs_real_OD_multi.png}
+      \includegraphics[width=0.32\linewidth,height=4.2cm,keepaspectratio]{pred_vs_real_TURB_multi.png}\\[2pt]
+      {\scriptsize\color{gray}(a) pH ($R^2=0{,}67$) \quad (b) OD ($R^2=-0{,}16$) \quad (c) Turbidez ($R^2=0{,}36$).}
+    \end{column}
+
+    \begin{column}{0.42\linewidth}
+      \textbf{Análise por Variável (SNN):}
+      \begin{itemize}\small
+        \item \textbf{pH:} Forte aderência à identidade ($\text{MAE} = 0{,}125$, $R^2 = 0{,}670$).
+        \item \textbf{Turbidez:} Boa correlação em ampla escala ($\text{MAE} = 1{,}012$, $R^2 = 0{,}364$).
+        \item \textbf{Oxigênio Dissolvido (OD):} Erro absoluto pequeno ($\text{MAE} = 0{,}204$), mas baixa variância explicada ($R^2$ negativo em todos os modelos devido a fraca correlação das entradas).
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 10: Interpolação Espacial e Índice de Poluição (1:10)
+% -------------------------------------------------------------
+\begin{frame}{Superfícies Espaciais (IDW) e Índice Composto de Poluição}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.6cm,keepaspectratio]{idw_combined.png}\\[2pt]
+      {\scriptsize\color{gray}Superfícies contínuas por Ponderação pelo Inverso da Distância (IDW).}
+    \end{column}
+
+    \begin{column}{0.44\linewidth}
+      \textbf{Sensoriamento e Tomada de Decisão:}
+      \begin{itemize}\small
+        \item \textbf{Interpolação IDW:} Transforma pontos discretos em superfícies contínuas de pH, OD e Turbidez.
+        \item \textbf{Índice Composto de Poluição:} Normalizado em $[0, 1]$, sintetiza o risco ecológico relativo no corpo hídrico.
+        \item \textbf{Inspeção Prioritária:} Identifica microzonas críticas para atuação de órgãos ambientais sem demandar análise laboratorial demorada.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 11: Benchmarking de Energia e Throughput em Borda (1:15)
+% -------------------------------------------------------------
+\begin{frame}{Benchmarking Energético e Throughput em Dispositivos Reais}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.5cm,keepaspectratio]{energy_platforms_bar.png}\\[2pt]
+      {\scriptsize\color{gray}Energia incremental por inferência (escala logarítmica mJ/inf).}
+    \end{column}
+
+    \begin{column}{0.44\linewidth}
+      \centering
+      \metriccardaccent{0.0028 mJ}{Menor Energia / Inf}{Smartphone Android C}
+      \vspace{0.15cm}
+      
+      \begin{block}{Métricas por Plataforma}
+        \scriptsize
+        $\bullet$ \textbf{ESP32:} $5{,}0\text{ inf/s} \mid \Delta P = 56\text{ mW} \mid \mathbf{11{,}20\text{ mJ/inf}}$\\
+        $\bullet$ \textbf{Raspberry Pi 4B:} $4{.}670\text{ inf/s} \mid \Delta P = 239\text{ mW} \mid \mathbf{0{,}051\text{ mJ/inf}}$\\
+        $\bullet$ \textbf{Android A:} $12{.}337\text{ inf/s} \mid \mathbf{0{,}0104\text{ mJ/inf}}$\\
+        $\bullet$ \textbf{Android B:} $30{.}905\text{ inf/s} \mid \mathbf{0{,}0151\text{ mJ/inf}}$\\
+        $\bullet$ \textbf{Android C:} $16{.}121\text{ inf/s} \mid \mathbf{0{,}00285\text{ mJ/inf}}$
+      \end{block}
+      \vspace{0.05cm}
+      {\tiny\color{gray}*ESP32 viabiliza nós remotos de baixa taxa; smartphones e RPi entregam alta vazão em campo.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 12: Discussão e Posicionamento (0:45)
+% -------------------------------------------------------------
+\begin{frame}{Discussão: Posicionamento no Estado da Arte e Contribuições}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\linewidth}
+      \begin{block}{Posicionamento no Estado da Arte}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{Modelagem em Nuvem:}\\
+          {\scriptsize Inviável em áreas remotas da Amazônia pela carência de conectividade.\\
+          \color{CBAPurple!90!black}\textbf{\tiny$\to$ Yan et al. (2024); Liu et al. (2019)}}
+          \vspace{0.08cm}
+          \item \textbf{TinyML Tradicional:}\\
+          {\scriptsize Foca em classificação univariada; MLPs mostram instabilidade sob \textit{small-data} ($R^2 < 0$).\\
+          \color{CBAPurple!90!black}\textbf{\tiny$\to$ Alshareeda et al. (2025); Rosero et al. (2020)}}
+          \vspace{0.08cm}
+          \item \textbf{Neuromórfico Ambiental:}\\
+          {\scriptsize Estudos anteriores são conceituais ou restritos a circuitos sem validação em campo.\\
+          \color{CBAPurple!90!black}\textbf{\tiny$\to$ Aral et al. (2024); Azadi et al. (2025); Huijbregts et al. (2024)}}
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.48\linewidth}
+      \begin{exampleblock}{Contribuições}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Pipeline Multimodal SNN:} Previsão simultânea (pH, OD, TURB) de ponta a ponta.
+          \vspace{0.08cm}
+          \item \textbf{Protocolo Estatístico:} Aumento gaussiano ($\times 10$), multi-seed ($n=10$) e validação por Wilcoxon.
+          \vspace{0.08cm}
+          \item \textbf{Sensoriamento Espacial:} Superfícies IDW contínuas e Índice Composto de Poluição.
+          \vspace{0.08cm}
+          \item \textbf{Benchmarking em Borda:} Telemetria de potência e energia em 3 classes de dispositivos.
+        \end{enumerate}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 13: Conclusões e Trabalhos Futuros (1:00)
+% -------------------------------------------------------------
+\begin{frame}{Conclusões e Trabalhos Futuros}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.47\linewidth}
+      \begin{block}{Conclusões Centrais}
+        \footnotesize
+        \begin{enumerate}
+          \item \textbf{Viabilidade Neuromórfica:} SNN multimodal competitiva com Random Forest e LSTM sem diferença estatística ($p>0{,}05$).
+          \item \textbf{Operação 100\% Offline:} Validação prática em ESP32 ($11{,}2\text{ mJ}$), RPi 4B ($0{,}05\text{ mJ}$) e Android ($0{,}0028\text{ mJ}$).
+          \item \textbf{Mapeamento Espacial:} Geração de superfícies contínuas IDW e Índice de Poluição para suporte à decisão.
+          \item \textbf{Estabilidade com Poucos Dados:} Aumento gaussiano $\times 10$ reduz erro e estabiliza treino.
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{0.47\linewidth}
+      \begin{exampleblock}{Trabalhos Futuros}
+        \footnotesize
+        \begin{itemize}
+          \item \textbf{ASIC Neuromórfico Dedicado:} Deploy em hardware como SynSense Xylo / Intel Loihi 2 para consumo em sub-mW.
+          \item \textbf{Campanhas Sazonais:} Coleta de dados no período de cheia e seca dos rios amazônicos.
+          \item \textbf{Boias Autônomas:} Integração com painéis solares para telemetria contínua com protocolo LoRaWAN.
+          \item \textbf{Expansão de Sensores:} Incorporação de sondas de nitrato e clorofila-a.
+        \end{itemize}
+      \end{exampleblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 14: Referências Bibliográficas Selecionadas (0:25)
+% -------------------------------------------------------------
+\begin{frame}{Referências Bibliográficas Selecionadas}
+  \fontsize{6.8pt}{8.6pt}\selectfont
+  \begin{thebibliography}{99}
+    \bibitem{aral2024} R. Aral et al., ``Neuromorphic Edge AI for Remote and Rural Environmental Monitoring,'' \textit{IEEE Internet of Things Magazine}, vol. 7, no. 2, pp. 42--48, 2024.
+    \bibitem{azadi2025} M. Azadi et al., ``Embedded Spiking Neural Network Inference for Low-Power Industrial IoT,'' \textit{IEEE Transactions on Industrial Informatics}, 2025.
+    \bibitem{yan2024} T. Yan et al., ``Machine Learning Applications in Water Quality Prediction: A Comprehensive Review,'' \textit{Water Research}, vol. 248, p. 120890, 2024.
+    \bibitem{huijbregts2024} M. Huijbregts et al., ``Ultra-Low-Power Circuit Architectures for Spiking Neural Networks on Edge Devices,'' \textit{IEEE ISCAS}, pp. 1--5, 2024.
+    \bibitem{alshareeda2025} M. Alshareeda et al., ``Autonomous IoT Water Monitoring Sensor Nodes on Microcontroller Platforms,'' \textit{Sensors}, vol. 25, no. 3, 2025.
+    \bibitem{assuncao2026} F. V. Assunção, A. P. O. Barros, R. C. S. Alegria et al., ``Water Quality Physicochemical and Geospatial Dataset of Serpa Lake (Amazonia),'' \textit{Mendeley Data}, 2026.
+  \end{thebibliography}
+\end{frame}
+
+% -------------------------------------------------------------
+% SLIDE 15: Agradecimentos Oficiais, Suporte e Encerramento (0:20)
+% -------------------------------------------------------------
+\begin{frame}[plain]{Agradecimentos e Suporte Institucional}
+  % Versículo Bíblico do Salmo 11:1 posicionado no canto inferior direito
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[
+      anchor=south east,
+      rounded corners=3pt,
+      fill=CBAPurple!8,
+      draw=CBAPurple!35,
+      inner xsep=8pt,
+      inner ysep=4pt,
+      align=right,
+      font=\fontsize{6.2pt}{7.8pt}\selectfont
+    ] at ([xshift=-0.45cm,yshift=0.35cm]current page.south east) {
+      \color{CBAPurple!90!black}\textit{``No Senhor me refugio. Como dizeis à minha alma:}\\
+      \color{CBAPurple!90!black}\textit{Foge para o vosso monte como um pássaro?''} \textbf{--- Salmos 11:1}
+    };
+  \end{tikzpicture}
+
+  \begin{center}
+    \vspace{-0.1cm}
+    {\large\bfseries Agradecemos pelo apoio financeiro e suporte institucional}
+    
+    \vspace{0.35cm}
+    
+    % Container com os Logos
+    \begin{tikzpicture}
+      \node[
+        rounded corners=8pt,
+        draw=CBAPurple!40,
+        fill=white,
+        inner xsep=10pt,
+        inner ysep=6pt,
+        drop shadow={opacity=0.08, shadow xshift=1pt, shadow yshift=-1pt}
+      ] {
+        \begin{tabular}{ccccccc}
+          \includegraphics[height=0.58cm,keepaspectratio]{Logos/capes.pdf} &
+          \hspace{0.18cm}
+          \includegraphics[height=0.58cm,keepaspectratio]{Logos/cnpq.pdf} &
+          \hspace{0.18cm}
+          \includegraphics[height=0.58cm,keepaspectratio]{Logos/cba2026.pdf} &
+          \hspace{0.18cm}
+          \includegraphics[height=0.52cm,keepaspectratio]{Figuras/motorola_trim.png} &
+          \hspace{0.18cm}
+          \includegraphics[height=0.52cm,keepaspectratio]{Figuras/logo_eldorado_trim.png} &
+          \hspace{0.18cm}
+          \includegraphics[height=0.58cm,keepaspectratio]{Figuras/ufam_present.png} &
+          \hspace{0.18cm}
+          \includegraphics[height=0.58cm,keepaspectratio]{Figuras/navir_transparent.png}
+        \end{tabular}
+      };
+    \end{tikzpicture}
+
+    \vspace{0.35cm}
+
+    {\footnotesize\bfseries Apoio Financeiro:} {\footnotesize Instituto de Pesquisas Eldorado $\bullet$ Motorola Mobility $\bullet$ Flextronics $\bullet$ Mob4Ai (Acordo 008/2024)}\\[3pt]
+    {\footnotesize\bfseries Instituições:} {\footnotesize UFAM $\bullet$ PPGCTS $\bullet$ ICET/Itacoatiara $\bullet$ Laboratório NAVIR}
+
+    \vspace{0.45cm}
+
+    {\LARGE\color{CBAPurple}\bfseries Muito Obrigado! / Perguntas \& Discussão}
+
+    \vspace{0.20cm}
+    {\small\color{gray}\textbf{Contato:} \texttt{\{felipe.assuncao, alfredo.barros, vandermi\}@ufam.edu.br}}
+  \end{center}
+\end{frame}
+
+% =========================================================================
+% SEÇÃO DE SLIDES DE BACKUP TÉCNICO
+% =========================================================================
+\appendix
+
+\begin{frame}[plain]
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\Huge Slides de Backup Técnico\par
+    \vspace{0.2cm}
+    \normalsize Material Suplementar para a Sessão de Perguntas \& Discussão
+  \end{beamercolorbox}
+  \vfill
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 1: Estatísticas do Dataset do Lago Serpa
+% -------------------------------------------------------------
+\begin{frame}{Backup 1: Estatísticas Descritivas do Dataset ($N=60$)}
+  \footnotesize
+  \centering
+  \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Variável} & \textbf{Média} & \textbf{Desvio Padrão} & \textbf{Mínimo} & \textbf{Máximo} & \textbf{Tipo} \\
+    \midrule
+    Temperatura ($^\circ$C) & 29.85 & 1.12 & 27.50 & 32.10 & Entrada \\
+    Condutividade ($\mu$S/cm) & 42.15 & 8.45 & 25.10 & 68.20 & Entrada \\
+    TDS (ppm) & 21.08 & 4.23 & 12.55 & 34.10 & Entrada \\
+    Salinidade (PSU) & 0.021 & 0.005 & 0.010 & 0.035 & Entrada \\
+    Latitude / Longitude & -- & -- & -- & -- & Entrada (UTM 21S) \\
+    \midrule
+    \textbf{pH} & 6.42 & 0.58 & 5.10 & 7.60 & \textbf{Alvo (Target)} \\
+    \textbf{Oxigênio Dissolvido (mg/L)} & 5.12 & 0.42 & 4.20 & 6.10 & \textbf{Alvo (Target)} \\
+    \textbf{Turbidez (NTU)} & 14.85 & 6.72 & 3.20 & 38.50 & \textbf{Alvo (Target)} \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 2: Matriz de Correlação das Entradas e Alvos
+% -------------------------------------------------------------
+\begin{frame}{Backup 2: Matriz de Correlação das Variáveis}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\linewidth}
+      \begin{block}{Correlações Físico-Químicas}
+        \scriptsize
+        $\bullet$ \textbf{TDS e Condutividade:} Correlação quase perfeita ($r = 0{,}99$), esperada pela física da água.\\
+        $\bullet$ \textbf{pH e Temperatura:} Correlação moderada positiva ($r = 0{,}62$).\\
+        $\bullet$ \textbf{Turbidez:} Fortemente correlacionada com a posição espacial (escoamento de margens).
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.50\linewidth}
+      \begin{alertblock}{Diagnóstico de Dificuldade do Oxigênio (OD)}
+        \scriptsize
+        O Oxigênio Dissolvido apresentou correlação fraca com todas as variáveis ($|r| < 0{,}20$). Isso explica o $R^2$ negativo em todos os modelos avaliados (Random Forest, LSTM, SNN, MLP). A limitação reside no conjunto de variáveis de entrada e não na arquitetura da rede neural.
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 3: Ablação do Aumento Gaussiano
+% -------------------------------------------------------------
+\begin{frame}{Backup 3: Ablação do Aumento Gaussiano}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.52\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.5cm,keepaspectratio]{augmentation_ablation_bar.png}
+    \end{column}
+
+    \begin{column}{0.46\linewidth}
+      \textbf{Impacto da Expansão ($\times 10$ com $\sigma=0{,}01$):}
+      \begin{itemize}\small
+        \item \textbf{Redução de MAE Macro:} de $0{,}496 \pm 0{,}060$ para $0{,}483 \pm 0{,}075$ (ganho de $2{,}53\%$).
+        \item \textbf{Estabilização de Gradiente:} Previne sobreajuste (\textit{overfitting}) severo em dados de 60 amostras.
+        \item \textbf{Ganho em Turbidez:} Redução de MAE de $1{,}139 \to 1{,}102$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 4: Dinâmica Neural CUBA-LIF e Surrogate Gradient
+% -------------------------------------------------------------
+\begin{frame}{Backup 4: Formulação Matemática do Neurônio LIF}
+  \footnotesize
+  \begin{block}{Equações de Membrana em Tempo Discreto}
+    \begin{equation*}
+      U_i[t] = \beta U_i[t-1] + (1 - \beta) I_i[t] - S_i[t-1] \theta
+    \end{equation*}
+    \begin{equation*}
+      S_i[t] = \Theta(U_i[t] - \theta), \quad \text{onde } \Theta(x) = \begin{cases} 1, & x \ge 0 \\ 0, & x < 0 \end{cases}
+    \end{equation*}
+  \end{block}
+  \begin{exampleblock}{Gradiente Substituto (Surrogate Gradient - Fast Sigmoid)}
+    \begin{equation*}
+      \sigma'(x) = \frac{1}{(1 + k |x|)^2}, \quad k = 25
+    \end{equation*}
+    Permite a retropropagação através do tempo (BPTT) contornando a não-diferenciabilidade do disparo.
+  \end{exampleblock}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 5: Curva de Perda e Treinamento
+% -------------------------------------------------------------
+\begin{frame}{Backup 5: Dinâmica de Convergência do Treinamento}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.5cm,keepaspectratio]{loss_curve_multi.png}
+    \end{column}
+
+    \begin{column}{0.44\linewidth}
+      \begin{block}{Convergência Estável}
+        \small
+        $\bullet$ Otimizador Adam com taxa de aprendizado escalonada ($10^{-3} \to 10^{-4}$).\\
+        $\bullet$ Perda ponderada com pesos $(0{,}20,\,0{,}20,\,0{,}60)$ para balancear a magnitude de erro da turbidez.\\
+        $\bullet$ Convergência em aproximadamente 100 épocas.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 6: Varredura de Pesos da Perda (Loss Weights Sweep)
+% -------------------------------------------------------------
+\begin{frame}{Backup 6: Varredura de Pesos na Perda Multitarget}
+  \footnotesize
+  \centering
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Pesos (pH, OD, TURB)} & \textbf{MAE Macro} & \textbf{MAE TURB} & \textbf{$R^2$ Macro} \\
+    \midrule
+    $\mathbf{(0{,}20,\,0{,}20,\,0{,}60)}$ & $\mathbf{0{,}447}$ & $1{,}012$ & $\mathbf{0{,}291}$ \\
+    $(0{,}15,\,0{,}15,\,0{,}70)$ & $0{,}452$ & $1{,}022$ & $0{,}289$ \\
+    $(0{,}10,\,0{,}10,\,0{,}80)$ & $0{,}454$ & $1{,}028$ & $0{,}288$ \\
+    $(0{,}05,\,0{,}15,\,0{,}80)$ & $0{,}448$ & $\mathbf{1{,}006}$ & $0{,}280$ \\
+    \bottomrule
+  \end{tabular}
+  \vspace{0.3cm}
+  \begin{block}{Conclusão do Trade-off}
+    \scriptsize
+    A configuração $(0{,}20,\,0{,}20,\,0{,}60)$ fornece o melhor equilíbrio entre ajuste global ($R^2=0{,}291$) e precisão individual.
+  \end{block}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 7: Testes Estatísticos Não-Paramétricos Detalhados
+% -------------------------------------------------------------
+\begin{frame}{Backup 7: Testes de Wilcoxon e Friedman ($n=10$)}
+  \small
+  \begin{block}{Teste Pareado de Wilcoxon (SNN vs Modelos)}
+    \begin{itemize}\footnotesize
+      \item \textbf{SNN vs Random Forest:} $\text{MAE } p=0{,}064 \mid \text{RMSE } p=0{,}846 \mid R^2\text{ } p=0{,}922$ (sem diferença estatística).
+      \item \textbf{SNN vs LSTM:} $\text{MAE } p=0{,}105 \mid \text{RMSE } p=0{,}131 \mid R^2\text{ } p=0{,}232$ (sem diferença estatística).
+      \item \textbf{SNN vs MLP:} Supera com $p = 0{,}002$ em todas as métricas.
+    \end{itemize}
+  \end{block}
+  \vspace{0.15cm}
+  \begin{exampleblock}{Teste de Friedman Global}
+    \footnotesize
+    $\chi^2(3) = 19{,}56$, $p < 0{,}001$, com postos médios: Random Forest (1.7), LSTM (1.9), SNN (2.4) e MLP (4.0). A diferença global é puxada pela fraqueza da MLP.
+  \end{exampleblock}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 8: Trade-off Velocidade vs Energia
+% -------------------------------------------------------------
+\begin{frame}{Backup 8: Análise de Trade-off Throughput vs Energia}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.5cm,keepaspectratio]{speed_energy_tradeoff.png}
+    \end{column}
+
+    \begin{column}{0.44\linewidth}
+      \begin{block}{Dinâmica de Potência}
+        \scriptsize
+        $\bullet$ Maior throughput não garante menor energia por inferência.\\
+        $\bullet$ O Raspberry Pi 4B atinge equilíbrio ideal para gateways de campo.\\
+        $\bullet$ O ESP32 é perfeito para nós alimentados por painel solar operando em rajadas (\textit{duty-cycling}).
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 9: Comparativo Radar Multidirecional
+% -------------------------------------------------------------
+\begin{frame}{Backup 9: Comparativo Multicritério das Plataformas}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.54\linewidth}
+      \centering
+      \includegraphics[width=0.99\linewidth,height=4.5cm,keepaspectratio]{snn_platform_radar.png}
+    \end{column}
+
+    \begin{column}{0.44\linewidth}
+      \begin{block}{Critérios Avaliados}
+        \scriptsize
+        $\bullet$ Custo de Hardware\\
+        $\bullet$ Eficiência Energética ($\mu$J/inf)\\
+        $\bullet$ Facilidade de Deploy em Campo\\
+        $\bullet$ Throughput Máximo
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 10: Detalhamento do Índice de Poluição
+% -------------------------------------------------------------
+\begin{frame}{Backup 10: Formulação do Índice de Poluição da Água}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{0.48\linewidth}
+      \centering
+      \includegraphics[width=0.98\linewidth,height=4.2cm,keepaspectratio]{pollution_scatter.png}\\[2pt]
+      {\scriptsize\color{gray}Índice pontual normalizado $[0, 1]$.}
+    \end{column}
+
+    \begin{column}{0.50\linewidth}
+      \begin{block}{Formulação do Índice Sintético}
+        \scriptsize
+        O índice agrega os desvios normalizados das variáveis em relação aos padrões de qualidade ambiental:
+        \begin{equation*}
+          I_p = w_1 \cdot \text{dev}(\text{pH}) + w_2 \cdot (1 - \text{norm}(\text{OD})) + w_3 \cdot \text{norm}(\text{TURB})
+        \end{equation*}
+        Valores próximos a $1{,}0$ indicam zonas de maior degradação hídrica.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% -------------------------------------------------------------
+% BACKUP 11: Referências Bibliográficas
+% -------------------------------------------------------------
+\begin{frame}{Backup 11: Referências Bibliográficas}
+  \tiny
+  \begin{thebibliography}{99}
+    \bibitem{davies2018} M. Davies et al., ``Loihi: A neuromorphic manycore processor with on-chip learning,'' \textit{IEEE Micro}, vol. 38, no. 1, pp. 82--99, 2018.
+    \bibitem{frenkel2023} C. Frenkel et al., ``Bottom-up and top-down approaches for the design of neuromorphic processing systems,'' \textit{IEEE TCAS-I}, 2023.
+    \bibitem{tawny2020} T. T. Tawny et al., ``Water quality prediction using machine learning techniques,'' \textit{IEEE Access}, 2020.
+    \bibitem{zenke2021} F. Zenke and E. Neftci, ``BrainScaleS and Spiking Neural Networks for Edge AI,'' \textit{Frontiers in Neuroscience}, 2021.
+  \end{thebibliography}
+\end{frame}
+
+\end{document}

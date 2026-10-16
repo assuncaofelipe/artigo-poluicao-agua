@@ -1,0 +1,469 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{top=2.2cm, bottom=2.2cm, left=2.2cm, right=2.2cm, headheight=14pt}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+% Paleta Oficial CBA 2026
+\definecolor{CBAPurple}{HTML}{7040B8}
+\definecolor{CBAMagenta}{HTML}{D81B70}
+\definecolor{CBAOrange}{HTML}{F28C38}
+\definecolor{CBAPetrol}{HTML}{245B73}
+\definecolor{CBAGraphite}{HTML}{303030}
+\definecolor{CBALightPurple}{HTML}{F3EEF9}
+\definecolor{CBALightOrange}{HTML}{FFF4EB}
+\definecolor{CBALightPetrol}{HTML}{EAF3F7}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=CBAPurple,
+    citecolor=CBAPetrol,
+    urlcolor=CBAMagenta
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\color{CBAGraphite}\small\itshape Guia de Treinamento \& Q\&A --- CBA 2026}
+\lhead{\color{CBAPurple}\bfseries XXVI Congresso Brasileiro de Automática}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+
+\titleformat{\section}{\color{CBAPurple}\Large\bfseries}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}{\color{CBAPetrol}\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\color{CBAOrange}\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% Estilos de Caixas
+\newtcolorbox{slidebox}[2][]{
+  enhanced,
+  colback=CBALightPurple,
+  colframe=CBAPurple,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=CBAPurple,
+  title={Slide #2: #1},
+  rounded corners,
+  boxrule=1pt,
+  breakable,
+  before skip=10pt,
+  after skip=10pt
+}
+
+\newtcolorbox{qnabox}[2][]{
+  enhanced,
+  colback=CBALightPetrol,
+  colframe=CBAPetrol,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=CBAPetrol,
+  title={Pergunta da Banca #2: #1},
+  rounded corners,
+  boxrule=1pt,
+  breakable,
+  before skip=10pt,
+  after skip=10pt
+}
+
+\newtcolorbox{tipbox}[1][Dica de Apresentação]{
+  enhanced,
+  colback=CBALightOrange,
+  colframe=CBAOrange,
+  fonttitle=\bfseries\color{white},
+  coltitle=white,
+  colbacktitle=CBAOrange,
+  title={#1},
+  rounded corners,
+  boxrule=0.8pt,
+  breakable,
+  before skip=6pt,
+  after skip=6pt
+}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+    \vspace*{0.5cm}
+    {\Huge\color{CBAPurple}\bfseries MANUAL COMPLETO DE TREINAMENTO ORAL\\E DEFESA EM BANCA EXAMINADORA}\\[0.4cm]
+    {\Large\color{CBAPetrol}\bfseries XXVI Congresso Brasileiro de Automática (CBA 2026)}\\[0.8cm]
+    
+    \begin{tcolorbox}[colback=CBALightPurple,colframe=CBAPurple,arc=4mm,width=0.95\linewidth]
+        \centering\large
+        \textbf{Trabalho:}\\[0.2cm]
+        \textbf{\textit{Previsão da Qualidade da Água: Inferência Neuromórfica Multimodal na Borda com Eficiência Energética e Operação Offline}}\\[0.3cm]
+        \normalsize
+        \textbf{Autores:} Felipe V. Assunção, Alfredo P. O. Barros, Reyner Alegria, Elton Araújo, Débora Raimundo, Alex Ramos, Vicente Lucena Jr., Vandermi J. Silva\\
+        \textbf{Instituições:} UFAM (ICET / NAVIR) $\bullet$ Instituto de Pesquisas Eldorado $\bullet$ PPGCTS\\
+        \textbf{Apoio:} Motorola Mobility $\bullet$ Flextronics da Amazônia $\bullet$ Mob4Ai $\bullet$ CAPES $\bullet$ CNPq
+    \end{tcolorbox}
+
+    \vspace{0.8cm}
+
+    \begin{minipage}{0.88\linewidth}
+        \begin{tcolorbox}[colback=white,colframe=CBAGraphite,title=\textbf{Parâmetros Oficiais da Sessão Técnica},boxrule=0.8pt]
+            \begin{itemize}[leftmargin=1.5em,itemsep=2pt]
+                \item \textbf{Tempo Total de Sessão:} 15 minutos improrrogáveis.
+                \item \textbf{Tempo de Fala Recomendado:} 12:00 a 12:45 minutos (margem de segurança).
+                \item \textbf{Tempo para Perguntas da Banca:} 2:15 a 3:00 minutos.
+                \item \textbf{Estrutura dos Slides:} 14 Slides Principais + 12 Slides de Backup Técnico.
+                \item \textbf{Meta:} Apresentação fluida, defensável, precisa numericamente e com respostas prontas ancoradas nos slides de backup.
+            \end{itemize}
+        \end{tcolorbox}
+    \end{minipage}
+
+    \vfill
+    {\small\color{CBAGraphite} Manaus / CBA 2026 --- Documento de Preparação e Simulação de Banca}
+\end{center}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ==============================================================================
+\section{Planejamento e Cronometria Slide a Slide (14 Slides Principais)}
+% ==============================================================================
+
+\begin{slidebox}[Capa Oficial CBA 2026]{1}
+\textbf{Tempo Alvo:} 0:00 -- 0:20 min (20s)\\[3pt]
+\textbf{Objetivo do Slide:} Cumprimentar a banca, contextualizar a afiliação institucional e introduzir o tema com firmeza.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Bom dia a todos os membros da banca examinadora, colegas pesquisadores e participantes do XXVI Congresso Brasileiro de Automática. Apresento o trabalho intitulado `Previsão da Qualidade da Água: Inferência Neuromórfica Multimodal na Borda com Eficiência Energética e Operação Offline', fruto de uma colaboração entre a Universidade Federal do Amazonas (UFAM/ICET), o Programa de Pós-Graduação em Ciência, Tecnologia e Saúde (PPGCTS), o Instituto de Pesquisas Eldorado e o projeto Mob4Ai.''}
+\end{slidebox}
+
+\begin{slidebox}[Sumário Executivo]{2}
+\textbf{Tempo Alvo:} 0:20 -- 0:35 min (15s)\\[3pt]
+\textbf{Objetivo do Slide:} Orientar visualmente a audiência sobre a estrutura da apresentação em 3 blocos lógicos.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Nossa apresentação está dividida em três blocos objetivos: iniciaremos com a Motivação e a Proposta de inferência neuromórfica em borda; em seguida, detalharemos a Metodologia, a coleta em campo no Lago Serpa e o setup experimental; e encerraremos com a análise dos Resultados Preditivos, Mapeamento Espacial e Telemetria Energética.''}
+\end{slidebox}
+
+\begin{slidebox}[Contexto, Problema e Pergunta Central]{3}
+\textbf{Tempo Alvo:} 0:35 -- 1:25 min (50s)\\[3pt]
+\textbf{Objetivo do Slide:} Contextualizar o desafio do monitoramento ambiental remoto na Amazônia e a limitação de nuvem/energia.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Na região Amazônica, o monitoramento ambiental de bacias hidrográficas remotas enfrenta três gargalos críticos: isolamento geográfico, ausência de conectividade celular/satélite e escassez de infraestrutura energética. Depender de processamento em nuvem é inviável em campo. Diante disso, formulamos nossa pergunta central de pesquisa: `É possível realizar inferência preditiva multimodal da qualidade da água de forma 100\% offline em dispositivos de borda heterogêneos, garantindo estabilidade e baixo consumo energético?'}
+\end{slidebox}
+
+\begin{slidebox}[Lacuna na Literatura e Desafios de Pesquisa]{4}
+\textbf{Tempo Alvo:} 1:25 -- 2:20 min (55s)\\[3pt]
+\textbf{Objetivo do Slide:} Apresentar as lacunas da literatura citando os autores-chave e os três desafios centrais de engenharia.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Na literatura, abordagens clássicas de qualidade da água revisadas por Yan et al., Liu et al. e Pan et al. assumem servidores centralizados ou nuvem, inviáveis em corpos hídricos amazônicos. Por outro lado, soluções de TinyML convencional como em Rosero et al. e Alshareeda et al. focam em tarefas univariadas com MLPs que sofrem instabilidade sob poucos dados. Além disso, estudos neuromórficos ambientais como Aral et al. e Azadi et al. mantêm-se em nível conceitual ou industrial sem deploy prático em campo. Nossos desafios centrais são: viabilizar multimodalidade offline, estabilidade preditiva em small-data e eficiência energética multiplataforma.''}
+\end{slidebox}
+
+\begin{slidebox}[Coleta de Dados e Aumento Controlado]{5}
+\textbf{Tempo Alvo:} 2:20 -- 3:10 min (50s)\\[3pt]
+\textbf{Objetivo do Slide:} Apresentar a campanha no Lago Serpa ($N=60$) e a estratégia de aumento com ruído gaussiano.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Coletamos 60 amostras georreferenciadas in situ no Lago Serpa, em Itacoatiara-AM, utilizando sonda multiparâmetros. Como entradas, utilizamos temperatura, condutividade, TDS, salinidade e coordenadas geográficas. Para superar a escassez de dados sem introduzir viés artificial, aplicamos um aumento gaussiano controlado ($\times 10$, $\sigma = 0{,}01$), expandindo o suporte de treino para 600 amostras, o que reduziu o MAE macro em 2,53\% e estabilizou os gradientes de treino.''}
+\end{slidebox}
+
+\begin{slidebox}[Arquitetura Multimodal SNN Ponta a Ponta]{6}
+\textbf{Tempo Alvo:} 3:10 -- 4:15 min (65s)\\[3pt]
+\textbf{Objetivo do Slide:} Explicar a codificação em spikes, os neurônios LIF e a saída multimodal contínua.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Nossa arquitetura neuromórfica recebe as 6 variáveis normalizadas e as converte em trens de spikes temporais ao longo de 16 a 32 passos de tempo. A camada oculta emprega neurônios Leaky Integrate-and-Fire (LIF) treinados via Backpropagation Through Time com gradiente substituto fast-sigmoid. A camada de saída integra as voltagens de membrana para produzir a regressão contínua simultânea dos três alvos de qualidade da água.''}
+\end{slidebox}
+
+\begin{slidebox}[Dispositivos de Borda e Setup de Telemetria]{7}
+\textbf{Tempo Alvo:} 4:15 -- 5:15 min (60s)\\[3pt]
+\textbf{Objetivo do Slide:} Apresentar o hardware heterogêneo (ESP32, RPi 4B, Android) e o circuito de medição INA219.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Para avaliar o deploy prático, implementamos o modelo em três classes de hardware: o microcontrolador ESP32 em MicroPython, o computador em placa Raspberry Pi 4B e três dispositivos móveis Android. A potência física foi mensurada com sensor de shunt INA219, medindo estritamente a potência incremental entre repouso e carga de inferência ($\Delta P$) para calcular a energia real por inferência em milijoules.''}
+\end{slidebox}
+
+\begin{slidebox}[Desempenho Preditivo e Significância Estatística]{8}
+\textbf{Tempo Alvo:} 5:15 -- 6:30 min (75s)\\[3pt]
+\textbf{Objetivo do Slide:} Comparar SNN com Random Forest, LSTM e MLP em 10 seeds com testes de Wilcoxon/Friedman.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``No benchmark multi-seed com 10 sementes independentes, a SNN proposta atingiu MAE macro de $0{,}447 \pm 0{,}064$, demonstrando desempenho competitivo com Random Forest ($0{,}409$) e LSTM ($0{,}428$). O teste pareado de Wilcoxon confirmou que não há diferença estatisticamente significativa entre a SNN e Random Forest ($p=0{,}064$) ou LSTM ($p=0{,}105$). Em contrapartida, a SNN superou com folga a MLP clássica ($p=0{,}002$), que falhou em convergir satisfatoriamente no regime de poucos dados.''}
+\end{slidebox}
+
+\begin{slidebox}[Comportamento Predito vs Real por Variável]{9}
+\textbf{Tempo Alvo:} 6:30 -- 7:40 min (70s)\\[3pt]
+\textbf{Objetivo do Slide:} Analisar individualmente pH ($R^2=0{,}67$), Turbidez ($R^2=0{,}36$) e a dificuldade inerente do OD.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Analisando as variáveis individualmente, o pH apresentou excelente aderência à linha de identidade com $R^2 = 0{,}670$ e baixo erro ($0{,}125$). A turbidez obteve $R^2 = 0{,}364$. Já o Oxigênio Dissolvido (OD), embora com erro absoluto baixo ($0{,}204$), apresentou baixa variância explicada em todos os modelos avaliados da literatura. A análise de correlação provou que o OD é fracamente correlacionado com as entradas disponíveis, tratando-se de uma característica físico-química da água e não de uma falha do modelo neural.''}
+\end{slidebox}
+
+\begin{slidebox}[Interpolação Espacial e Índice de Poluição]{10}
+\textbf{Tempo Alvo:} 7:40 -- 8:50 min (70s)\\[3pt]
+\textbf{Objetivo do Slide:} Apresentar os mapas IDW contínuos e o Índice Composto de Poluição para tomada de decisão.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``A partir das predições pontuais, geramos superfícies espaciais contínuas utilizando Interpolação por Inverso da Distância (IDW) sobre o mapa do Lago Serpa. Combinando as variáveis preditas, formulamos um Índice Composto de Poluição normalizado de 0 a 1. Esse mapa permite aos gestores ambientais identificar rapidamente microzonas críticas com alta turbidez e degradação da água para fiscalização prioritária em campo.''}
+\end{slidebox}
+
+\begin{slidebox}[Benchmarking Energético e Throughput]{11}
+\textbf{Tempo Alvo:} 8:50 -- 10:05 min (75s)\\[3pt]
+\textbf{Objetivo do Slide:} Mostrar os 11,2 mJ no ESP32, 0,051 mJ no RPi 4B e 0,0028 mJ no Android C.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``A telemetria física revelou perfis complementares: o ESP32 atinge 5 inferências por segundo consumindo 11,20 mJ por inferência, sendo ideal para estações remotas autônomas operando em regime de sono intermitente. O Raspberry Pi 4B atinge mais de 4.600 inferências/s com apenas 0,051 mJ/inf. Nos smartphones Android, a eficiência atingiu até 0,0028 mJ por previsão com vazão superior a 16.000 amostras/s, viabilizando diagnósticos instantâneos no celular do agente ambiental.''}
+\end{slidebox}
+
+\begin{slidebox}[Discussão, Posicionamento no Estado da Arte e Contribuições]{12}
+\textbf{Tempo Alvo:} 10:05 -- 10:55 min (50s)\\[3pt]
+\textbf{Objetivo do Slide:} Posicionar a contribuição frente ao estado da arte citando os autores-chave e consolidar as 4 contribuições centrais.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Posicionamos nosso trabalho frente à literatura: superamos a dependência de conectividade apontada por Yan et al., a instabilidade de MLPs sob small-data descrita por Rosero et al., e avançamos além dos estudos conceituais de Aral et al. e Azadi et al. ao realizar a implantação real em campo. Consolidamos quatro contribuições: (1) pipeline multimodal SNN ponta a ponta; (2) protocolo estatístico rigoroso com aumento gaussiano; (3) sensoriamento espacial contínuo com IDW e Índice de Poluição; e (4) benchmarking de energia e potência física em três classes de hardware de borda.''}
+\end{slidebox}
+
+\begin{slidebox}[Conclusões e Trabalhos Futuros]{13}
+\textbf{Tempo Alvo:} 10:55 -- 11:50 min (55s)\\[3pt]
+\textbf{Objetivo do Slide:} Resumir os 4 pilares concluídos e os próximos passos de pesquisa.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Concluímos comprovando a viabilidade de SNNs multimodais na qualidade da água, operação 100\% offline em hardware heterogêneo, mapeamento contínuo de poluição e alta resiliência a poucos dados com aumento gaussiano. Para trabalhos futuros, implementaremos a SNN em processadores neuromórficos dedicados como o Xylo ou Loihi 2 e realizaremos coletas sazonais na seca e cheia dos rios.''}
+\end{slidebox}
+
+\begin{slidebox}[Referências Bibliográficas Selecionadas]{14}
+\textbf{Tempo Alvo:} 11:50 -- 12:15 min (25s)\\[3pt]
+\textbf{Objetivo do Slide:} Apresentar as referências fundamentais do trabalho (Aral et al., Azadi et al., Yan et al., Huijbregts et al., Alshareeda et al., Dataset Mendeley).\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Apresentamos as referências que fundamentam nosso trabalho, destacando os estudos de Edge AI neuromórfica de Aral et al., inferência SNN embarcada de Azadi et al. e revisões sistemáticas de Yan et al., além do nosso dataset público disponibilizado no Mendeley Data.''}
+\end{slidebox}
+
+\begin{slidebox}[Agradecimentos Oficiais e Encerramento]{15}
+\textbf{Tempo Alvo:} 12:15 -- 12:40 min (25s)\\[3pt]
+\textbf{Objetivo do Slide:} Agradecer aos órgãos de fomento, parceiros e passar a palavra à banca.\\[3pt]
+\textbf{Fala Sugerida:}\\
+\textit{``Agradecemos ao Instituto de Pesquisas Eldorado, Motorola Mobility, Flextronics da Amazônia, projeto Mob4Ai, CAPES, CNPq e UFAM pelo suporte financeiro e institucional. Muito obrigado pela atenção e estamos abertos para perguntas e comentários da banca examinadora.''}
+\end{slidebox}
+
+\newpage
+% ==============================================================================
+\section{Banco Completo de 15 Perguntas Prováveis da Banca (Q\&A)}
+% ==============================================================================
+
+\begin{qnabox}[Por que usar uma SNN para regressão e não o Random Forest que obteve MAE menor?]{1}
+\textbf{Pergunta Provável:}\\
+\textit{``O Random Forest obteve MAE de 0,409 e a SNN obteve 0,447. Por que adotar uma Rede Neural de Spikes se o Random Forest foi ligeiramente superior?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Excelente pergunta, professor. Primeiramente, o teste não-paramétrico pareado de Wilcoxon demonstrou que a diferença entre o Random Forest e a SNN não possui significância estatística ($p = 0{,}064$ para MAE, $p = 0{,}846$ para RMSE e $p = 0{,}922$ para $R^2$). Em segundo lugar, o Random Forest requer armazenamento em memória de centenas de árvores de decisão e não se beneficia de processamento assíncrono orientado a eventos (\textit{event-driven}). A SNN viabiliza a migração direta para processadores neuromórficos de silício de ultrabaixo consumo (como chips neuromórficos em mW ou sub-mW), além de produzir saídas multimodais simultâneas em uma única passada temporal contínua.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 8} (Testes Estatísticos de Wilcoxon) e \textbf{Backup 10} (Radar Multicritério).
+\end{qnabox}
+
+\begin{qnabox}[Por que o Oxigênio Dissolvido (OD) teve $R^2$ negativo em todos os modelos?]{2}
+\textbf{Pergunta Provável:}\\
+\textit{``O modelo falhou na previsão do Oxigênio Dissolvido? Por que o $R^2$ do OD foi negativo em todos os experimentos?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``O $R^2$ negativo do OD decorre da física da água e das variáveis de entrada disponíveis, não de uma falha do modelo. Como demonstramos na matriz de correlação (Backup 3), o Oxigênio Dissolvido possui correlação linear muito fraca com condutividade, TDS e salinidade ($|r| < 0{,}20$). Além disso, a variância do OD no conjunto coletado foi muito baixa (média de 5,12 mg/L com desvio padrão de apenas 0,42). Isso faz com que o erro absoluto médio seja bem pequeno ($\text{MAE} = 0{,}204\text{ mg/L}$), mas a variância explicada ($R^2$) fique negativa quando comparada à média amostral. Tanto o Random Forest ($R^2 = -0{,}063$), a LSTM ($R^2 = -0{,}154$) quanto a SNN ($R^2 = -0{,}162$) apresentaram o mesmo comportamento, provando que é uma característica do conjunto de dados e não da arquitetura neuromórfica.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 2} (Estatísticas do Dataset) e \textbf{Backup 3} (Matriz de Correlação).
+\end{qnabox}
+
+\begin{qnabox}[O aumento de dados com ruído gaussiano ($\times 10$) não gera overfitting ou dados irreais?]{3}
+\textbf{Pergunta Provável:}\\
+\textit{``Vocês expandiram 60 amostras para 600 usando ruído gaussiano. Isso não induz vazamento de dados ou sobreajuste?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Não, professor, porque o aumento gaussiano foi aplicado exclusivamente sobre o conjunto de treinamento em cada iteração, com o conjunto de teste permanecendo 100\% isolado e com dados estritamente reais de campo. O ruído injetado teve desvio de apenas $\sigma = 0{,}01$ nas variáveis normalizadas, o que simula a incerteza de medição intrínseca dos sensores eletroquímicos da sonda multiparâmetros. O estudo de ablação (Backup 4) provou que o aumento estabilizou a retropropagação através do tempo (BPTT), reduzindo o MAE macro de 0,496 para 0,483 e evitando a divergência de pesos que afetou fortemente a MLP clássica.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 4} (Ablação do Aumento Gaussiano).
+\end{qnabox}
+
+\begin{qnabox}[Como foi feita a medição de energia física com o sensor INA219?]{4}
+\textbf{Pergunta Provável:}\\
+\textit{``Como vocês garantiram que o consumo medido correspondia apenas à execução da rede neural?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Adotamos o protocolo rigoroso de potência incremental ($\Delta P$). Primeiramente, medimos a potência do sistema em repouso ($P_{\text{idle}}$) com o sistema operacional e periféricos ativos, mas sem execução de inferência. Em seguida, medimos a potência média sob carga contínua de inferência ($P_{\text{load}}$). A potência atribuível estritamente ao processamento da SNN é $\Delta P = P_{\text{load}} - P_{\text{idle}}$. Dividindo $\Delta P$ pela taxa de transferência (amostras por segundo), obtivemos a energia por inferência $E = \Delta P / \text{Throughput}$ em mJ/inf.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Slide 7} (Setup de Telemetria) e \textbf{Slide 11} (Benchmarking Energético).
+\end{qnabox}
+
+\begin{qnabox}[Por que o ESP32 teve 11,2 mJ/inf enquanto o Android C teve 0,0028 mJ/inf?]{5}
+\textbf{Pergunta Provável:}\\
+\textit{``Por que o ESP32 consumiu mais energia por inferência do que um smartphone potente?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``A energia por inferência depende diretamente do tempo de execução ($E = P \cdot \Delta t$). O ESP32 possui um processador Xtensa de 240 MHz rodando MicroPython sem aceleração vetorial, executando 5 inferências por segundo ($\Delta t = 200\text{ ms}$). Já o smartphone Android C possui processador octa-core moderno com instruções SIMD/NEON rodando a inferência em fração de microssegundos ($> 16.000\text{ inf/s}$). Contudo, em potência total de repouso, o ESP32 consome frações de miliwatts em modo de sono (\textit{deep sleep}), sendo o único viável para boias alimentadas por pequenos painéis solares onde se executa apenas uma medição a cada 15 minutos.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 9} (Trade-off Velocidade vs Energia).
+\end{qnabox}
+
+\begin{qnabox}[Como funciona a conversão das entradas numéricas em spikes?]{6}
+\textbf{Pergunta Provável:}\\
+\textit{``Como variáveis físico-químicas contínuas como pH e temperatura são codificadas em spikes na SNN?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Utilizamos a codificação por corrente direta com integração temporal em passos discretos ($T=16\text{--}32$). As entradas contínuas são normalizadas em $[0, 1]$ e injetadas como correntes de entrada contínuas $I_i[t]$ na primeira camada de neurônios LIF. Ao longo da janela temporal, essas correntes elevam o potencial de membrana até ultrapassar o limiar de disparo $\theta$, gerando trens de spikes com taxas e tempos de disparo proporcionais à intensidade físico-química de cada parâmetro.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 5} (Dinâmica Neural CUBA-LIF e BPTT).
+\end{qnabox}
+
+\begin{qnabox}[Por que a MLP clássica falhou com $R^2 = -5{,}46$?]{7}
+\textbf{Pergunta Provável:}\\
+\textit{``Por que a rede MLP convencional teve um desempenho tão degradado em relação aos outros modelos?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``As redes neurais artificiais densas (MLPs) sofrem com saturação de gradientes e forte sobreajuste quando treinadas em espaços de dados pequenos (\textit{small-data regime}) com saídas multivariadas de escalas muito distintas. A SNN, por outro lado, possui uma dinâmica recorrente intrínseca devido ao decaimento temporal de membrana $\beta$ dos neurônios LIF, o que funciona como uma regularização natural durante o treinamento via BPTT, tornando-a muito mais resiliente à variabilidade amostral.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 6} (Curva de Perda) e \textbf{Backup 8} (Wilcoxon Pareado).
+\end{qnabox}
+
+\begin{qnabox}[Como foi calculada a interpolação espacial IDW e qual seu alcance?]{8}
+\textbf{Pergunta Provável:}\\
+\textit{``Qual o método de interpolação espacial utilizado e por que não usar Krigagem?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Utilizamos a Ponderação pelo Inverso da Distância (IDW) com expoente de potência $p=2$, que atribui pesos proporcionais ao inverso do quadrado da distância euclidiana em coordenadas UTM 21S. Optamos pelo IDW por ser computacionalmente determinístico e extremamente leve para execução direta em dispositivos de borda ou navegadores sem conexão, enquanto a Krigagem exige ajuste de variogramas teóricos que demandam centenas de pontos para estabilidade estatística.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Slide 10} (Superfícies IDW) e \textbf{Backup 11} (Índice de Poluição).
+\end{qnabox}
+
+\begin{qnabox}[Como o Índice Composto de Poluição foi calibrado e normalizado?]{9}
+\textbf{Pergunta Provável:}\\
+\textit{``Qual a fundamentação matemática do Índice de Poluição apresentado nos mapas?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``O índice composto agrega os desvios normalizados das três variáveis previstas em relação aos limites de referência ambiental do CONAMA para corpos hídricos de Classe 2. A fórmula pondera o desvio do pH em relação à faixa neutra (6,0--9,0), o déficit de oxigênio dissolvido ($1 - \text{norm}(\text{OD})$) e a elevação de turbidez. O valor final é normalizado em $[0, 1]$, onde valores acima de 0,6 indicam áreas prioritárias para intervenção ou coleta de contraprova laboratorial.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 11} (Formulação do Índice de Poluição).
+\end{qnabox}
+
+\begin{qnabox}[O modelo é capaz de generalizar para outros rios ou épocas do ano?]{10}
+\textbf{Pergunta Provável:}\\
+\textit{``Este modelo treinado no Lago Serpa funcionaria no Rio Negro ou no Rio Solimões durante o período de seca?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Essa é uma excelente reflexão sobre transferência de domínio. Como os rios amazônicos possuem águas de características químicas muito distintas (águas pretas ácidas no Rio Negro vs águas brancas ricas em sedimentos no Solimões), o modelo atual é calibrado para a bacia do Lago Serpa. No entanto, a arquitetura multimodal SNN e a metodologia de treino são universais: basta aplicar o mesmo pipeline com novas amostras sazonais via \textit{transfer learning} para adaptar a rede a novas bacias hidrográficas.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Slide 13} (Conclusões e Trabalhos Futuros).
+\end{qnabox}
+
+\begin{qnabox}[Como a rede foi otimizada por Grid Search? Quais hiperparâmetros foram testados?]{11}
+\textbf{Pergunta Provável:}\\
+\textit{``Quais hiperparâmetros da SNN foram otimizados no grid search?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Executamos uma busca sistemática em grade variando: (1) passos de tempo temporais ($T \in \{8, 16, 32\}$); (2) taxa de aprendizado ($\eta \in \{10^{-2}, 10^{-3}, 10^{-4}\}$); (3) constante de decaimento de membrana ($\beta \in \{0{,}80, 0{,}90, 0{,}95\}$); (4) limiar de disparo ($\theta \in \{0{,}5, 1{,}0, 1{,}5\}$); e (5) número de neurônios ocultos ($N_h \in \{32, 64, 128\}$). A melhor combinação com estabilidade multivariada foi $T=16$, $\beta=0{,}90$, $\theta=1{,}0$ e 64 neurônios ocultos.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 5} (Dinâmica CUBA-LIF) e \textbf{Backup 7} (Pesos de Perda).
+\end{qnabox}
+
+\begin{qnabox}[Como o peso da perda multitarget $(0{,}20,\,0{,}20,\,0{,}60)$ foi determinado?]{12}
+\textbf{Pergunta Provável:}\\
+\textit{``Por que deram peso 0,60 para a Turbidez e 0,20 para pH e OD na função de perda?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Porque a turbidez possui uma escala numérica e desvio padrão muito maiores (variando de 3 a 38 NTU) em comparação ao pH (escala unitária) e OD (4 a 6 mg/L). Realizamos uma varredura de pesos na perda (Backup 7) com 10 seeds: a configuração $(0{,}20,\,0{,}20,\,0{,}60)$ evitou que o erro de turbidez monopolizasse o treinamento, alcançando o melhor $R^2$ macro global ($0{,}291$) e menor MAE geral ($0{,}447$).''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 7} (Varredura de Pesos na Perda Multitarget).
+\end{qnabox}
+
+\begin{qnabox}[Qual é a viabilidade de implantar a SNN em um chip neuromórfico dedicado?]{13}
+\textbf{Pergunta Provável:}\\
+\textit{``Vocês testaram em microcontrolador convencional e Android. Qual seria o ganho em um chip como o SynSense Xylo ou Intel Loihi?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``O ganho seria de ordens de magnitude na eficiência energética. No ESP32 e Raspberry Pi, a SNN é simulada em software sobre registradores convencionais de CPU. Em um chip ASIC neuromórfico dedicado (como o SynSense Xylo ou Loihi 2), a dinâmica LIF é executada diretamente no circuito de silício com barramentos assíncronos e memória SRAM local por neurônio. Com base em nossos trabalhos correlatos no laboratório com o Xylo, o consumo cairia da faixa de dezenas de miliwatts para a escala de microwatts ($\mu$W), multiplicando a autonomia de baterias por meses em campo.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Backup 9} (Trade-off Velocidade vs Energia) e \textbf{Slide 13}.
+\end{qnabox}
+
+\begin{qnabox}[Qual o tempo de autonomia de uma boia autônoma com o ESP32 operando o modelo?]{14}
+\textbf{Pergunta Provável:}\\
+\textit{``Com o consumo de 11,2 mJ por inferência no ESP32, quanto tempo duraria uma bateria típica de 2000 mAh?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Em uma estação de monitoramento ambiental em campo, as medições de qualidade da água são discretas (por exemplo, 1 leitura a cada 15 minutos, totalizando 96 inferências por dia). O consumo de processamento da SNN seria de apenas $\approx 1\text{ Joule por dia}$. Em modo de sono profundo (\textit{deep sleep}), o ESP32 drena apenas $10\text{ }\mu\text{A}$ ($0{,}033\text{ mW}$). Portanto, uma bateria comum de lítio 18650 de 2000 mAh (7,4 Wh) suportaria a operação do nó por mais de 12 meses sem recarga, ou indefinidamente com uma pequena célula fotovoltaica de 1W.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Slide 11} (Benchmarking Energético).
+\end{qnabox}
+
+\begin{qnabox}[Como o agente em campo utiliza a aplicação móvel nos smartphones Android?]{15}
+\textbf{Pergunta Provável:}\\
+\textit{``Como foi feita a integração no Android e como o usuário opera a aplicação offline?''}
+
+\vspace{0.2cm}
+\textbf{Resposta Recomendada:}\\
+``Desenvolvemos um aplicativo móvel com motor de inferência embutido em C++/Java que roda 100\% localmente no processador do smartphone sem necessidade de sinal 4G/5G ou Wi-Fi. O agente em campo conecta a sonda ou digita as leituras físico-químicas instantâneas. O aplicativo computa a inferência multimodal em menos de 1 milissegundo ($> 16.000\text{ inf/s}$ no Android C), exibe os valores estimados de pH, OD e Turbidez e plota o ponto com o Índice de Poluição sobre um mapa offline em cache OpenStreetMap.''
+
+\vspace{0.2cm}
+\textbf{Slide de Backup para Mostrar:} \textbf{Slide 10} (Mapeamento Espacial) e \textbf{Slide 11} (Android Benchmarking).
+\end{qnabox}
+
+\newpage
+% ==============================================================================
+\section{Mapa Rápido dos Slides de Backup}
+% ==============================================================================
+
+\begin{table}[h!]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{c l X}
+\toprule
+\textbf{Backup} & \textbf{Título do Slide} & \textbf{Quando Acionar / Contexto de Pergunta} \\
+\midrule
+\textbf{B1 (p. 16)} & Estatísticas do Dataset ($N=60$) & Perguntas sobre médias, desvios e faixas de pH, OD, turbidez, TDS e salinidade. \\
+\textbf{B2 (p. 17)} & Matriz de Correlação das Variáveis & Perguntas sobre correlações físicas e a dificuldade do Oxigênio Dissolvido ($|r| < 0{,}20$). \\
+\textbf{B3 (p. 18)} & Ablação do Aumento Gaussiano & Perguntas sobre o impacto da expansão $\times 10$ ($\sigma=0{,}01$) e prevenção de overfitting. \\
+\textbf{B4 (p. 19)} & Dinâmica Neural CUBA-LIF e BPTT & Perguntas sobre equações diferenciais, decaimento de membrana $\beta$ e surrogate gradient. \\
+\textbf{B5 (p. 20)} & Curva de Perda e Convergência & Detalhes da otimização Adam, taxa de aprendizado e épocas de convergência. \\
+\textbf{B6 (p. 21)} & Varredura de Pesos da Perda & Perguntas sobre a ponderação $(0{,}20,\,0{,}20,\,0{,}60)$ para balancear a turbidez. \\
+\textbf{B7 (p. 22)} & Testes de Wilcoxon e Friedman & Perguntas sobre significância estatística em 10 seeds ($p=0{,}064$ vs RF, $p=0{,}002$ vs MLP). \\
+\textbf{B8 (p. 23)} & Trade-off Throughput vs Energia & Perguntas sobre dinâmica de potência incremental $\Delta P$ e mJ/inf. \\
+\textbf{B9 (p. 24)} & Comparativo Radar Multicritério & Comparativo abrangente de custo, energia, facilidade e throughput. \\
+\textbf{B10 (p. 25)} & Formulação do Índice de Poluição & Equação matemática do índice agregado ponderado e desvios ambientais. \\
+\textbf{B11 (p. 26)} & Referências Bibliográficas & Citações da literatura sobre computação neuromórfica e predição de qualidade da água. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\vspace{0.5cm}
+\begin{tcolorbox}[colback=CBALightPurple,colframe=CBAPurple,title=\textbf{Checklist Final Antes de Subir ao Púlpito},boxrule=1pt]
+\begin{enumerate}[leftmargin=1.5em,itemsep=3pt]
+    \item \textbf{Postura e Respiração:} Fale com calma e autoridade científica. O roteiro de 14 slides foi calibrado para totalizar $\approx 12\text{m}15\text{s}$ com folga de quase 3 minutos para a banca.
+    \item \textbf{Foco nos 4 Números de Ouro deste Trabalho:}
+    \begin{itemize}
+        \item \textbf{$\text{MAE} = 0{,}447$} no benchmark multimodal com 10 seeds (estatisticamente equivalente a Random Forest com $p=0{,}064$).
+        \item \textbf{$R^2 = 0{,}670$} na previsão contínua de pH.
+        \item \textbf{$11{,}2\text{ mJ/inf}$} no ESP32 $\bullet$ \textbf{$0{,}051\text{ mJ/inf}$} no Raspberry Pi 4B $\bullet$ \textbf{$0{,}0028\text{ mJ/inf}$} no Android C.
+        \item \textbf{$\times 10$ de Aumento Gaussiano} com redução de 2,53\% no erro e estabilização de treino.
+    \end{itemize}
+    \item \textbf{Segurança nas Respostas:} Use sempre os slides de backup (páginas 16 a 27) para demonstrar que todas as variáveis, métricas e decisões foram rigorosamente calculadas e validadas estatisticamente.
+\end{enumerate}
+\end{tcolorbox}
+
+\end{document}

@@ -1,0 +1,152 @@
+===============================================================================
+ROTEIRO DE APRESENTAÇÃO ORAL -- CBA 2026 (CALIBRADO PARA 12m00s - 12m45s)
+Trabalho: Previsão da Qualidade da Água: Inferência Neuromórfica Multimodal 
+          na Borda com Eficiência Energética e Operação Offline
+Autores: Felipe de Vasconcelos Assunção, Alfredo Paulo Oliveira Barros et al.
+Instituições: UFAM (ICET / NAVIR) | Instituto de Pesquisas Eldorado | PPGCTS
+Tempo Máximo do Congresso: 15:00 min | Duração Alvo da Apresentação: ~12:15 min
+===============================================================================
+
+ESTRUTURA DE TEMPO POR SLIDE (15 SLIDES PRINCIPAIS):
+- Slide 1  -- Capa Oficial CBA 2026                 : 0:15 - 0:20 min
+- Slide 2  -- Sumário Executivo (3 Blocos)          : 0:10 - 0:15 min
+- Slide 3  -- Contexto, Problema e Pergunta Central : 0:45 - 0:50 min
+- Slide 4  -- Lacuna e Desafios de Pesquisa         : 0:50 - 0:55 min
+- Slide 5  -- Coleta em Campo e Aumento Gaussiano   : 0:45 - 0:50 min
+- Slide 6  -- Arquitetura Multimodal SNN            : 1:00 - 1:05 min
+- Slide 7  -- Dispositivos de Borda e Telemetria    : 0:55 - 1:00 min
+- Slide 8  -- Desempenho Preditivo (10 Seeds)       : 1:10 - 1:15 min
+- Slide 9  -- Análise Predito vs Real por Variável  : 1:05 - 1:10 min
+- Slide 10 -- Mapeamento IDW e Índice de Poluição   : 1:05 - 1:10 min
+- Slide 11 -- Benchmarking Energético em Borda      : 1:10 - 1:15 min
+- Slide 12 -- Discussão e Posicionamento            : 0:45 - 0:50 min
+- Slide 13 -- Conclusões e Trabalhos Futuros        : 0:55 - 1:00 min
+- Slide 14 -- Referências Bibliográficas            : 0:20 - 0:25 min
+- Slide 15 -- Agradecimentos Oficiais e Encerramento: 0:15 - 0:20 min
+-------------------------------------------------------------------------------
+TEMPO TOTAL ESTIMADO DA APRESENTAÇÃO PRINCIPAL: 12:15 - 12:45 min (Margem Perfeita)
+===============================================================================
+
+-------------------------------------------------------------------------------
+ROTEIRO DETALHADO SLIDE A SLIDE
+-------------------------------------------------------------------------------
+
+[SLIDE 1 -- Capa Oficial CBA 2026] (0:00 - 0:20)
+"Bom dia a todos os membros da banca examinadora, colegas pesquisadores e participantes 
+do XXVI Congresso Brasileiro de Automática. Apresento o trabalho intitulado 'Previsão 
+da Qualidade da Água: Inferência Neuromórfica Multimodal na Borda com Eficiência Energética 
+e Operação Offline', fruto de uma colaboração entre a Universidade Federal do Amazonas 
+(UFAM/ICET), o Programa de Pós-Graduação em Ciência, Tecnologia e Saúde (PPGCTS), o 
+Instituto de Pesquisas Eldorado e o projeto Mob4Ai."
+
+[SLIDE 2 -- Sumário da Apresentação] (0:20 - 0:35)
+"Nossa apresentação está dividida em três blocos objetivos: iniciaremos com a Motivação 
+e a Proposta de inferência neuromórfica em borda; em seguida, detalharemos a Metodologia, 
+a coleta em campo no Lago Serpa e o setup experimental; e encerraremos com a análise dos 
+Resultados Preditivos, Mapeamento Espacial e Telemetria Energética."
+
+[SLIDE 3 -- Contexto, Problema e Pergunta Central] (0:35 - 1:25)
+"Na região Amazônica, o monitoramento ambiental de bacias hidrográficas remotas enfrenta 
+três gargalos críticos: isolamento geográfico, ausência de conectividade celular ou via satélite 
+e escassez de infraestrutura energética. Depender de processamento em nuvem é inviável em campo. 
+Diante disso, formulamos nossa pergunta central de pesquisa: 'É possível realizar inferência 
+preditiva multimodal da qualidade da água de forma 100% offline em dispositivos de borda 
+heterogêneos, garantindo estabilidade e baixo consumo energético?'"
+
+[SLIDE 4 -- Lacuna na Literatura e Desafios de Pesquisa] (1:25 - 2:20)
+"Na literatura, abordagens clássicas de qualidade da água revisadas por Yan et al., Liu et al. e 
+Pan et al. assumem servidores centralizados ou nuvem, inviáveis em corpos hídricos amazônicos. 
+Por outro lado, soluções de TinyML convencional como em Rosero et al. e Alshareeda et al. focam em 
+tarefas univariadas com MLPs que sofrem instabilidade sob poucos dados. Além disso, estudos neuromórficos 
+ambientais como Aral et al. e Azadi et al. mantêm-se conceituais ou industriais sem deploy prático em campo. 
+Nossos desafios centrais são: viabilizar multimodalidade offline, estabilidade preditiva em small-data 
+e eficiência energética multiplataforma."
+
+[SLIDE 5 -- Coleta em Campo (Lago Serpa) e Aumento Controlado] (2:20 - 3:10)
+"Coletamos 60 amostras georreferenciadas in situ no Lago Serpa, em Itacoatiara-AM, utilizando 
+sonda multiparâmetros. Como entradas, utilizamos temperatura, condutividade, TDS, salinidade 
+e coordenadas geográficas. Para superar a escassez de dados sem introduzir viés artificial, 
+aplicamos um aumento gaussiano controlado (fator 10, desvio de 0,01), expandindo o suporte 
+de treino para 600 amostras, o que reduziu o MAE macro em 2,53% e estabilizou os gradientes de treino."
+
+[SLIDE 6 -- Arquitetura da Rede Neural de Spikes (SNN)] (3:10 - 4:15)
+"Nossa arquitetura neuromórfica recebe as 6 variáveis normalizadas e as converte em trens 
+de spikes temporais ao longo de 16 a 32 passos de tempo. A camada oculta emprega neurônios 
+Leaky Integrate-and-Fire (LIF) treinados via Backpropagation Through Time com gradiente substituto 
+fast-sigmoid. A camada de saída integra as voltagens de membrana para produzir a regressão 
+contínua simultânea dos três alvos de qualidade da água."
+
+[SLIDE 7 -- Plataformas de Borda Heterogêneas e Telemetria Física] (4:15 - 5:15)
+"Para avaliar o deploy prático, implementamos o modelo em três classes de hardware: o microcontrolador 
+ESP32 em MicroPython, o computador em placa Raspberry Pi 4B e três dispositivos móveis Android. 
+A potência física foi mensurada com sensor de shunt INA219, medindo estritamente a potência incremental 
+entre repouso e carga de inferência para calcular a energia real por inferência em milijoules."
+
+[SLIDE 8 -- Desempenho Preditivo Multimodal (n=10 Seeds)] (5:15 - 6:30)
+"No benchmark multi-seed com 10 sementes independentes, a SNN proposta atingiu MAE macro de 
+0,447, demonstrando desempenho competitivo com Random Forest (0,409) e LSTM (0,428). O teste 
+pareado de Wilcoxon confirmou que não há diferença estatisticamente significativa entre a SNN 
+e Random Forest (p=0,064) ou LSTM (p=0,105). Em contrapartida, a SNN superou com folga a MLP 
+clássica (p=0,002), que falhou em convergir satisfatoriamente no regime de poucos dados."
+
+[SLIDE 9 -- Comportamento Predito vs Real por Variável Alvo] (6:30 - 7:40)
+"Analisando as variáveis individualmente, o pH apresentou excelente aderência à linha de 
+identidade com R2 de 0,670 e baixo erro (0,125). A turbidez obteve R2 de 0,364. Já o Oxigênio 
+Dissolvido (OD), embora com erro absoluto baixo (0,204), apresentou baixa variância explicada 
+em todos os modelos avaliados da literatura. A análise de correlação provou que o OD é fracamente 
+correlacionado com as entradas disponíveis, tratando-se de uma característica físico-química da água 
+e não de uma falha do modelo neural."
+
+[SLIDE 10 -- Superfícies Espaciais (IDW) e Índice Composto de Poluição] (7:40 - 8:50)
+"A partir das predições pontuais, geramos superfícies espaciais contínuas utilizando Interpolação 
+por Inverso da Distância (IDW) sobre o mapa do Lago Serpa. Combinando as variáveis preditas, 
+formulamos um Índice Composto de Poluição normalizado de 0 a 1. Esse mapa permite aos gestores 
+ambientais identificar rapidamente microzonas críticas com alta turbidez e degradação da água 
+para fiscalização prioritária em campo."
+
+[SLIDE 11 -- Benchmarking Energético e Throughput em Dispositivos Reais] (8:50 - 10:05)
+"A telemetria física revelou perfis complementares: o ESP32 atinge 5 inferências por segundo 
+consumindo 11,20 mJ por inferência, sendo ideal para estações remotas autônomas operando em 
+regime de sono intermitente. O Raspberry Pi 4B atinge mais de 4.600 inferências/s com apenas 
+0,051 mJ/inf. Nos smartphones Android, a eficiência atingiu até 0,0028 mJ por previsão com vazão 
+superior a 16.000 amostras/s, viabilizando diagnósticos instantâneos no celular do agente ambiental."
+
+[SLIDE 12 -- Discussão: Posicionamento no Estado da Arte e Contribuições] (10:05 - 10:55)
+"Posicionamos nosso trabalho frente à literatura: superamos a dependência de nuvem apontada por 
+Yan et al., a instabilidade de MLPs sob small-data descrita por Rosero et al., e avançamos além 
+dos estudos conceituais de Aral et al. e Azadi et al. ao realizar a implantação real em campo. 
+Consolidamos quatro contribuições: (1) pipeline multimodal SNN ponta a ponta; (2) protocolo estatístico 
+rigoroso com aumento gaussiano; (3) sensoriamento espacial contínuo com IDW e Índice de Poluição; 
+e (4) benchmarking de energia e potência física em três classes de hardware de borda."
+
+[SLIDE 13 -- Conclusões e Trabalhos Futuros] (10:55 - 11:50)
+"Concluímos comprovando a viabilidade de SNNs multimodais na qualidade da água, operação 100% 
+offline em hardware heterogêneo, mapeamento contínuo de poluição e alta resiliência a poucos 
+dados com aumento gaussiano. Para trabalhos futuros, implementaremos a SNN em processadores 
+neuromórficos dedicados como o Xylo ou Loihi 2 e realizaremos coletas sazonais na seca e cheia dos rios."
+
+[SLIDE 14 -- Referências Bibliográficas Selecionadas] (11:50 - 12:15)
+"Apresentamos as referências que fundamentam nosso trabalho, destacando os estudos de Edge AI 
+neuromórfica de Aral et al., inferência SNN embarcada de Azadi et al. e revisões sistemáticas de 
+Yan et al., além do nosso dataset público disponibilizado no Mendeley Data."
+
+[SLIDE 15 -- Agradecimentos Oficiais, Suporte e Encerramento] (12:15 - 12:40)
+"Agradecemos ao Instituto de Pesquisas Eldorado, Motorola Mobility, Flextronics da Amazônia, 
+projeto Mob4Ai, CAPES, CNPq e UFAM pelo suporte financeiro e institucional. Muito obrigado pela 
+atenção e estamos abertos para perguntas e comentários da banca examinadora."
+===============================================================================
+SLIDES DE BACKUP DISPONÍVEIS PARA PERGUNTAS TÉCNICAS:
+- Backup 1: Estatísticas Descritivas do Dataset do Lago Serpa (N = 60)
+- Backup 2: Matriz de Correlação das Variáveis (Diagnóstico do OD)
+- Backup 3: Ablação do Aumento Gaussiano (x10, sigma = 0,01)
+- Backup 4: Formulação Matemática do Neurônio LIF e Surrogate Gradient
+- Backup 5: Dinâmica de Convergência do Treinamento e Curva de Perda
+- Backup 6: Varredura de Pesos na Perda Multitarget (0,20, 0,20, 0,60)
+- Backup 7: Testes Estatísticos Não-Paramétricos (Wilcoxon e Friedman)
+- Backup 8: Análise de Trade-off Throughput vs Energia Incremental
+- Backup 9: Comparativo Multicritério das Plataformas (Radar)
+- Backup 10: Formulação do Índice Composto de Poluição da Água
+- Backup 11: Referências Bibliográficas Complementares
+===============================================================================
+- Backup 12: Referências Bibliográficas Completas
+===============================================================================
