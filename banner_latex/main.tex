@@ -1,0 +1,32 @@
+\documentclass{extarticle}
+
+\input{config}
+\begin{document}
+\thispagestyle{empty}
+\PosterBackground
+
+% The official frame occupies the top and bottom of the page.
+\vspace*{20.0cm}
+\input{sections/title}
+
+\vspace{0.6cm}
+\begin{minipage}[t]{0.475\textwidth}
+  \input{sections/introduction}
+  \vspace{0.40cm}
+  \input{sections/objectives}
+  \vspace{0.40cm}
+  \input{sections/methods}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.475\textwidth}
+  \input{sections/results}
+  \vspace{0.40cm}
+  \input{sections/conclusion}
+  \vspace{0.40cm}
+  \input{sections/references}
+  \ifPosterBlinded\else
+    \vspace{0.10cm}
+    \input{sections/acknowledgements}
+  \fi
+\end{minipage}
+
+\end{document}

@@ -1,0 +1,10 @@
+\PosterSection{4. RESULTADOS E DISCUSSÃO}
+\PosterBody
+Random Forest obteve o menor MAE macro ($0{,}409 \pm 0{,}062$); LSTM, o menor RMSE macro ($0{,}548 \pm 0{,}073$). A SNN alcançou MAE $0{,}447 \pm 0{,}064$, RMSE $0{,}566 \pm 0{,}072$ e $R^2$ $0{,}291 \pm 0{,}146$: desempenho competitivo para implantação na borda, sem superioridade preditiva demonstrada.
+
+A turbidez apresenta o maior MAE absoluto por sua faixa numérica mais ampla. O OD é o alvo mais difícil em variância explicada: todos os modelos apresentaram $R^2$ médio negativo, coerente com sua baixa correlação com as entradas disponíveis. O pH apresentou o comportamento preditivo mais confiável. Os intervalos resumem a variabilidade entre dez sementes e não representam incerteza hidrológica populacional completa.
+
+\begin{center}
+\input{sections/plots}
+\end{center}
+\FigureSource{MAE macro (desvio-padrão, dez sementes) e energia incremental por inferência.}

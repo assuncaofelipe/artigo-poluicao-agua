@@ -1,0 +1,91 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{mathptmx}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{eso-pic}
+\usepackage{enumitem}
+\usepackage{ragged2e}
+
+% The event rules specify a 90 x 120 cm vertical banner. The official PPTX
+% frame is retained as the event identity and scaled to this print format.
+\geometry{paperwidth=90cm,paperheight=120cm,top=0cm,bottom=0cm,left=4.3cm,right=4.3cm,noheadfoot}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.22em}
+\graphicspath{{assets/logos/}{assets/figures/}{assets/template/}}
+
+\definecolor{EventGreen}{HTML}{216D46}
+\definecolor{EventBorder}{HTML}{385623}
+\definecolor{ChartGreen}{HTML}{167451}
+\definecolor{ChartBlue}{HTML}{1677A8}
+\definecolor{ChartGold}{HTML}{C58B18}
+\definecolor{ChartGray}{HTML}{6C7073}
+\color{black}
+\pgfplotsset{compat=1.18}
+
+% Wrappers in blinded/ and sem_blinded/ select the corresponding version.
+\newif\ifPosterBlinded
+\ifdefined\PosterBlinded
+  \PosterBlindedtrue
+\else
+  \PosterBlindedfalse
+\fi
+
+\newcommand{\PosterTitle}[1]{{\fontsize{72}{78}\selectfont\bfseries #1\par}}
+\newcommand{\PosterAuthors}[1]{{\fontsize{48}{54}\selectfont #1\par}}
+\newcommand{\PosterAffiliation}[1]{{\fontsize{40}{46}\selectfont #1\par}}
+\newcommand{\PosterBody}{\fontsize{36}{42}\selectfont}
+\newcommand{\PosterSmall}{\fontsize{30}{35}\selectfont}
+\newcommand{\PosterTiny}{\fontsize{24}{29}\selectfont}
+\newcommand{\FigureSource}[1]{{\PosterTiny\textit{Fonte: #1}\par}}
+\newcommand{\PosterMetric}[2]{%
+  \begin{center}\fbox{\parbox[c][2.4cm][c]{0.88\linewidth}{\centering
+    {\fontsize{34}{38}\selectfont\bfseries #1\par}
+    {\PosterTiny #2\par}}}\end{center}%
+}
+
+\newcommand{\PosterSection}[1]{%
+  \par\vspace{0.1cm}%
+  {\fontsize{48}{54}\selectfont\bfseries #1\par}%
+  \vspace{0.10cm}%
+}
+
+\newlist{posteritems}{itemize}{1}
+\setlist[posteritems]{leftmargin=1.0em,label=\textbullet,itemsep=0.18em,topsep=0.1em,parsep=0pt}
+
+% Uses a 300 dpi flattened rendering of the official model as the fixed event
+% frame. Flattening prevents placeholder instructions from remaining selectable
+% in the final PDF while retaining the original header, border and footer.
+\newcommand{\PosterBackground}{%
+\AddToShipoutPictureBG{%
+\begin{tikzpicture}[remember picture,overlay]
+  \node[anchor=south west,inner sep=0pt] at (current page.south west)
+    {\includegraphics[width=\paperwidth,height=\paperheight]{modelo_oficial_flat.png}};
+  % Removes the broken dashed support box while retaining the UFAM and SUS marks.
+  \fill[white] ([xshift=12.71cm,yshift=3.20cm]current page.south west)
+    rectangle ([xshift=32.74cm,yshift=9.20cm]current page.south west);
+  \node[anchor=center,inner sep=0pt] at ([xshift=17.49cm,yshift=6.60cm]current page.south west)
+    {\includegraphics[height=3.80cm]{ufam_transparent.png}};
+  \node[anchor=center,inner sep=0pt] at ([xshift=25.26cm,yshift=6.60cm]current page.south west)
+    {\includegraphics[width=6.60cm]{sus_logo_modelo.png}};
+  % Restores the lower outer-border segment covered while cleaning this block.
+  \draw[EventBorder,line width=2.0pt]
+    ([xshift=12.71cm,yshift=3.53cm]current page.south west) --
+    ([xshift=32.74cm,yshift=3.53cm]current page.south west);
+  \fill[white] ([xshift=1.29cm,yshift=13.2cm]current page.south west)
+    rectangle ([xshift=-1.29cm,yshift=-18.35cm]current page.north east);
+  % Restores only the side segments hidden by the central white field.
+  \draw[EventBorder,line width=2.0pt]
+    ([xshift=2.62cm,yshift=13.2cm]current page.south west) --
+    ([xshift=2.62cm,yshift=-18.35cm]current page.north west);
+  \draw[EventBorder,line width=2.0pt]
+    ([xshift=-3.23cm,yshift=13.2cm]current page.south east) --
+    ([xshift=-3.23cm,yshift=-18.35cm]current page.north east);
+\end{tikzpicture}%
+}%
+}
